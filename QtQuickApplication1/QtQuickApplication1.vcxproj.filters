@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{db1632c3-7744-418b-9f95-b89f8b50e55e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window\Input">
+      <UniqueIdentifier>{e8feda7d-5b42-484e-ab4c-d21c7f8ad514}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Events">
+      <UniqueIdentifier>{1d2b3b5c-c8b9-414f-a395-9b16a6806923}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{8eba2e41-daaa-4047-be23-b64086601563}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application">
+      <UniqueIdentifier>{e604ca14-5a64-4f1a-bc6f-8696441f89d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{f454b3ec-d8b3-4150-b4a7-7f7e6d036a1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Components">
+      <UniqueIdentifier>{22650892-27d7-4492-81fc-f2149a68e3f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Lights">
+      <UniqueIdentifier>{ec221767-53c8-45a3-b278-befaa5f4297f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\ECS">
+      <UniqueIdentifier>{48f1df0d-e77b-4d2c-8c50-42381631ffb8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="debug\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="release\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="main.qml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <QtRcc Include="qml.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MouseInput.h">
+      <Filter>Window\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Window\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="Mesh.h">
+      <Filter>Objects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Objects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshRenderer.h">
+      <Filter>Objects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Objects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleMeshRenderer.h">
+      <Filter>Objects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="EventDispatcher.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="EventSubscriber.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="OnUpdateEvent.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="OnUpdateSubscriber.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="GLWindow.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshLoader.h" />
+    <ClInclude Include="Texture.h">
+      <Filter>Objects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneRenderer.h" />
+    <ClInclude Include="Background.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="VolumetricCubeMeshRenderer.h">
+      <Filter>Objects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderData.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderCollection.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshRendererGenerator.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="AloyApplication.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="GLCamera.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="UIManager.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="FPSCounter.h">
+      <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="LightSource.h">
+      <Filter>Objects\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Objects\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="SpotLight.h">
+      <Filter>Objects\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Objects\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentManager.h">
+      <Filter>Objects\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeInfo.h">
+      <Filter>Objects\ECS</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="Window.h">
+      <Filter>Window</Filter>
+    </QtMoc>
+  </ItemGroup>
+</Project>
