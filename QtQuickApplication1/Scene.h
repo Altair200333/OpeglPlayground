@@ -26,14 +26,22 @@ class Scene final
 	std::shared_ptr<Object> createObject(const MeshLoader::LoadedModel& model, const QVector3D& pos, ShaderData& data, const std::string& tag = "") const
 	{
 		auto object = std::make_shared<Object>();
-		object->transform = std::make_shared<Transform>();
+		//object->transform = std::make_shared<Transform>();
 		object->tag = tag;
-		object->mesh = model.mesh;
-		object->material = model.material;
-		object->renderer = data.renderer->getRenderer();
-		object->initRenderer(functions, data.getShader());
-
-		object->transform->translate(pos);
+		//object->mesh = model.mesh;
+		//object->material = model.material;
+		//object->renderer = data.renderer->getRenderer();
+		//object->initRenderer(functions, data.getShader());
+		
+		object->addComponent(std::make_shared<Transform>());
+		object->addComponent(model.mesh);
+		object->addComponent(model.material);
+		object->addComponent(data.renderer->getRenderer());
+		
+		object->getComponent<Transform>()->translate(pos);
+		object->getComponent<MeshRenderer>()->initMeshRenderer(functions, object->getComponent<Transform>(),
+			object->getComponent<Mesh>(), object->getComponent<Material>(), data.getShader());
+		
 		return object;
 	}
 public:

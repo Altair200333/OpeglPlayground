@@ -55,7 +55,7 @@ public:
 			renderer.nextDrawMode();
 		
 		if (Input::keyJustPressed(Qt::Key_R))
-			atmosphere->renderer->enabled = !atmosphere->renderer->enabled;
+			atmosphere->getComponent<MeshRenderer>()->enabled = !atmosphere->getComponent<MeshRenderer>()->enabled;
 
 		scene.angularVelocity *= 0.987f;
 		
@@ -63,8 +63,8 @@ public:
 		{
 			if (object->tag == "modifiable")
 			{
-				object->transform->rotate(QQuaternion::fromAxisAndAngle(scene.camera.right, -scene.angularVelocity.y()).normalized());
-				object->transform->rotate(QQuaternion::fromAxisAndAngle(scene.camera.up, scene.angularVelocity.x()).normalized());
+				object->getComponent<Transform>()->rotate(QQuaternion::fromAxisAndAngle(scene.camera.right, -scene.angularVelocity.y()).normalized());
+				object->getComponent<Transform>()->rotate(QQuaternion::fromAxisAndAngle(scene.camera.up, scene.angularVelocity.x()).normalized());
 			}
 		}
 		if (Input::keyPressed(Qt::RightButton))
