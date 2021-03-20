@@ -50,6 +50,9 @@
     <Filter Include="Objects\ECS">
       <UniqueIdentifier>{48f1df0d-e77b-4d2c-8c50-42381631ffb8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Application\Level">
+      <UniqueIdentifier>{9b5077ee-120e-4119-b81b-f57b5c81289a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -164,9 +167,18 @@
     <ClInclude Include="TypeInfo.h">
       <Filter>Objects\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>Application\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="ExperimentalLevel.h">
+      <Filter>Application\Level</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Transform.cpp">
+      <Filter>Objects\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="Window.h">

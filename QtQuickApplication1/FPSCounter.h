@@ -5,7 +5,14 @@
 
 class FPSCounter final
 {
+	 
 public:
+	static FPSCounter& instance()
+	{
+		static FPSCounter counter;
+		return counter;
+	}
+	
 	std::chrono::time_point<std::chrono::system_clock> lastFrameTime;
 
 	std::vector<float> times;
@@ -13,23 +20,32 @@ public:
 	float lastFPS = 0;
 	float elapsedFrameTime = 0;
 	float frameTime = 0;
-	float getFPS()
+
+	static void updateFps()
 	{
-		
+		auto& inst = instance();
 		const auto current = std::chrono::system_clock::now();
-		const std::chrono::duration<float> elapsedSeconds = current - lastFrameTime;
-		lastFrameTime = current;
-		frameTime = elapsedSeconds.count();
-		
-		times.push_back(frameTime);
-		
-		elapsedFrameTime += frameTime;
-		if(elapsedFrameTime >= 0.5)
+		const std::chrono::duration<float> elapsedSeconds = current - inst.lastFrameTime;
+
+		inst.lastFrameTime = current;
+		inst.frameTime = elapsedSeconds.count();
+
+		inst.times.push_back(inst.frameTime);
+
+		inst.elapsedFrameTime += inst.frameTime;
+		if (inst.elapsedFrameTime >= 0.5)
 		{
-			elapsedFrameTime = 0;
-			lastFPS = std::accumulate(times.begin(), times.end(), 0.0) / static_cast<float>(times.size());
-			times.clear();
+			inst.elapsedFrameTime = 0;
+			inst.lastFPS = std::accumulate(inst.times.begin(), inst.times.end(), 0.0) / static_cast<float>(inst.times.size());
+			inst.times.clear();
 		}
-		return lastFPS;
+	}
+	static float getFrameTime()
+	{
+		return instance().frameTime;
+	}
+	static float getFPS()
+	{
+		return instance().lastFPS;
 	}
 };

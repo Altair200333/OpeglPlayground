@@ -16,8 +16,9 @@
 #include "ShaderData.h"
 #include "VolumetricCubeMeshRenderer.h"
 
-class Scene final
+class Scene
 {
+protected:
 	void createLightSourceBlock()
 	{
 		lightSourceBlock = createObject(MeshLoader().loadModel("Assets/Models/ico.obj")[0], QVector3D(0, 0, 0),
@@ -26,12 +27,7 @@ class Scene final
 	std::shared_ptr<Object> createObject(const MeshLoader::LoadedModel& model, const QVector3D& pos, ShaderData& data, const std::string& tag = "") const
 	{
 		auto object = std::make_shared<Object>();
-		//object->transform = std::make_shared<Transform>();
 		object->tag = tag;
-		//object->mesh = model.mesh;
-		//object->material = model.material;
-		//object->renderer = data.renderer->getRenderer();
-		//object->initRenderer(functions, data.getShader());
 		
 		object->addComponent(std::make_shared<Transform>());
 		object->addComponent(model.mesh);
@@ -55,17 +51,13 @@ public:
 	std::shared_ptr<Background> backround;
 
 	GLCamera camera;
-
-	bool drawWireframe = false;
-
-	QVector2D angularVelocity = {0,0};
 	
 	Scene() = default;
+	virtual void init() = 0;
 
 	Scene(std::shared_ptr<QOpenGLFunctions> _functions): functions(std::move(_functions))
 	{
 		createLightSourceBlock();
-
 	}
 	void addModel(const std::vector<MeshLoader::LoadedModel>& models, const QVector3D& pos, ShaderData& data, const std::string& tag = "")
 	{

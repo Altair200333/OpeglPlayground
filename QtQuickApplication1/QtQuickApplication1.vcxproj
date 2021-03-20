@@ -221,6 +221,7 @@
     <ClInclude Include="Background.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />
+    <ClInclude Include="ExperimentalLevel.h" />
     <ClInclude Include="FPSCounter.h" />
     <ClInclude Include="GLWindow.h" />
     <ClInclude Include="Event.h" />
@@ -228,6 +229,7 @@
     <ClInclude Include="EventSubscriber.h" />
     <ClInclude Include="GLCamera.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Level.h" />
     <ClInclude Include="LightSource.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Material.h" />
@@ -255,6 +257,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

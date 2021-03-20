@@ -10,6 +10,8 @@ class Object
 {
 	ComponentManager componentManager;
 public:
+	std::vector<std::shared_ptr<Object>> children;
+	
 	template<typename T>
 	void addComponent(std::shared_ptr<T> component)
 	{

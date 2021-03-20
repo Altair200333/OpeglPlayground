@@ -10,61 +10,61 @@ public:
 	{
 		drawMode = drawMode == 2 ? 0 : drawMode + 1;
 	}
-	void renderLights(Scene& scene)
+	void renderLights(std::shared_ptr<Scene>& scene)
 	{
-		for (auto& light : scene.lights)
+		for (auto& light : scene->lights)
 		{
-			auto transform = scene.lightSourceBlock->getComponent<Transform>();
+			auto transform = scene->lightSourceBlock->getComponent<Transform>();
 			transform->translate(-transform->position);
 			transform->translate(light->position);
 			
-			scene.lightSourceBlock->getComponent<Material>()->diffuse = light->color;
-			scene.lightSourceBlock->getComponent<Material>()->isLightSource = true;
-			scene.lightSourceBlock->getComponent<MeshRenderer>()->render(scene.camera, scene.lights);
+			scene->lightSourceBlock->getComponent<Material>()->diffuse = light->color;
+			scene->lightSourceBlock->getComponent<Material>()->isLightSource = true;
+			scene->lightSourceBlock->getComponent<MeshRenderer>()->render(scene->camera, scene->lights);
 		}
 	}
 
-	void renderTransparentObjects(Scene& scene)
+	void renderTransparentObjects(std::shared_ptr<Scene>& scene)
 	{
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
-		for (auto& cloud : scene.transparentObjects)
-			cloud->getComponent<MeshRenderer>()->render(scene.camera, scene.lights);
+		for (auto& cloud : scene->transparentObjects)
+			cloud->getComponent<MeshRenderer>()->render(scene->camera, scene->lights);
 		glCullFace(GL_FRONT);
-		for (auto& cloud : scene.transparentObjects)
-			cloud->getComponent<MeshRenderer>()->render(scene.camera, scene.lights);
+		for (auto& cloud : scene->transparentObjects)
+			cloud->getComponent<MeshRenderer>()->render(scene->camera, scene->lights);
 	}
 
-	void render(Scene& scene)
+	void render(std::shared_ptr<Scene>& scene)
 	{
 		// Enable blending
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glCullFace(GL_BACK);
 
-		for (size_t i = 0; i < scene.objects.size(); ++i)
+		for (size_t i = 0; i < scene->objects.size(); ++i)
 		{
 			if(drawMode == 0)
-				scene.objects[i]->getComponent<MeshRenderer>()->render(scene.camera, scene.lights, scene.backround);
+				scene->objects[i]->getComponent<MeshRenderer>()->render(scene->camera, scene->lights, scene->backround);
 			else if(drawMode == 1)
 			{
-				scene.objects[i]->getComponent<MeshRenderer>()->render(scene.camera, scene.lights, scene.backround);
+				scene->objects[i]->getComponent<MeshRenderer>()->render(scene->camera, scene->lights, scene->backround);
 
 				glEnable(GL_POLYGON_OFFSET_LINE);
 				glPolygonOffset(-1, -1);
 
-				scene.objects[i]->getComponent<MeshRenderer>()->renderWireframe(scene.camera);
+				scene->objects[i]->getComponent<MeshRenderer>()->renderWireframe(scene->camera);
 
 				glDisable(GL_POLYGON_OFFSET_LINE);
 			}
 			else
 			{
-				scene.objects[i]->getComponent<MeshRenderer>()->renderWireframe(scene.camera);
+				scene->objects[i]->getComponent<MeshRenderer>()->renderWireframe(scene->camera);
 			}
 		}
 		
 		renderLights(scene);
-		scene.backround->render(scene.camera);
+		scene->backround->render(scene->camera);
 
 		renderTransparentObjects(scene);
 	}
