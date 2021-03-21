@@ -2,6 +2,8 @@
 #include "MeshRenderer.h"
 #include <SpotLight.h>
 
+#include "DirectionalLight.h"
+
 class SimpleMeshRenderer final: public MeshRenderer
 {
 public:
@@ -73,6 +75,7 @@ public:
 	{
 		size_t pointLights = 0;
 		size_t spotLights = 0;
+		size_t dirLights = 0;
 		for (int i = 0; i < lights.size(); ++i)
 		{	
 			int id = 0;
@@ -84,12 +87,16 @@ public:
 			{
 				id = spotLights++;
 			}
+			else if (std::dynamic_pointer_cast<DirectionalLight>(lights[i]) != nullptr)
+			{
+				id = dirLights++;
+			}
 			lights[i]->uploadToShader(shader, id);
-
 		}
 		
 		shader->setUniformValue("lightsCount", static_cast<int>(pointLights));
 		shader->setUniformValue("spotLightsCount", static_cast<int>(spotLights));
+		shader->setUniformValue("dirLightsCount", static_cast<int>(dirLights));
 
 	}
 };

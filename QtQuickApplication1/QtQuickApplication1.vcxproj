@@ -221,6 +221,7 @@
     <ClInclude Include="Background.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />
+    <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="ObjectComponentManager.h" />
     <ClInclude Include="ExperimentalLevel.h" />
     <ClInclude Include="FPSCounter.h" />

@@ -52,6 +52,16 @@ struct SpotLightSource
 uniform SpotLightSource spotLights[10];
 uniform int spotLightsCount;
 
+struct DirectionalLight
+{
+   vec3 direction;
+   vec4 color;
+   float intensity;
+};
+
+uniform DirectionalLight dirLights[4];
+uniform int dirLightsCount;
+
 uniform bool wireframe;
 
 vec2 SampleSphericalMap(vec3 direction)
@@ -137,6 +147,21 @@ vec3 getLighting()
 
       result += (diffuse + lightSpecular) * attenuation(length(spotLights[i].position - FragPos))*spotLights[i].intensity;
    }
+
+   for(int i=0; i < dirLightsCount; ++i)
+   {
+      vec3 dirToLight = normalize(-dirLights[i].direction);
+
+      vec3 diffuse = baseColor * vec3(dirLights[i].color);
+      diffuse = diffuse * max(dot(dirToLight, norm), 0.0f);
+
+      vec3 reflectDir = reflect(-dirToLight, norm);
+      float spec = pow(max(dot(-dirToFrag, reflectDir), 0.0), 8.0);
+      vec3 lightSpecular = dirLights[i].color.rgb * spec*getSpecular(); 
+
+      result +=  ((diffuse + lightSpecular))*dirLights[i].intensity;
+   }
+
    result = (1-getRoughness())*(result + ambient.rgb*0.089f) + getRoughness()*envColor;
    return result;
 }

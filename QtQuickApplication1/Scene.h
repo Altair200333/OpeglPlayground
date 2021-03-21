@@ -58,7 +58,7 @@ public:
 
 	Scene(QOpenGLFunctions* _functions): functions(_functions)
 	{
-		//createLightSourceBlock();
+		createLightSourceBlock();
 	}
 	void addModel(const std::vector<MeshLoader::LoadedModel>& models, const QVector3D& pos, ShaderData& data, const std::string& tag = "")
 	{

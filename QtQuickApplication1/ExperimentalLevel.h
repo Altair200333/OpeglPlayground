@@ -32,6 +32,7 @@ public:
 		//
 		//addLight(std::make_shared<PointLight>(QVector3D{ -8, 4, 7 }, QColor{ 255, 255, 255 }, 2.5));
 		//addLight(std::make_shared<PointLight>(QVector3D{ 30, 3, -7 }, QColor{ 255, 23, 12 }, 3));
+		addLight(std::make_shared<DirectionalLight>());
 		//
 		backround = std::make_shared<Background>(functions, "Assets\\Models\\textures\\background.jpg");
 

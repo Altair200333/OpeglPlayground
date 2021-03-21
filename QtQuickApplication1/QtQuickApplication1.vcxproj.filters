@@ -176,6 +176,9 @@
     <ClInclude Include="ComponentManager.h">
       <Filter>Objects\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="DirectionalLight.h">
+      <Filter>Objects\Lights</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
