@@ -6,6 +6,7 @@
 #include <utility>
 
 #include "Background.h"
+#include "ComponentManager.h"
 #include "Mesh.h"
 #include "GLCamera.h"
 #include "PointLight.h"
@@ -20,12 +21,12 @@ public:
 	QOpenGLVertexArrayObject* vao = nullptr;
 	
 	std::shared_ptr<QOpenGLShaderProgram> shader = nullptr;
+
+	QOpenGLFunctions* functions;
+	
 	std::shared_ptr<Transform> transform;
 	std::shared_ptr<Mesh> mesh;
 	std::shared_ptr<Material> material;
-
-	std::shared_ptr<QOpenGLFunctions> functions;
-
 
 	bool enabled = true;
 	
@@ -92,40 +93,28 @@ public:
 		ibo->allocate(mesh->indices.data(), mesh->indices.size() * sizeof(GLuint));
 	}
 	
-	void init(std::shared_ptr<QOpenGLFunctions> _functions, std::shared_ptr<Transform> _transform,
-		std::shared_ptr<Mesh> _mesh, std::shared_ptr<Material> _material)
+	void init(QOpenGLFunctions* _functions)
 	{
-		functions = std::move(_functions);
-		mesh = _mesh;
-		transform = _transform;
-		material = _material;
+		functions = _functions;
 
+		mesh = ComponentManager::getComponent<Mesh>(owner);
+		material = ComponentManager::getComponent<Material>(owner);
+		transform = ComponentManager::getComponent<Transform>(owner);
+		
 		createVao();
 		createVbo();
 		createIbo();
-
+		
 		enableAttributes();
-
+		
 		vao->release();
 	}
 	
-	void initMeshRenderer( std::shared_ptr<QOpenGLFunctions> _functions, std::shared_ptr<Transform> _transform, 
-		std::shared_ptr<Mesh> _mesh, std::shared_ptr<Material> _material,
-		const std::string& fragment = "Shaders/triangle.fs",
-		const std::string& vertex = "Shaders/triangle.vs", const std::string& geometry = "")
+	void initMeshRenderer(QOpenGLFunctions* _functions, std::shared_ptr<QOpenGLShaderProgram> _shader)
 	{
-		createShader(fragment, vertex, geometry);
-		shader->link();
-		init(std::move(_functions), _transform, _mesh, _material);
-	}
+		shader = _shader;
 
-	void initMeshRenderer(std::shared_ptr<QOpenGLFunctions> _functions, std::shared_ptr<Transform> _transform,
-		std::shared_ptr<Mesh> _mesh, std::shared_ptr<Material> _material,
-	                      std::shared_ptr<QOpenGLShaderProgram> _shader)
-	{
-		shader = std::move(_shader);
-
-		init(std::move(_functions), _transform, _mesh, _material);
+		init(_functions);
 	}
 	void uploadCameraDetails(GLCamera& camera) const
 	{

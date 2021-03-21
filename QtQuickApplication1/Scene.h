@@ -11,6 +11,7 @@
 
 
 #include "Background.h"
+#include "ComponentManager.h"
 #include "MeshLoader.h"
 #include "ShaderCollection.h"
 #include "ShaderData.h"
@@ -29,19 +30,19 @@ protected:
 		auto object = std::make_shared<Object>();
 		object->tag = tag;
 		
-		object->addComponent(std::make_shared<Transform>());
-		object->addComponent(model.mesh);
-		object->addComponent(model.material);
-		object->addComponent(data.renderer->getRenderer());
+		ComponentManager::addComponent(object, std::make_shared<Transform>());
+		ComponentManager::addComponent(object, model.mesh);
+		ComponentManager::addComponent(object, model.material);
+		ComponentManager::addComponent(object, data.renderer->getRenderer());
+
+		ComponentManager::getComponent<Transform>(object)->translate(pos);
 		
-		object->getComponent<Transform>()->translate(pos);
-		object->getComponent<MeshRenderer>()->initMeshRenderer(functions, object->getComponent<Transform>(),
-			object->getComponent<Mesh>(), object->getComponent<Material>(), data.getShader());
+		ComponentManager::getComponent<MeshRenderer>(object)->initMeshRenderer(functions, data.getShader());
 		
 		return object;
 	}
 public:
-	std::shared_ptr<QOpenGLFunctions> functions;
+	QOpenGLFunctions* functions;
 
 	std::vector<std::shared_ptr<Object>> objects;
 	std::vector<std::shared_ptr<LightSource>> lights;
@@ -55,9 +56,9 @@ public:
 	Scene() = default;
 	virtual void init() = 0;
 
-	Scene(std::shared_ptr<QOpenGLFunctions> _functions): functions(std::move(_functions))
+	Scene(QOpenGLFunctions* _functions): functions(_functions)
 	{
-		createLightSourceBlock();
+		//createLightSourceBlock();
 	}
 	void addModel(const std::vector<MeshLoader::LoadedModel>& models, const QVector3D& pos, ShaderData& data, const std::string& tag = "")
 	{

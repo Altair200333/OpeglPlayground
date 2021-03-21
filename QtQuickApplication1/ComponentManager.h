@@ -1,31 +1,41 @@
 #pragma once
-#include <memory>
-#include <optional>
-#include <unordered_map>
-#include "TypeInfo.h"
-#include "Component.h"
+#include <map>
+#include "Object.h"
+#include "ObjectComponentManager.h"
 
 class ComponentManager final
 {
-	template<typename T>
-	using isComponent = std::enable_if_t<std::is_base_of<Component, T>::value, int>;
-	
-	std::unordered_map<TypeInfo::type, std::shared_ptr<Component>> components{};
-public:
-	
-	template<typename T, isComponent<T>* = nullptr>
-	void addComponent(std::shared_ptr<T> component, Object* owner)
+	static ComponentManager& instance()
 	{
-		std::dynamic_pointer_cast<Component>(component)->setOwner(owner);
-		components.insert(std::make_pair(TypeInfo::type_name<T>(), std::move(component)));
+		static ComponentManager manager;
+		return manager;
 	}
-	
-	template<typename T, isComponent<T>* = nullptr>
-	[[nodiscard]] std::shared_ptr<T> getComponent() const
+public:
+	std::map<Object*, ObjectComponentManager> objectComponents;
+
+	template<typename T>
+	static void addComponent(const std::shared_ptr<Object>& object, std::shared_ptr<T> component)
 	{
-		auto it = components.find(TypeInfo::type_name<T>());
-		if(it == components.end())
+		auto& inst = instance();
+		inst.objectComponents[object.get()].addComponent(component, object.get());
+	}
+
+	template<typename T>
+	static std::shared_ptr<T> getComponent(const std::shared_ptr<Object>& object)
+	{
+		auto& inst = instance();
+		auto it = inst.objectComponents.find(object.get());
+		if (it == inst.objectComponents.end())
 			return {};
-		return std::dynamic_pointer_cast<T>(it->second);
+		return it->second.getComponent<T>();
+	}
+	template<typename T>
+	static std::shared_ptr<T> getComponent(Object* object)
+	{
+		auto& inst = instance();
+		auto it = inst.objectComponents.find(object);
+		if (it == inst.objectComponents.end())
+			return {};
+		return it->second.getComponent<T>();
 	}
 };

@@ -12,10 +12,10 @@ public:
 	std::shared_ptr<QOpenGLShaderProgram> shader = nullptr;
 	QOpenGLVertexArrayObject* vao = nullptr;
 	QOpenGLTexture* image = nullptr;
-	std::shared_ptr<QOpenGLFunctions> functions;
+	QOpenGLFunctions* functions;
 	
 	Background() = default;
-	Background(std::shared_ptr<QOpenGLFunctions> _functions, const std::string& imagePath = "Assets\\Models\\textures\\background.jpg",
+	Background(QOpenGLFunctions* _functions, const std::string& imagePath = "Assets\\Models\\textures\\background.jpg",
 		const std::string& vertex = "Shaders/background.vs", const std::string& fragment = "Shaders/background.fs", const std::string& geometry = "Shaders/background.gs")
 	{
 		functions = _functions;

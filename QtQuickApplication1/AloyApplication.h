@@ -70,7 +70,7 @@ public:
 	
 	void init()
 	{
-		activeLevel = std::make_shared<ExperimentalLevel>(manager.viewport);
+		activeLevel = std::make_shared<ExperimentalLevel>(manager.viewport.get());
 		manager.viewport->glEnable(GL_DEPTH_TEST);
 		activeLevel->init();
 	}

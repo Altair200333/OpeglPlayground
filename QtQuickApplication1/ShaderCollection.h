@@ -2,6 +2,7 @@
 #include <map>
 
 #include "ShaderData.h"
+#include "SimpleMeshRenderer.h"
 #include "VolumetricCubeMeshRenderer.h"
 
 class ShaderCollection final

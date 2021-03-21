@@ -161,9 +161,6 @@
     <ClInclude Include="Component.h">
       <Filter>Objects\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentManager.h">
-      <Filter>Objects\ECS</Filter>
-    </ClInclude>
     <ClInclude Include="TypeInfo.h">
       <Filter>Objects\ECS</Filter>
     </ClInclude>
@@ -172,6 +169,12 @@
     </ClInclude>
     <ClInclude Include="ExperimentalLevel.h">
       <Filter>Application\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectComponentManager.h">
+      <Filter>Objects\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentManager.h">
+      <Filter>Objects\ECS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -6,7 +6,7 @@ class Level: public Scene, public OnUpdateSubscriber
 {
 public:
 	virtual ~Level() = default;
-	Level(std::shared_ptr<QOpenGLFunctions> _functions):Scene(_functions)
+	Level(QOpenGLFunctions* _functions):Scene(_functions)
 	{	
 	}
 
