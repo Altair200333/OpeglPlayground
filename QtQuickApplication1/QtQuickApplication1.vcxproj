@@ -247,7 +247,7 @@
     <ClInclude Include="SceneRenderer.h" />
     <ClInclude Include="ShaderCollection.h" />
     <ClInclude Include="ShaderData.h" />
-    <ClInclude Include="SimpleMeshRenderer.h" />
+    <ClInclude Include="PhongMeshRenderer.h" />
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Transform.h" />

@@ -11,7 +11,7 @@ class ComponentManager final
 		return manager;
 	}
 public:
-	std::map<Object*, ObjectComponentManager> objectComponents;
+	std::unordered_map<Object*, ObjectComponentManager> objectComponents;
 
 	template<typename T>
 	static void addComponent(const std::shared_ptr<Object>& object, std::shared_ptr<T> component)

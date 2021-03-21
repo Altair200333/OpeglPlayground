@@ -23,13 +23,13 @@ public:
 			ComponentManager::getComponent<Transform>(fuselage)->translate(QVector3D(-0.1, 0, 0));
 		if(Input::keyPressed(Qt::Key_F))
 		{
-			ComponentManager::getComponent<Transform>(aill)->rotate(0.2, QVector3D(1, 0, 0));
-			ComponentManager::getComponent<Transform>(ailr)->rotate(0.2, QVector3D(1, 0, 0));
+			ComponentManager::getComponent<Transform>(aill)->rotate(0.35, QVector3D(1, 0, 0));
+			ComponentManager::getComponent<Transform>(ailr)->rotate(0.35, QVector3D(1, 0, 0));
 		}
 		if (Input::keyPressed(Qt::Key_G))
 		{
-			ComponentManager::getComponent<Transform>(aill)->rotate(-0.2, QVector3D(1, 0, 0));
-			ComponentManager::getComponent<Transform>(ailr)->rotate(-0.2, QVector3D(1, 0, 0));
+			ComponentManager::getComponent<Transform>(aill)->rotate(-0.35, QVector3D(1, 0, 0));
+			ComponentManager::getComponent<Transform>(ailr)->rotate(-0.35, QVector3D(1, 0, 0));
 		}
 		for (auto& light : lights)
 		{

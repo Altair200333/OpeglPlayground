@@ -4,7 +4,7 @@
 
 #include "DirectionalLight.h"
 
-class SimpleMeshRenderer final: public MeshRenderer
+class PhongMeshRenderer final: public MeshRenderer
 {
 public:
 
@@ -47,7 +47,7 @@ public:
 
 		shader->bind();
 		material->uploadToShader(shader);
-		uploadCameraDetails(camera);
+		uploadCameraDetails(camera, shader);
 		uploadLights(lights);
 
 		bindAlbedo();
@@ -99,4 +99,5 @@ public:
 		shader->setUniformValue("dirLightsCount", static_cast<int>(dirLights));
 
 	}
+	
 };

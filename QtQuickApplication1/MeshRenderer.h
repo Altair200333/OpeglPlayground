@@ -33,7 +33,7 @@ public:
 	MeshRenderer() = default;
 	virtual ~MeshRenderer() = default;
 
-	void enableAttributes() const
+	void enableAttributes(std::shared_ptr<QOpenGLShaderProgram> shader) const
 	{
 		shader->enableAttributeArray("posAttr");
 		shader->setAttributeBuffer("posAttr", GL_FLOAT, 0, 3, sizeof(Vertex));
@@ -105,7 +105,7 @@ public:
 		createVbo();
 		createIbo();
 
-		enableAttributes();
+		enableAttributes(shader);
 
 		vao->release();
 	}
@@ -141,7 +141,7 @@ public:
 		return model;
 	}
 
-	void uploadCameraDetails(GLCamera& camera) const
+	void uploadCameraDetails(GLCamera& camera, std::shared_ptr<QOpenGLShaderProgram> shader) const
 	{
 		shader->setUniformValue(shader->uniformLocation("model"), getGlobalTransform());
 		shader->setUniformValue(shader->uniformLocation("view"), camera.getViewMatrix());
@@ -154,7 +154,7 @@ public:
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 		shader->bind();
-		uploadCameraDetails(camera);
+		uploadCameraDetails(camera, shader);
 		shader->setUniformValue("wireframe", true);
 
 		vao->bind();
