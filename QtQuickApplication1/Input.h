@@ -5,6 +5,7 @@ class Input final
 {
 	QMap<int, bool> keys;
 	QMap<int, bool> pressedKeys;
+
 	static Input& instance()
 	{
 		static Input input;
@@ -28,6 +29,7 @@ public:
 	{
 		return instance().pressedKeys[keyCode];
 	}
+	
 	static void reset()
 	{
 		instance().pressedKeys.clear();

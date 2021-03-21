@@ -7,6 +7,9 @@ class MouseInput final
 	
 	QPoint mousePos;
 	QPoint deltaMouse;
+
+	QMap<int, bool> mouseKeys;
+	QMap<int, bool> mousePressedKeys;
 	
 	static MouseInput& instance()
 	{
@@ -30,9 +33,29 @@ public:
 	static void reset()
 	{
 		instance().deltaMouse = { 0,0 };
+		instance().mousePressedKeys.clear();
 	}
 	static QPoint delta()
 	{
 		return instance().deltaMouse;
 	}
+	//----
+	static void pressMouseKey(int keyCode)
+	{
+		instance().mouseKeys[keyCode] = true;
+		instance().mousePressedKeys[keyCode] = true;
+	}
+	static void releaseMouseKey(int keyCode)
+	{
+		instance().mouseKeys[keyCode] = false;
+	}
+	static bool keyPressed(int keyCode)
+	{
+		return instance().mouseKeys[keyCode];
+	}
+	static bool keyJustPressed(int keyCode)
+	{
+		return instance().mousePressedKeys[keyCode];
+	}
+	//----
 };

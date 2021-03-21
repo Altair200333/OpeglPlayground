@@ -26,10 +26,11 @@ public:
 
 inline void Transform::translate(const QVector3D& translation)
 {
-	//for (auto& child : owner->children)
-	//{
-	//	child->getComponent<Transform>()->translate(translation);
-	//}
+	for (auto& child : owner->children)
+	{
+		ComponentManager::getComponent<Transform>(child)->translate(translation);
+	}
+	
 	position += translation;
 	transform.translate(translation);
 }

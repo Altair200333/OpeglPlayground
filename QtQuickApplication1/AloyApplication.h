@@ -104,7 +104,7 @@ public:
 			}
 		}
 		
-		if (Input::keyPressed(Qt::LeftButton))
+		if (MouseInput::keyPressed(Qt::LeftButton))
 			activeLevel->camera.look(MouseInput::delta().x() * 0.5f, MouseInput::delta().y() * 0.5f);
 	}
 };

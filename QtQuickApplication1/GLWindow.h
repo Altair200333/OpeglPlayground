@@ -89,13 +89,13 @@ protected:
 
 	void mousePressEvent(QMouseEvent* e) override
 	{
-		Input::pressKey(e->button());
+		MouseInput::pressMouseKey(e->button());
 		QOpenGLWidget::mousePressEvent(e);
 	}
 
 	void mouseReleaseEvent(QMouseEvent* e) override
 	{
-		Input::releaseKey(e->button());
+		MouseInput::releaseMouseKey(e->button());
 		QOpenGLWidget::mouseReleaseEvent(e);
 	}
 };

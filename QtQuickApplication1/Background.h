@@ -36,6 +36,7 @@ public:
 		shader->release();
 
 		image = new QOpenGLTexture(QImage(QString(imagePath.c_str())));
+		image->setWrapMode(QOpenGLTexture::ClampToEdge);
 	}
 	
 	void render(GLCamera& camera)

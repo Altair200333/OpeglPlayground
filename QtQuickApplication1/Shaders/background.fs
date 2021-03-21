@@ -37,11 +37,23 @@ vec2 SampleSphericalMap(vec3 direction)
 
    return vec2(x, 1-y);
 }
+vec2 toUV(vec3 n)
+{
+    vec2 uv;
+
+    uv.x = atan(-n.x, n.z);
+    uv.x = (uv.x + PI / 2.0) / (PI * 2.0) + PI * (28.670 / 360.0);
+
+    uv.y = acos(n.y) / PI;
+
+    return uv;
+}
+
 void main() 
 {
    vec3 direction = normalize(getDirection());
-   vec2 uv = SampleSphericalMap(direction);
-   uv.x = clamp(uv.x, 0, 1);
+   vec2 uv = toUV(direction);// SampleSphericalMap(direction);
+
    vec3 color = texture(background, uv).rgb;
 
    fragColor = vec4(color, 1.0f);
