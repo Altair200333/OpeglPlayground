@@ -35,6 +35,10 @@ public:
 		{
 			light->position = QQuaternion::fromAxisAndAngle({ 0,1,0 }, 20.0f * FPSCounter::getFrameTime()) * light->position;
 		}
+		if(MouseInput::keyPressed(Qt::RightButton))
+		{
+			ComponentManager::getComponent<Transform>(fuselage)->rotate(MouseInput::delta().x(), QVector3D(0,1,0));
+		}
 	}
 
 	void init() override
@@ -50,16 +54,16 @@ public:
 		addModel(MeshLoader().loadModel("Assets/Models/fus.obj"), { 3.5f, 3, 0 }, ShaderCollection::shaders["normals"]);
 		fuselage = objects.back();
 		
-		addModel(MeshLoader().loadModel("Assets/Models/wing.obj"), { 3.5f, 3, 0 }, ShaderCollection::shaders["normals"]);
+		addModel(MeshLoader().loadModel("Assets/Models/wing.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
 		wings = objects.back();
 
-		addModel(MeshLoader().loadModel("Assets/Models/ail.obj"), { 3.5f+1.08, 3+0.358, 0-1}, ShaderCollection::shaders["normals"]);
+		addModel(MeshLoader().loadModel("Assets/Models/ail.obj"), { 1.08, 0.358, -1}, ShaderCollection::shaders["normals"]);
 		aill = objects.back();
-		addModel(MeshLoader().loadModel("Assets/Models/ail.obj"), { 3.5f- 1.08, 3 + 0.358, 0-1 }, ShaderCollection::shaders["normals"]);
+		addModel(MeshLoader().loadModel("Assets/Models/ail.obj"), { -1.08, 0.358, -1 }, ShaderCollection::shaders["normals"]);
 		ailr = objects.back();
-		
-		fuselage->children.push_back(wings);
-		fuselage->children.push_back(aill);
-		fuselage->children.push_back(ailr);
+
+		fuselage->addChild(wings);
+		fuselage->addChild(aill);
+		fuselage->addChild(ailr);
 	}
 };

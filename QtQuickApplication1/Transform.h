@@ -26,13 +26,10 @@ public:
 
 inline void Transform::translate(const QVector3D& translation)
 {
-	for (auto& child : owner->children)
-	{
-		ComponentManager::getComponent<Transform>(child)->translate(translation);
-	}
-	
 	position += translation;
-	transform.translate(translation);
+	QMatrix4x4 m;
+	m.translate(translation);
+	transform = m * transform;
 }
 
 inline void Transform::rotate(float angle, const QVector3D& axis)
