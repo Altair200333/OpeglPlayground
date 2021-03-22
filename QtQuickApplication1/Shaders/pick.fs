@@ -7,9 +7,9 @@ in vec3 Normal;
 in vec2 TexCoords;
 in mat3 TBN;
 
-uniform int id;
+uniform vec4 color;
 
 void main() 
 {
-   fragColor = vec4(id, 0.682, 0, 1.0f);
+   fragColor = vec4(color.rgb, 1.0f);
 }

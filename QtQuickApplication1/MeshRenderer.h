@@ -117,33 +117,9 @@ public:
 		init(_functions);
 	}
 
-	QMatrix4x4 getGlobalTransform() const
-	{
-		Object* current = owner->parent;
-
-
-		std::vector<QMatrix4x4> matrix;
-		matrix.push_back(transform->transform);
-
-		while (current != nullptr)
-		{
-			matrix.push_back(ComponentManager::getComponent<Transform>(current)->transform);
-			current = current->parent;
-		}
-
-		QMatrix4x4 model = QMatrix4x4();
-		model.setToIdentity();
-
-		for (int i = matrix.size() - 1; i >= 0; --i)
-		{
-			model *= matrix[i];
-		}
-		return model;
-	}
-
+	
 	void uploadCameraDetails(GLCamera& camera, std::shared_ptr<QOpenGLShaderProgram> shader) const
 	{
-		shader->setUniformValue(shader->uniformLocation("model"), getGlobalTransform());
 		shader->setUniformValue(shader->uniformLocation("view"), camera.getViewMatrix());
 		shader->setUniformValue(shader->uniformLocation("projection"), camera.getProjectionMatrix());
 		shader->setUniformValue(shader->uniformLocation("cameraPos"), camera.position);
@@ -155,6 +131,7 @@ public:
 
 		shader->bind();
 		uploadCameraDetails(camera, shader);
+		shader->setUniformValue(shader->uniformLocation("model"),transform->getGlobalTransform());
 		shader->setUniformValue("wireframe", true);
 
 		vao->bind();

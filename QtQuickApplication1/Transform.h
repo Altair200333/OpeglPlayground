@@ -16,7 +16,30 @@ public:
 	void rotate(const QQuaternion& quaternion);
 
 	void rotateAround(float angle, const QVector3D& axis, const QVector3D& point);
+	
+	QMatrix4x4 getGlobalTransform() const
+	{
+		Object* current = owner->parent;
 
+		std::vector<QMatrix4x4> matrix;
+		matrix.push_back(transform);
+
+		while (current != nullptr)
+		{
+			matrix.push_back(ComponentManager::getComponent<Transform>(current)->transform);
+			current = current->parent;
+		}
+
+		QMatrix4x4 model = QMatrix4x4();
+		model.setToIdentity();
+
+		for (int i = matrix.size() - 1; i >= 0; --i)
+		{
+			model *= matrix[i];
+		}
+		return model;
+	}
+	
 	void reset()
 	{
 		position = QVector3D(0, 0, 0);

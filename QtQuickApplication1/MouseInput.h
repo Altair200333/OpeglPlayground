@@ -17,6 +17,10 @@ class MouseInput final
 		return input;
 	}
 public:
+	static QPoint& getPosition()
+	{
+		return instance().mousePos;
+	}
 	static void mouseCallback(const QPoint& _mousePos)
 	{
 		auto& inst = instance();

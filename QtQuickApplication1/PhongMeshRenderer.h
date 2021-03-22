@@ -48,6 +48,8 @@ public:
 		shader->bind();
 		material->uploadToShader(shader);
 		uploadCameraDetails(camera, shader);
+		shader->setUniformValue(shader->uniformLocation("model"), transform->getGlobalTransform());
+
 		uploadLights(lights);
 
 		bindAlbedo();

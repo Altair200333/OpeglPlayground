@@ -29,7 +29,7 @@ public:
 		viewport->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Expanding);
 		
 		QSurfaceFormat format;
-		format.setSamples(16);
+		format.setSamples(2);
 		format.setVersion(3, 3);
 		format.setProfile(QSurfaceFormat::CoreProfile);
 

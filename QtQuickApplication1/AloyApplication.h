@@ -80,10 +80,34 @@ public:
 		const auto retinaScale = manager.viewport->devicePixelRatio();
 		manager.viewport->glViewport(0, 0, manager.viewport->width() * retinaScale, manager.viewport->height() * retinaScale);
 
-		manager.viewport->glClearColor(0.08f, 0.08f, 0.08f, 1);
+		manager.viewport->glClearColor(1.0f, 1.0f, 1.0f, 1);
 		manager.viewport->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		renderer.render(activeLevel);
+		if(MouseInput::keyPressed(Qt::RightButton))
+		{
+			QSurfaceFormat format;
+			
+			manager.viewport->setFormat(format);
+			renderer.renderPickShader(activeLevel);
+
+			glFlush();
+			glFinish();
+
+			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+			
+			unsigned char data[4] = {1,1,1,0};
+			manager.viewport->glReadPixels(MouseInput::getPosition().x(), MouseInput::getPosition().y(), 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
+			
+			const int pickedID = data[0] + data[1] * 256 + data[2] * 256 * 256;
+
+			std::string col = std::to_string(data[0]) + " " + std::to_string(data[1]) + " "+std::to_string(data[2]) + " "
+				+ std::to_string(data[3]) +"; " + std::to_string(pickedID);
+			manager.label->setText(QString(col.c_str()));
+		}
+		else
+		{
+			renderer.render(activeLevel);
+		}
 	}
 
 	void moveCamera()

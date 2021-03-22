@@ -36,7 +36,8 @@ public:
 			ComponentManager::getComponent<MeshRenderer>(cloud)->render(scene->camera, scene->lights);
 		glCullFace(GL_BACK);
 	}
-
+	std::unordered_map<std::shared_ptr<Object>, bool> initializedPickShaders;
+	
 	void renderPickShader(std::shared_ptr<Scene>& scene)
 	{
 		auto shader = ShaderCollection::shaders["pick"].getShader();
@@ -44,12 +45,24 @@ public:
 
 		for (int i = 0; i < scene->objects.size(); ++i)
 		{
-			shader->setUniformValue("id", i);
-			auto meshRenderer = ComponentManager::getComponent<MeshRenderer>(scene->objects[i]);
-			auto mesh = ComponentManager::getComponent<Mesh>(scene->objects[i]);
-			meshRenderer->enableAttributes(shader);
-			meshRenderer->uploadCameraDetails(scene->camera, shader);
+			int r = (i & 0x000000FF) >> 0;
+			int g = (i & 0x0000FF00) >> 8;
+			int b = (i & 0x00FF0000) >> 16;
 			
+			shader->setUniformValue("color", QColor(r,g,b));
+			auto meshRenderer = ComponentManager::getComponent<MeshRenderer>(scene->objects[i]);
+			const auto mesh = ComponentManager::getComponent<Mesh>(scene->objects[i]);
+			const auto transform = ComponentManager::getComponent<Transform>(scene->objects[i]);
+
+			if(!initializedPickShaders[scene->objects[i]])
+			{
+				meshRenderer->enableAttributes(shader);
+				initializedPickShaders[scene->objects[i]] = true;
+			}
+			
+			meshRenderer->uploadCameraDetails(scene->camera, shader);
+			shader->setUniformValue(shader->uniformLocation("model"), transform->getGlobalTransform());
+
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 			meshRenderer->vao->bind();
@@ -60,10 +73,7 @@ public:
 
 	void render(std::shared_ptr<Scene>& scene)
 	{
-		//enderPickShader(scene);
-		//lClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//return;
-		// Enable blending
+		//Enable blending
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glCullFace(GL_BACK);
@@ -77,13 +87,7 @@ public:
 			{
 				ComponentManager::getComponent<MeshRenderer>(scene->objects[i])->render(
 					scene->camera, scene->lights, scene->backround);
-
-				glEnable(GL_POLYGON_OFFSET_LINE);
-				glPolygonOffset(-1, -1);
-
 				ComponentManager::getComponent<MeshRenderer>(scene->objects[i])->renderWireframe(scene->camera);
-
-				glDisable(GL_POLYGON_OFFSET_LINE);
 			}
 			else
 			{
