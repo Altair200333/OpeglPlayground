@@ -50,7 +50,9 @@ public:
 	std::shared_ptr<Object> lightSourceBlock;
 	
 	std::shared_ptr<Background> backround;
+	int pickedObjectId = -1;
 
+	
 	GLCamera camera;
 	
 	Scene() = default;
