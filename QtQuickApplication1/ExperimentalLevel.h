@@ -10,6 +10,8 @@ public:
 	std::shared_ptr<Object> wings;
 	std::shared_ptr<Object> aill;
 	std::shared_ptr<Object> ailr;
+	
+	std::shared_ptr<Object> selectedObject = nullptr;
 
 	ExperimentalLevel(QOpenGLFunctions* _functions) :Level(_functions)
 	{
@@ -39,6 +41,17 @@ public:
 		{
 			ComponentManager::getComponent<Transform>(fuselage)->rotate(MouseInput::delta().x(), QVector3D(0,1,0));
 		}
+
+		if(MouseInput::keyJustPressed(Qt::LeftButton) && pickedObjectId != -1)
+		{
+			selectedObject = objects[pickedObjectId];
+		}
+		if(selectedObject!=nullptr && MouseInput::keyPressed(Qt::MiddleButton))
+		{
+			ComponentManager::getComponent<Transform>(selectedObject)->translate(camera.right* MouseInput::delta().x()*0.01f+
+				camera.up * MouseInput::delta().y() * 0.01f);
+		}
+		
 	}
 
 	void init() override
