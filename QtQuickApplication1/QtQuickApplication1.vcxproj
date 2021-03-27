@@ -222,6 +222,7 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="DirectionalLight.h" />
+    <ClInclude Include="GUIRender.h" />
     <ClInclude Include="ObjectComponentManager.h" />
     <ClInclude Include="ExperimentalLevel.h" />
     <ClInclude Include="FPSCounter.h" />
@@ -252,6 +253,7 @@
     <ClInclude Include="ShaderData.h" />
     <ClInclude Include="PhongMeshRenderer.h" />
     <ClInclude Include="SpotLight.h" />
+    <ClInclude Include="Sprite.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="TypeInfo.h" />

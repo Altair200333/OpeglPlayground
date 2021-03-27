@@ -15,7 +15,7 @@
 #include "MeshLoader.h"
 #include "ShaderCollection.h"
 #include "ShaderData.h"
-#include "VolumetricCubeMeshRenderer.h"
+#include "Sprite.h"
 
 class Scene
 {
@@ -50,6 +50,8 @@ public:
 	std::shared_ptr<Object> lightSourceBlock;
 	
 	std::shared_ptr<Background> backround;
+	std::vector<std::shared_ptr<Sprite>> sprites;
+
 	int pickedObjectId = -1;
 
 	

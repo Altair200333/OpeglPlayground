@@ -78,5 +78,8 @@ public:
 		fuselage->addChild(wings);
 		fuselage->addChild(aill);
 		fuselage->addChild(ailr);
+
+		//---
+		sprites.push_back(std::make_shared<Sprite>(200, 200));
 	}
 };

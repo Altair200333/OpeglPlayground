@@ -196,6 +196,12 @@
     <ClInclude Include="PickRenderer.h">
       <Filter>Render\Renderers</Filter>
     </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIRender.h">
+      <Filter>Render\Renderers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

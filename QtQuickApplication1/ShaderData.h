@@ -9,7 +9,7 @@ struct ShaderData final
 	std::string fragment;
 	std::string geometry;
 
-	std::shared_ptr<MeshRendererGenerator> renderer;
+	std::shared_ptr<MeshRendererGenerator> renderer = nullptr;
 	std::shared_ptr<QOpenGLShaderProgram> shader = nullptr;
 	
 	ShaderData() = default;

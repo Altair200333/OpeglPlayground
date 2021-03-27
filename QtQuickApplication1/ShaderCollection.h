@@ -32,5 +32,6 @@ public:
 		{{"pick"}, {"Shaders\\pick.vs","Shaders\\pick.fs", "", std::make_shared<SimpleMeshRendererGenerator>()}},
 		{{"lightSource"}, {"Shaders\\lightSource.vs","Shaders\\lightSource.fs", "", std::make_shared<SimpleMeshRendererGenerator>()}},
 		{{"cubicCloud"}, {"Shaders\\cloud.vs","Shaders\\cloud.fs", "", std::make_shared<VolumetricCubeMeshRendererGenerator>()}},
+		{{"sprite"}, {"Shaders\\sprite.vs","Shaders\\sprite.fs", "Shaders\\sprite.gs"}},
 	};
 };

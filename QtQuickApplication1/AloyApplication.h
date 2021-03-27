@@ -16,6 +16,7 @@
 
 #include "ExperimentalLevel.h"
 #include "FPSCounter.h"
+#include "GUIRender.h"
 #include "Level.h"
 #include "RenderLayerStack.h"
 #include "UIManager.h"
@@ -30,6 +31,7 @@ public:
 	bool initialized = false;
 	std::shared_ptr<SceneRenderer> renderer;
 	std::shared_ptr<PickRenderer> pickRenderer;
+	std::shared_ptr<GUIRenderer> guiRenderer;
 	RenderLayerStack renderStack;
 	
 	AloyApplication(Window* window)
@@ -87,6 +89,11 @@ public:
 		renderer = std::make_shared<SceneRenderer>();
 		renderer->scene = activeLevel;
 		renderStack.layers.push_back(renderer);
+
+		guiRenderer = std::make_shared<GUIRenderer>();
+		guiRenderer->scene = activeLevel;
+		guiRenderer->viewport = manager.viewport;
+		renderStack.layers.push_back(guiRenderer);
 	}
 	
 
