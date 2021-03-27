@@ -233,6 +233,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LightSource.h" />
+    <ClInclude Include="PickRenderer.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
@@ -243,6 +244,8 @@
     <ClInclude Include="Object.h" />
     <ClInclude Include="OnUpdateEvent.h" />
     <ClInclude Include="OnUpdateSubscriber.h" />
+    <ClInclude Include="RenderLayer.h" />
+    <ClInclude Include="RenderLayerStack.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneRenderer.h" />
     <ClInclude Include="ShaderCollection.h" />

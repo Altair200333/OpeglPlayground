@@ -1,11 +1,13 @@
 #pragma once
+#include "RenderLayer.h"
 #include "Scene.h"
 
-class SceneRenderer final
+class SceneRenderer final: public RenderLayer
 {
 public:
 	int drawMode = 0;
-
+	std::shared_ptr<Scene> scene;
+	
 	void nextDrawMode()
 	{
 		drawMode = drawMode == 2 ? 0 : drawMode + 1;
@@ -71,7 +73,7 @@ public:
 		}
 	}
 
-	void render(std::shared_ptr<Scene>& scene)
+	void onRender() override
 	{
 		//Enable blending
 		glEnable(GL_BLEND);

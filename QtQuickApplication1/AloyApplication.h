@@ -17,7 +17,9 @@
 #include "ExperimentalLevel.h"
 #include "FPSCounter.h"
 #include "Level.h"
+#include "RenderLayerStack.h"
 #include "UIManager.h"
+#include "PickRenderer.h"
 
 class AloyApplication final: public OnUpdateSubscriber
 {
@@ -26,8 +28,10 @@ public:
 	UIManager manager;
 
 	bool initialized = false;
-	SceneRenderer renderer;
-
+	std::shared_ptr<SceneRenderer> renderer;
+	std::shared_ptr<PickRenderer> pickRenderer;
+	RenderLayerStack renderStack;
+	
 	AloyApplication(Window* window)
 	{
 		manager.setWindow(window);
@@ -40,7 +44,7 @@ public:
 		activeLevel->camera.aspectRatio = static_cast<float>(manager.viewport->width()) / manager.viewport->height();
 
 		if (Input::keyJustPressed(Qt::Key_Z))
-			renderer.nextDrawMode();
+			renderer->nextDrawMode();
 		
 		moveCamera();
 	}
@@ -74,26 +78,17 @@ public:
 		activeLevel = std::make_shared<ExperimentalLevel>(manager.viewport.get());
 		manager.viewport->glEnable(GL_DEPTH_TEST);
 		activeLevel->init();
+
+		pickRenderer = std::make_shared<PickRenderer>();
+		pickRenderer->scene = activeLevel;
+		pickRenderer->viewport = manager.viewport;
+		renderStack.layers.push_back(pickRenderer);
+		
+		renderer = std::make_shared<SceneRenderer>();
+		renderer->scene = activeLevel;
+		renderStack.layers.push_back(renderer);
 	}
-	QOpenGLFramebufferObject* mFBO = nullptr;
-
-	void createFBO()
-	{
-		QOpenGLContext* ctx = QOpenGLContext::currentContext();
-
-		QOpenGLFramebufferObjectFormat format;
-		format.setSamples(0);
-		format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
 	
-		if(!mFBO)
-			mFBO = new QOpenGLFramebufferObject(QSize(manager.viewport->width(), manager.viewport->height()), format);
-
-
-		manager.viewport->glBindFramebuffer(GL_READ_FRAMEBUFFER, ctx->defaultFramebufferObject());
-		manager.viewport->glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mFBO->handle());
-		ctx->extraFunctions()->glBlitFramebuffer(0, 0, manager.viewport->width(), manager.viewport->height(), 
-		                                         0, 0, mFBO->width(), mFBO->height(), GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-	}
 
 	void render()
 	{
@@ -105,40 +100,11 @@ public:
 
 		if(MouseInput::keyPressed(Qt::LeftButton))
 		{
-			createFBO();
-
-			mFBO->bind();
-
-			renderer.renderPickShader(activeLevel);
-
-			glFlush();
-			glFinish();
-
-			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-			unsigned char data[4] = { 1,1,1,0 };
-			manager.viewport->glReadPixels(MouseInput::getPosition().x(), manager.viewport->height() - MouseInput::getPosition().y(), 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
-
-			const int pickedID = data[0] + data[1] * 256 + data[2] * 256 * 256;
-
-			mFBO->release();
-
-			if (pickedID != 0x00ffffff)
-			{
-				activeLevel->pickedObjectId = pickedID;
-				std::string col = std::to_string(data[0]) + " " + std::to_string(data[1]) + " " + std::to_string(data[2]) + " "
-					+ std::to_string(data[3]) + "; " + std::to_string(pickedID);
-				manager.label->setText(QString(col.c_str()));
-			}
-			else
-			{
-				activeLevel->pickedObjectId = -1;
-			}
-
+			activeLevel->pickedObjectId = pickRenderer->pickedObjectId;
 		}
 		manager.viewport->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		renderer.render(activeLevel);
+		renderStack.render();
 		
 	}
 

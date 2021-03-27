@@ -53,6 +53,12 @@
     <Filter Include="Application\Level">
       <UniqueIdentifier>{9b5077ee-120e-4119-b81b-f57b5c81289a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render">
+      <UniqueIdentifier>{9f5a5988-79f3-49cd-93da-782e11a1b9ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\Renderers">
+      <UniqueIdentifier>{e0d40f6a-7870-490a-816a-16d5cbe1ecff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -118,7 +124,6 @@
     <ClInclude Include="Texture.h">
       <Filter>Objects\Components</Filter>
     </ClInclude>
-    <ClInclude Include="SceneRenderer.h" />
     <ClInclude Include="Background.h">
       <Filter>Objects</Filter>
     </ClInclude>
@@ -178,6 +183,18 @@
     </ClInclude>
     <ClInclude Include="PhongMeshRenderer.h">
       <Filter>Objects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderLayer.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderLayerStack.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneRenderer.h">
+      <Filter>Render\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="PickRenderer.h">
+      <Filter>Render\Renderers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
