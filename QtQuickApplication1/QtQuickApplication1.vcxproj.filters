@@ -211,6 +211,9 @@
     <ClInclude Include="GLBackground.h">
       <Filter>Objects\Background</Filter>
     </ClInclude>
+    <ClInclude Include="RenderContext.h">
+      <Filter>Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

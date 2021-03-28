@@ -9,7 +9,7 @@ public:
 	int drawMode = 0;
 	std::shared_ptr<Scene> scene;
 	std::shared_ptr<GLWindow> viewport;
-	const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+	const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
 
 	void nextDrawMode()
 	{
@@ -26,7 +26,7 @@ public:
 
 			ComponentManager::getComponent<Material>(scene->lightSourceBlock)->diffuse = light->color;
 			ComponentManager::getComponent<Material>(scene->lightSourceBlock)->isLightSource = true;
-			ComponentManager::getComponent<MeshRenderer>(scene->lightSourceBlock)->render(scene->camera, scene->lights);
+			ComponentManager::getComponent<MeshRenderer>(scene->lightSourceBlock)->render({ &scene->camera, scene->lights });
 		}
 	}
 
@@ -35,10 +35,10 @@ public:
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 		for (auto& cloud : scene->transparentObjects)
-			ComponentManager::getComponent<MeshRenderer>(cloud)->render(scene->camera, scene->lights);
+			ComponentManager::getComponent<MeshRenderer>(cloud)->render({ &scene->camera, scene->lights });
 		glCullFace(GL_FRONT);
 		for (auto& cloud : scene->transparentObjects)
-			ComponentManager::getComponent<MeshRenderer>(cloud)->render(scene->camera, scene->lights);
+			ComponentManager::getComponent<MeshRenderer>(cloud)->render({ &scene->camera, scene->lights });
 		glCullFace(GL_BACK);
 	}
 
@@ -47,12 +47,12 @@ public:
 		for (size_t i = 0; i < scene->objects.size(); ++i)
 		{
 			if (drawMode == 0)
-				ComponentManager::getComponent<MeshRenderer>(scene->objects[i])->render(
-					scene->camera, scene->lights, scene->backround, depthMap, &lightSpaceMatrix);
+				ComponentManager::getComponent<MeshRenderer>(scene->objects[i])->render({
+					&scene->camera, scene->lights, scene->backround, depthMap, &lightSpaceMatrix });
 			else if (drawMode == 1)
 			{
 				ComponentManager::getComponent<MeshRenderer>(scene->objects[i])->render(
-					scene->camera, scene->lights, scene->backround);
+					{&scene->camera, scene->lights, scene->backround, depthMap, &lightSpaceMatrix });
 				ComponentManager::getComponent<MeshRenderer>(scene->objects[i])->renderWireframe(scene->camera);
 			}
 			else
@@ -96,10 +96,11 @@ public:
 			if (ptr != nullptr)
 				dirLight = ptr;
 		}
-		float near_plane = 0.1f, far_plane = 100.5f;
+		const float near_plane = 0.1f, far_plane = 100.5f;
 
 		QMatrix4x4 lightProjection;
-		lightProjection.ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+		float size = 20;
+		lightProjection.ortho(-size, size, -size, size, near_plane, far_plane);
 
 		QMatrix4x4 lightView;
 		lightView.lookAt(-dirLight->direction*10, QVector3D(0, 0, 0), QVector3D(0, 1, 0));

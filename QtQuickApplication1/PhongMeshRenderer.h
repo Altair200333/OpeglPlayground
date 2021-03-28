@@ -47,8 +47,7 @@ public:
 			shader->setUniformValue("shadowMap", 4);
 		}
 	}
-	void render(GLCamera& camera, const std::vector<std::shared_ptr<LightSource>>& lights = std::vector<std::shared_ptr<LightSource>>{}, 
-		std::shared_ptr<GLBackground> background = nullptr, unsigned int shadowMap = -1, QMatrix4x4* lightSpaceMatrix = nullptr) override
+	void render(const RenderContext& context) override
 	{
 		if(!enabled)
 			return;
@@ -56,21 +55,23 @@ public:
 
 		shader->bind();
 		material->uploadToShader(shader);
-		uploadCameraDetails(camera, shader);
+		uploadCameraDetails(*context.camera, shader);
 		shader->setUniformValue(shader->uniformLocation("model"), transform->getGlobalTransform());
 
-		uploadLights(lights);
+		uploadLights(context.lights);
 
 		bindAlbedo();
 		bindNormals();
 		bindSpecular();
-		bindShadowMap(shadowMap);
-		if(lightSpaceMatrix!=nullptr)
+		
+		if(context.lightSpaceMatrix != nullptr)
 		{
-			shader->setUniformValue("lightSpaceMatrix", *lightSpaceMatrix);
+			bindShadowMap(context.shadowMap);
+			shader->setUniformValue("lightSpaceMatrix", *context.lightSpaceMatrix);
 		}
 		
-		auto imgBack = std::dynamic_pointer_cast<ImageBackground>(background);
+		
+		auto imgBack = std::dynamic_pointer_cast<ImageBackground>(context.background);
 		if(imgBack !=nullptr)
 		{
 			shader->setUniformValue("texture_background", 3);
@@ -78,7 +79,7 @@ public:
 			imgBack->image->bind();
 		}
 		
-		shader->setUniformValue("useBackground", background != nullptr);
+		shader->setUniformValue("useBackground", context.background != nullptr);
 		shader->setUniformValue("isLightSource", material->isLightSource);
 
 		shader->setUniformValue("wireframe", false);

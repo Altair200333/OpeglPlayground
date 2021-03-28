@@ -11,6 +11,7 @@
 #include "GLCamera.h"
 #include "PointLight.h"
 #include "Material.h"
+#include "RenderContext.h"
 #include "Transform.h"
 
 class MeshRenderer : public Component
@@ -139,7 +140,5 @@ public:
 		vao->release();
 	}
 
-	virtual void render(GLCamera& camera,
-	                    const std::vector<std::shared_ptr<LightSource>>& lights = std::vector<std::shared_ptr<
-		                    LightSource>>{}, std::shared_ptr<GLBackground> background = nullptr, unsigned int shadowMap = -1, QMatrix4x4* lightSpaceMatrix = nullptr) = 0;
+	virtual void render(const RenderContext& context) = 0;
 };

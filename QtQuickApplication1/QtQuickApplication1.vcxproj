@@ -246,6 +246,7 @@
     <ClInclude Include="Object.h" />
     <ClInclude Include="OnUpdateEvent.h" />
     <ClInclude Include="OnUpdateSubscriber.h" />
+    <ClInclude Include="RenderContext.h" />
     <ClInclude Include="RenderLayer.h" />
     <ClInclude Include="RenderLayerStack.h" />
     <ClInclude Include="Scene.h" />
