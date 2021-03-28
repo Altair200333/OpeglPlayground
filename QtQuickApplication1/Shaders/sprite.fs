@@ -8,5 +8,5 @@ const float PI = 3.14159265359;
 
 void main() 
 {
-   fragColor = vec4(1,1,1, 1.0f);
+   fragColor = vec4(texture(sprite, texcoord));
 }

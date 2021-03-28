@@ -14,27 +14,13 @@ public:
 	
 	QOpenGLVertexArrayObject* vao = nullptr;
 
-	Sprite(int w, int h):width(w), height(h)
+	Sprite(const std::string& path, int w, int h):width(w), height(h)
 	{
 		vao = new QOpenGLVertexArrayObject();
 		vao->create();
 		vao->bind();
+
+		texture = std::make_shared<QOpenGLTexture>(QImage(QString(path.c_str())));
 	}
-	void render()
-	{
-		glDisable(GL_DEPTH_TEST);
-
-		vao->bind();
-		auto shader = ShaderCollection::shaders["sprite"].getShader();
-		shader->bind();
-		shader->setUniformValue("w", width);
-		shader->setUniformValue("h", height);
-
-		shader->setUniformValue("viewportW", viewportW);
-		shader->setUniformValue("viewportH", viewportH);
-		
-		glDrawArrays(GL_POINTS, 0, 1);
-
-		glEnable(GL_DEPTH_TEST);
-	}
+	
 };

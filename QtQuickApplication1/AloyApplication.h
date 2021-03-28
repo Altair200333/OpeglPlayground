@@ -44,7 +44,6 @@ public:
 	{
 		//stuff like this should be overwatched from application - the apex class
 		activeLevel->camera.aspectRatio = static_cast<float>(manager.viewport->width()) / manager.viewport->height();
-
 		if (Input::keyJustPressed(Qt::Key_Z))
 			renderer->nextDrawMode();
 		
@@ -88,6 +87,7 @@ public:
 		
 		renderer = std::make_shared<SceneRenderer>();
 		renderer->scene = activeLevel;
+		renderer->viewport = manager.viewport;
 		renderStack.layers.push_back(renderer);
 
 		guiRenderer = std::make_shared<GUIRenderer>();

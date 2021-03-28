@@ -59,6 +59,9 @@
     <Filter Include="Render\Renderers">
       <UniqueIdentifier>{e0d40f6a-7870-490a-816a-16d5cbe1ecff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Objects\Background">
+      <UniqueIdentifier>{26a0d41f-9954-4b85-87b7-97d0a3b32bd8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -123,9 +126,6 @@
     <ClInclude Include="MeshLoader.h" />
     <ClInclude Include="Texture.h">
       <Filter>Objects\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Background.h">
-      <Filter>Objects</Filter>
     </ClInclude>
     <ClInclude Include="VolumetricCubeMeshRenderer.h">
       <Filter>Objects\Components</Filter>
@@ -201,6 +201,15 @@
     </ClInclude>
     <ClInclude Include="GUIRender.h">
       <Filter>Render\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="imageBackground.h">
+      <Filter>Objects\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyBackground.h">
+      <Filter>Objects\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="GLBackground.h">
+      <Filter>Objects\Background</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -48,7 +48,7 @@ protected:
 
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-		unsigned char data[4] = { 1,1,1,0 };
+		unsigned char data[4] = {1, 1, 1, 0};
 		viewport->glReadPixels(MouseInput::getPosition().x(), viewport->height() - MouseInput::getPosition().y(), 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
 		const int pickedID = data[0] + data[1] * 256 + data[2] * 256 * 256;

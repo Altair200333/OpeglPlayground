@@ -218,7 +218,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AloyApplication.h" />
-    <ClInclude Include="Background.h" />
+    <ClInclude Include="GLBackground.h" />
+    <ClInclude Include="imageBackground.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="DirectionalLight.h" />
@@ -252,6 +253,7 @@
     <ClInclude Include="ShaderCollection.h" />
     <ClInclude Include="ShaderData.h" />
     <ClInclude Include="PhongMeshRenderer.h" />
+    <ClInclude Include="SkyBackground.h" />
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Texture.h" />

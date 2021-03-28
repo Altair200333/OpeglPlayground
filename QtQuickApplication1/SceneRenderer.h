@@ -1,4 +1,5 @@
 #pragma once
+#include "AloyApplication.h"
 #include "RenderLayer.h"
 #include "Scene.h"
 
@@ -7,7 +8,9 @@ class SceneRenderer final: public RenderLayer
 public:
 	int drawMode = 0;
 	std::shared_ptr<Scene> scene;
-	
+	std::shared_ptr<GLWindow> viewport;
+	const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+
 	void nextDrawMode()
 	{
 		drawMode = drawMode == 2 ? 0 : drawMode + 1;
@@ -38,53 +41,14 @@ public:
 			ComponentManager::getComponent<MeshRenderer>(cloud)->render(scene->camera, scene->lights);
 		glCullFace(GL_BACK);
 	}
-	std::unordered_map<std::shared_ptr<Object>, bool> initializedPickShaders;
-	
-	void renderPickShader(std::shared_ptr<Scene>& scene)
+
+	void renderObjects()
 	{
-		auto shader = ShaderCollection::shaders["pick"].getShader();
-		shader->bind();
-
-		for (int i = 0; i < scene->objects.size(); ++i)
-		{
-			int r = (i & 0x000000FF) >> 0;
-			int g = (i & 0x0000FF00) >> 8;
-			int b = (i & 0x00FF0000) >> 16;
-			
-			shader->setUniformValue("color", QColor(r,g,b));
-			auto meshRenderer = ComponentManager::getComponent<MeshRenderer>(scene->objects[i]);
-			const auto mesh = ComponentManager::getComponent<Mesh>(scene->objects[i]);
-			const auto transform = ComponentManager::getComponent<Transform>(scene->objects[i]);
-
-			if(!initializedPickShaders[scene->objects[i]])
-			{
-				meshRenderer->enableAttributes(shader);
-				initializedPickShaders[scene->objects[i]] = true;
-			}
-			
-			meshRenderer->uploadCameraDetails(scene->camera, shader);
-			shader->setUniformValue(shader->uniformLocation("model"), transform->getGlobalTransform());
-
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-			meshRenderer->vao->bind();
-			glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, 0);
-			meshRenderer->vao->release();
-		}
-	}
-
-	void onRender() override
-	{
-		//Enable blending
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glCullFace(GL_BACK);
-
 		for (size_t i = 0; i < scene->objects.size(); ++i)
 		{
 			if (drawMode == 0)
 				ComponentManager::getComponent<MeshRenderer>(scene->objects[i])->render(
-					scene->camera, scene->lights, scene->backround);
+					scene->camera, scene->lights, scene->backround, depthMap, &lightSpaceMatrix);
 			else if (drawMode == 1)
 			{
 				ComponentManager::getComponent<MeshRenderer>(scene->objects[i])->render(
@@ -96,11 +60,102 @@ public:
 				ComponentManager::getComponent<MeshRenderer>(scene->objects[i])->renderWireframe(scene->camera);
 			}
 		}
+	}
+
+	void onRender() override
+	{
+		if (!initialized)
+			initShadowMap();
+		renderShadows();
+
+		//Enable blending
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glCullFace(GL_BACK);
+
+		renderObjects();
 
 		renderLights(scene);
 		scene->backround->render(scene->camera);
 
 		renderTransparentObjects(scene);
 
+	}
+	
+	unsigned int depthMapFBO;
+	unsigned int depthMap;
+	bool initialized = false;
+	std::unordered_map<std::shared_ptr<Object>, bool> initializedShadowShaders;
+	QMatrix4x4 lightSpaceMatrix;
+	void renderShadows()
+	{
+		std::shared_ptr<DirectionalLight> dirLight;//TODO fix empty case
+		for(auto& light: scene->lights)
+		{
+			auto ptr = std::dynamic_pointer_cast<DirectionalLight>(light);
+			if (ptr != nullptr)
+				dirLight = ptr;
+		}
+		float near_plane = 0.1f, far_plane = 100.5f;
+
+		QMatrix4x4 lightProjection;
+		lightProjection.ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+
+		QMatrix4x4 lightView;
+		lightView.lookAt(-dirLight->direction*10, QVector3D(0, 0, 0), QVector3D(0, 1, 0));
+
+		lightSpaceMatrix = lightProjection* lightView;
+		
+		viewport->glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		viewport->glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		
+		auto shader = ShaderCollection::shaders["shadow"].getShader();
+		shader->bind();
+		shader->setUniformValue("lightSpaceMatrix", lightSpaceMatrix);
+		for (int i = 0; i < scene->objects.size(); ++i)
+		{
+			auto meshRenderer = ComponentManager::getComponent<MeshRenderer>(scene->objects[i]);
+			const auto mesh = ComponentManager::getComponent<Mesh>(scene->objects[i]);
+			const auto transform = ComponentManager::getComponent<Transform>(scene->objects[i]);
+
+			if (!initializedShadowShaders[scene->objects[i]])
+			{
+				meshRenderer->enableAttributes(shader);
+				initializedShadowShaders[scene->objects[i]] = true;
+			}
+			
+			shader->setUniformValue(shader->uniformLocation("model"), transform->getGlobalTransform());
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+			meshRenderer->vao->bind();
+			glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, 0);
+			meshRenderer->vao->release();
+		}
+		viewport->glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glViewport(0, 0, viewport->width(), viewport->height());
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+	
+	void initShadowMap()
+	{
+		viewport->glGenFramebuffers(1, &depthMapFBO);
+		// create depth texture
+		viewport->glGenTextures(1, &depthMap);
+		viewport->glBindTexture(GL_TEXTURE_2D, depthMap);
+		viewport->glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+		viewport->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		viewport->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		viewport->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		viewport->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+		viewport->glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+		// attach depth texture as FBO's depth buffer
+		viewport->glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		viewport->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
+		viewport->glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		initialized = true;
 	}
 };

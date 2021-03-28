@@ -2,6 +2,7 @@
 #include "FPSCounter.h"
 #include "Level.h"
 #include "OnUpdateSubscriber.h"
+#include "SkyBackground.h"
 
 class ExperimentalLevel: public Level
 {
@@ -10,6 +11,8 @@ public:
 	std::shared_ptr<Object> wings;
 	std::shared_ptr<Object> aill;
 	std::shared_ptr<Object> ailr;
+	
+	std::shared_ptr<DirectionalLight> dirLight;
 	
 	std::shared_ptr<Object> selectedObject = nullptr;
 
@@ -37,12 +40,15 @@ public:
 		{
 			light->position = QQuaternion::fromAxisAndAngle({ 0,1,0 }, 20.0f * FPSCounter::getFrameTime()) * light->position;
 		}
+		
 		if(MouseInput::keyPressed(Qt::RightButton))
 		{
+			dirLight->direction = QQuaternion::fromAxisAndAngle(camera.right, MouseInput::delta().y()) * dirLight->direction;
+			dirLight->direction = QQuaternion::fromAxisAndAngle(QVector3D(0, 1, 0), -MouseInput::delta().x()) * dirLight->direction;
 			ComponentManager::getComponent<Transform>(fuselage)->rotate(MouseInput::delta().x(), QVector3D(0,1,0));
 		}
 
-		if(MouseInput::keyJustPressed(Qt::LeftButton) && pickedObjectId != -1)
+		if(MouseInput::keyJustPressed(Qt::LeftButton) && pickedObjectId != -1 && pickedObjectId<objects.size())
 		{
 			selectedObject = objects[pickedObjectId];
 		}
@@ -60,10 +66,14 @@ public:
 		//
 		addTransparent(MeshLoader().loadModel("Assets/Models/earthAtmo.obj"), { 0, 3, 0 }, ShaderCollection::shaders["cubicCloud"]);
 		
-		addLight(std::make_shared<PointLight>(QVector3D{ -8, 4, 7 }, QColor{ 255, 255, 255 }, 2.5));
-		addLight(std::make_shared<DirectionalLight>());
+		//addLight(std::make_shared<PointLight>(QVector3D{ -8, 4, 7 }, QColor{ 255, 255, 255 }, 2.5));
+		dirLight = (std::make_shared<DirectionalLight>());
+		addLight(dirLight);
 		//
-		backround = std::make_shared<Background>(functions, "Assets\\Models\\textures\\background.jpg");
+		//backround = std::make_shared<ImageBackground>(functions, "Assets\\Models\\textures\\background.jpg");
+		backround = std::make_shared<SkyBackground>(functions);
+		backround->light = dirLight;
+		
 		addModel(MeshLoader().loadModel("Assets/Models/fus.obj"), { 3.5f, 3, 0 }, ShaderCollection::shaders["normals"]);
 		fuselage = objects.back();
 		
@@ -79,7 +89,9 @@ public:
 		fuselage->addChild(aill);
 		fuselage->addChild(ailr);
 
+		addModel(MeshLoader().loadModel("Assets/Models/plane.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
+
 		//---
-		sprites.push_back(std::make_shared<Sprite>(200, 200));
+		sprites.push_back(std::make_shared<Sprite>("Assets\\Sprites\\UV_1k.jpg", 200, 200));
 	}
 };

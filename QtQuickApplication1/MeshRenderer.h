@@ -5,7 +5,7 @@
 #include <QOpenGLFunctions>
 #include <utility>
 
-#include "Background.h"
+#include "ImageBackground.h"
 #include "ComponentManager.h"
 #include "Mesh.h"
 #include "GLCamera.h"
@@ -141,5 +141,5 @@ public:
 
 	virtual void render(GLCamera& camera,
 	                    const std::vector<std::shared_ptr<LightSource>>& lights = std::vector<std::shared_ptr<
-		                    LightSource>>{}, std::shared_ptr<Background> background = nullptr) = 0;
+		                    LightSource>>{}, std::shared_ptr<GLBackground> background = nullptr, unsigned int shadowMap = -1, QMatrix4x4* lightSpaceMatrix = nullptr) = 0;
 };

@@ -10,11 +10,12 @@
 #include <QTransform>
 
 
-#include "Background.h"
+#include "ImageBackground.h"
 #include "ComponentManager.h"
 #include "MeshLoader.h"
 #include "ShaderCollection.h"
 #include "ShaderData.h"
+#include "SkyBackground.h"
 #include "Sprite.h"
 
 class Scene
@@ -49,7 +50,7 @@ public:
 	std::vector<std::shared_ptr<Object>> transparentObjects;
 	std::shared_ptr<Object> lightSourceBlock;
 	
-	std::shared_ptr<Background> backround;
+	std::shared_ptr<SkyBackground> backround;
 	std::vector<std::shared_ptr<Sprite>> sprites;
 
 	int pickedObjectId = -1;

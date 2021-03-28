@@ -38,8 +38,17 @@ public:
 			shader->setUniformValue("texture_specular", 2);
 		}
 	}
+	void bindShadowMap(unsigned int shadowMap)
+	{
+		if (shadowMap != -1)
+		{
+			functions->glActiveTexture(GL_TEXTURE4);
+			functions->glBindTexture(GL_TEXTURE_2D, shadowMap);
+			shader->setUniformValue("shadowMap", 4);
+		}
+	}
 	void render(GLCamera& camera, const std::vector<std::shared_ptr<LightSource>>& lights = std::vector<std::shared_ptr<LightSource>>{}, 
-		std::shared_ptr<Background> background = nullptr) override
+		std::shared_ptr<GLBackground> background = nullptr, unsigned int shadowMap = -1, QMatrix4x4* lightSpaceMatrix = nullptr) override
 	{
 		if(!enabled)
 			return;
@@ -55,12 +64,18 @@ public:
 		bindAlbedo();
 		bindNormals();
 		bindSpecular();
+		bindShadowMap(shadowMap);
+		if(lightSpaceMatrix!=nullptr)
+		{
+			shader->setUniformValue("lightSpaceMatrix", *lightSpaceMatrix);
+		}
 		
-		if(background!=nullptr)
+		auto imgBack = std::dynamic_pointer_cast<ImageBackground>(background);
+		if(imgBack !=nullptr)
 		{
 			shader->setUniformValue("texture_background", 3);
-			functions->glActiveTexture(GL_TEXTURE0 + 3);
-			background->image->bind();
+			functions->glActiveTexture(GL_TEXTURE3);
+			imgBack->image->bind();
 		}
 		
 		shader->setUniformValue("useBackground", background != nullptr);
