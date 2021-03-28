@@ -45,7 +45,12 @@ public:
 		{
 			//dirLight->direction = QQuaternion::fromAxisAndAngle(camera.right, MouseInput::delta().y()) * dirLight->direction;
 			//dirLight->direction = QQuaternion::fromAxisAndAngle(QVector3D(0, 1, 0), -MouseInput::delta().x()) * dirLight->direction;
-			ComponentManager::getComponent<Transform>(fuselage)->rotate(MouseInput::delta().x(), QVector3D(0,1,0));
+			if(selectedObject)
+			{
+				auto transform = ComponentManager::getComponent<Transform>(selectedObject);
+				transform->rotate(MouseInput::delta().y(), transform->right);
+				transform->rotate(MouseInput::delta().x(), QVector3D(0,1,0));
+			}
 		}
 
 		if(MouseInput::keyJustPressed(Qt::LeftButton) && pickedObjectId != -1 && pickedObjectId<objects.size())

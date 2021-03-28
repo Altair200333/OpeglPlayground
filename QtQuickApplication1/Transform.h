@@ -8,6 +8,9 @@ class Transform final: public Component
 public:
 	QMatrix4x4 transform;
 	QVector3D position;
+	QVector3D right = QVector3D(1,0,0);
+	QVector3D up = QVector3D(0,1,0);
+	QVector3D forward = QVector3D(0, 0, 1);
 
 	void translate(const QVector3D& translation);
 
@@ -68,6 +71,10 @@ inline void Transform::rotate(const QQuaternion& quaternion)
 	m.translate(-position);
 
 	transform = m * transform;
+	
+	forward = m * forward;
+	up = m * up;
+	right = m * right;
 }
 
 inline void Transform::rotateAround(float angle, const QVector3D& axis, const QVector3D& point)
@@ -83,5 +90,9 @@ inline void Transform::rotateAround(float angle, const QVector3D& axis, const QV
 	position = rotation * position;
 	position += point;
 
+	forward = rotation * forward;
+	up = rotation * up;
+	right = rotation * right;
+	
 	transform = m * transform;
 }
