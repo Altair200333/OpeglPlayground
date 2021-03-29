@@ -19,7 +19,10 @@ public:
 	{
 		return *instance().world;
 	}
-
+	static reactphysics3d::PhysicsCommon& getCommon()
+	{
+		return *instance().physicsCommon;
+	}
 	static void init()
 	{
 		auto& inst = instance();

@@ -80,28 +80,8 @@ public:
 	reactphysics3d::RigidBody* body;
 	const reactphysics3d::decimal timeStep = 1.0f / 120.0f;
 	
-	void phys()
-	{
-		body->applyForceToCenterOfMass(reactphysics3d::Vector3(0, 5, 0));
-
-		world->update(timeStep);
-		
-		const reactphysics3d::Transform& transform = body->getTransform();
-		const reactphysics3d::Vector3& position = transform.getPosition();
-		auto cubeTransform = ComponentManager::getComponent<Transform>(cube);
-		QMatrix4x4 matrix;
-		matrix.translate(position.x, position.y, position.z);
-		cubeTransform->transform = matrix;
-	}
 	void init() override
 	{
-		//physicsCommon = new reactphysics3d::PhysicsCommon();
-		//world = physicsCommon->createPhysicsWorld();
-		//orientation = reactphysics3d::Quaternion::identity();
-		//position = reactphysics3d::Vector3(0, 20, 0);
-		//body = world->createRigidBody(transform);
-		//transform = reactphysics3d::Transform(position, orientation);
-
 		PhysicsWorld::init();
 		
 		//-----
