@@ -235,6 +235,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LightSource.h" />
+    <ClInclude Include="PhysicsWorld.h" />
     <ClInclude Include="PickRenderer.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Material.h" />
@@ -249,6 +250,7 @@
     <ClInclude Include="RenderContext.h" />
     <ClInclude Include="RenderLayer.h" />
     <ClInclude Include="RenderLayerStack.h" />
+    <ClInclude Include="RigidBody.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneRenderer.h" />
     <ClInclude Include="ShaderCollection.h" />

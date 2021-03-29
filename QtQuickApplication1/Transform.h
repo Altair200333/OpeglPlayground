@@ -86,13 +86,11 @@ inline void Transform::rotateAround(float angle, const QVector3D& axis, const QV
 	m.rotate(rotation);
 	m.translate(-point);
 
-	position -= point;
-	position = rotation * position;
-	position += point;
+	position = m * position;
 
-	forward = rotation * forward;
-	up = rotation * up;
-	right = rotation * right;
+	forward = m * forward;
+	up = m * up;
+	right = m * right;
 	
 	transform = m * transform;
 }

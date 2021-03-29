@@ -26,6 +26,7 @@ uniform sampler2D texture_specular;
 
 uniform int normalCount;
 uniform sampler2D texture_normal;
+
 uniform sampler2D shadowMap;
 
 const float PI = 3.14159265359;

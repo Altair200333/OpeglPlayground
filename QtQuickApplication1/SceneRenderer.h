@@ -96,7 +96,7 @@ public:
 			if (ptr != nullptr)
 				dirLight = ptr;
 		}
-		const float near_plane = 0.1f, far_plane = 100.5f;
+		const float near_plane = 1.1f, far_plane = 20;
 
 		QMatrix4x4 lightProjection;
 		float size = 20;
