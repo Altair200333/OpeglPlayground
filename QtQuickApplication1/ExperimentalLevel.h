@@ -16,6 +16,7 @@ public:
 	std::shared_ptr<Object> ailr;
 	
 	std::shared_ptr<Object> cube;
+	std::shared_ptr<Object> plane;
 	
 	std::shared_ptr<DirectionalLight> dirLight;
 	
@@ -27,9 +28,9 @@ public:
 	}
 	void onUpdate() override
 	{
-		if (Input::keyPressed(Qt::Key_R))
-			ComponentManager::getComponent<Transform>(fuselage)->translate(QVector3D(0.1, 0, 0));
 		if (Input::keyPressed(Qt::Key_T))
+			ComponentManager::getComponent<Transform>(fuselage)->translate(QVector3D(0.1, 0, 0));
+		if (Input::keyPressed(Qt::Key_R))
 			ComponentManager::getComponent<Transform>(fuselage)->translate(QVector3D(-0.1, 0, 0));
 		if(Input::keyPressed(Qt::Key_F))
 		{
@@ -67,18 +68,9 @@ public:
 			ComponentManager::getComponent<Transform>(selectedObject)->translate(camera.right* MouseInput::delta().x()*0.01f+
 				camera.up * MouseInput::delta().y() * 0.01f);
 		}
-		//phys();
+		ComponentManager::getComponent<RigidBody>(cube)->body->applyForceToCenterOfMass(reactphysics3d::Vector3(1, 0, 0));
 	}
 
-	reactphysics3d::PhysicsWorld* world;
-	reactphysics3d::PhysicsCommon* physicsCommon;
-	
-	reactphysics3d::Vector3 position;
-	reactphysics3d::Quaternion orientation;
-	reactphysics3d::Transform transform;
-	
-	reactphysics3d::RigidBody* body;
-	const reactphysics3d::decimal timeStep = 1.0f / 120.0f;
 	
 	void init() override
 	{
@@ -87,8 +79,13 @@ public:
 		//-----
 		addModel(MeshLoader().loadModel("Assets/Models/sam2.obj"), { 6.5f, 3, 0 }, ShaderCollection::shaders["normals"]);
 		cube = objects.back();
+		auto rb1 = ComponentManager::addComponent(cube, std::make_shared<RigidBody>());
+		rb1->init();
+		const reactphysics3d::Vector3 halfExtents(0.5, 0.5, 0.5);
+		// Create the box shape
+		reactphysics3d::BoxShape* boxShape = PhysicsWorld::getCommon().createBoxShape(halfExtents);
+		rb1->setCollider(boxShape, reactphysics3d::Transform::identity());
 		
-		ComponentManager::addComponent(cube, std::make_shared<RigidBody>())->init();
 		//
 		addTransparent(MeshLoader().loadModel("Assets/Models/earthAtmo.obj"), { 0, 3, 0 }, ShaderCollection::shaders["cubicCloud"]);
 		
@@ -116,6 +113,13 @@ public:
 		fuselage->addChild(ailr);
 
 		addModel(MeshLoader().loadModel("Assets/Models/plane.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
+		plane = objects.back();
+		auto rb2 = ComponentManager::addComponent(plane, std::make_shared<RigidBody>());
+		rb2->init(RigidBody::Type::KINEMATIC);
+		const reactphysics3d::Vector3 halfExtents2(4, 0.1f, 4);
+		// Create the box shape
+		reactphysics3d::BoxShape* boxShape2 = PhysicsWorld::getCommon().createBoxShape(halfExtents2);
+		rb2->setCollider(boxShape2, reactphysics3d::Transform::identity());
 
 		//---
 		sprites.push_back(std::make_shared<Sprite>("Assets\\Sprites\\UV_1k.jpg", 200, 200));
