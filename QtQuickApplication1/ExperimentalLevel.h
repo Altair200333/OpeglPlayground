@@ -3,6 +3,7 @@
 #include "Level.h"
 #include "OnUpdateSubscriber.h"
 #include "SkyBackground.h"
+#include "reactphysics3d/reactphysics3d.h"
 
 class ExperimentalLevel: public Level
 {
@@ -11,6 +12,8 @@ public:
 	std::shared_ptr<Object> wings;
 	std::shared_ptr<Object> aill;
 	std::shared_ptr<Object> ailr;
+	
+	std::shared_ptr<Object> cube;
 	
 	std::shared_ptr<DirectionalLight> dirLight;
 	
@@ -62,12 +65,39 @@ public:
 			ComponentManager::getComponent<Transform>(selectedObject)->translate(camera.right* MouseInput::delta().x()*0.01f+
 				camera.up * MouseInput::delta().y() * 0.01f);
 		}
-		
+		phys();
 	}
 
+	reactphysics3d::PhysicsWorld* world;
+	reactphysics3d::PhysicsCommon* physicsCommon;
+	reactphysics3d::Vector3 position;
+	reactphysics3d::Quaternion orientation;
+	reactphysics3d::Transform transform;
+	reactphysics3d::RigidBody* body;
+	const reactphysics3d::decimal timeStep = 1.0f / 60.0f;
+	
+	void phys()
+	{
+		world->update(timeStep);
+
+		const reactphysics3d::Transform& transform = body->getTransform();
+		const reactphysics3d::Vector3& position = transform.getPosition();
+		auto cubeTransform = ComponentManager::getComponent<Transform>(cube);
+		QMatrix4x4 matrix;
+		matrix.translate(position.x, position.y, position.z);
+		cubeTransform->transform = matrix;
+	}
 	void init() override
 	{
+		physicsCommon = new reactphysics3d::PhysicsCommon();
+		world = physicsCommon->createPhysicsWorld();
+		orientation = reactphysics3d::Quaternion::identity();
+		position = reactphysics3d::Vector3(0, 20, 0);
+		body = world->createRigidBody(transform);
+		transform = reactphysics3d::Transform(position, orientation);
+		//-----
 		addModel(MeshLoader().loadModel("Assets/Models/sam2.obj"), { 6.5f, 3, 0 }, ShaderCollection::shaders["normals"]);
+		cube = objects.back();
 		//
 		addTransparent(MeshLoader().loadModel("Assets/Models/earthAtmo.obj"), { 0, 3, 0 }, ShaderCollection::shaders["cubicCloud"]);
 		

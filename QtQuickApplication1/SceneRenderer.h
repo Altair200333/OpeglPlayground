@@ -103,7 +103,7 @@ public:
 		lightProjection.ortho(-size, size, -size, size, near_plane, far_plane);
 
 		QMatrix4x4 lightView;
-		lightView.lookAt(-dirLight->direction*10, QVector3D(0, 0, 0), QVector3D(0, 1, 0));
+		lightView.lookAt( scene->camera.position-dirLight->direction*10, scene->camera.position + dirLight->direction * 3, QVector3D(0, 1, 0));
 
 		lightSpaceMatrix = lightProjection* lightView;
 		
