@@ -13,7 +13,7 @@ public:
 		return counter;
 	}
 	
-	std::chrono::time_point<std::chrono::system_clock> lastFrameTime;
+	std::chrono::time_point<std::chrono::system_clock> lastFrameTime = std::chrono::system_clock::now();
 
 	std::vector<float> times;
 

@@ -25,8 +25,9 @@ public:
 		float data[16];
 		transformComponent->transform.copyDataTo(data);//row-major order
 		transform.setFromOpenGL(data);
+		transform.setPosition(reactphysics3d::Vector3(transformComponent->position.x(), transformComponent->position.y(), transformComponent->position.z()));
 		
-		body = PhysicsWorld::getWorld().createRigidBody(transform.getInverse());//why???
+		body = PhysicsWorld::getWorld().createRigidBody(transform);//why???
 		bodyType = _bodyType;
 		body->setType(bodyType);
 	}
@@ -50,7 +51,7 @@ public:
 			transformComponent->up = transformComponent->transform * QVector3D(0, 1, 0) - transformComponent->position;
 			transformComponent->forward = transformComponent->transform * QVector3D(0, 0, 1) - transformComponent->position;
 		}
-		else if(bodyType == Type::KINEMATIC)
+		else if(bodyType == Type::KINEMATIC || bodyType == Type::STATIC)
 		{
 			reactphysics3d::Transform transform;
 
@@ -58,7 +59,7 @@ public:
 			transformComponent->transform.copyDataTo(data);//row-major order
 			transform.setFromOpenGL(data);
 			auto& pos = transformComponent->position;
-			transform.setPosition(reactphysics3d::Vector3(-pos.x(), -pos.y(), -pos.z()));
+			transform.setPosition(reactphysics3d::Vector3(pos.x(), pos.y(), pos.z()));
 			body->setTransform(transform.getInverse());
 		}
 	}

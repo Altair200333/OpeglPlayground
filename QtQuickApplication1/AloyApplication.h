@@ -56,7 +56,7 @@ public:
 		FPSCounter::updateFps();
 		
 		std::stringstream ss;
-		ss << "framerate: " << std::fixed << std::setprecision(2) << 1.0f / FPSCounter::getFPS();
+		ss << "framerate: " << std::fixed << std::setprecision(2) << 1.0f / FPSCounter::getFPS()<<" "<<FPSCounter::getFrameTime();
 		manager.label->setText(QString(ss.str().c_str()));
 	}
 

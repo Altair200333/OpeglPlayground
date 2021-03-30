@@ -12,6 +12,7 @@ uniform vec3 cameraPos;
 
 uniform vec4 color;
 uniform vec4 ambient;
+uniform float alpha;
 
 uniform float roughness;
 
@@ -225,10 +226,10 @@ void main()
 {
    if(wireframe)
    {
-      fragColor = vec4(1, 0.682, 0, 1.0f);
+      fragColor = vec4(1, 0.682, 0, alpha);
    }
    else
    {
-      fragColor = vec4(getLighting(), 1.0f);
+      fragColor = vec4(getLighting(), alpha);
    }
 }

@@ -16,7 +16,7 @@ public:
 
 	float roughness = 0.02f;
 	bool isLightSource = false;
-	
+	float alpha = 1;
 
 	Material(QColor _diffuse = QColor(255, 149, 100)):diffuse(_diffuse)
 	{}
@@ -25,5 +25,6 @@ public:
 		shader->setUniformValue("roughness", roughness);
 		shader->setUniformValue("color", diffuse);
 		shader->setUniformValue("ambient", ambient);
+		shader->setUniformValue("alpha", alpha);
 	}
 };

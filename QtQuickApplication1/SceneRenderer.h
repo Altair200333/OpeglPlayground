@@ -34,11 +34,11 @@ public:
 	{
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
-		for (auto& cloud : scene->transparentObjects)
-			ComponentManager::getComponent<MeshRenderer>(cloud)->render({ &scene->camera, scene->lights });
+		for (auto& obj : scene->transparentObjects)
+			ComponentManager::getComponent<MeshRenderer>(obj)->render({ &scene->camera, scene->lights });
 		glCullFace(GL_FRONT);
-		for (auto& cloud : scene->transparentObjects)
-			ComponentManager::getComponent<MeshRenderer>(cloud)->render({ &scene->camera, scene->lights });
+		for (auto& obj : scene->transparentObjects)
+			ComponentManager::getComponent<MeshRenderer>(obj)->render({ &scene->camera, scene->lights });
 		glCullFace(GL_BACK);
 	}
 
