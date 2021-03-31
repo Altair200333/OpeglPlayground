@@ -11,7 +11,7 @@ public:
 	std::vector<Texture> normal;
 	std::vector<Texture> specular;
 	
-	QColor diffuse;
+	QColor diffuse = QColor(180, 180,180);
 	QColor ambient = QColor(20, 200, 100);
 
 	float roughness = 0.02f;

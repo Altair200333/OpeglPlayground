@@ -221,6 +221,10 @@
     <ClInclude Include="BoxShapeGenerator.h" />
     <ClInclude Include="CollisionShapeGenerator.h" />
     <ClInclude Include="GLBackground.h" />
+    <ClInclude Include="HeightMap.h" />
+    <ClInclude Include="HeightMapGenerator.h" />
+    <ClInclude Include="HeightMapMeshGenerator.h" />
+    <ClInclude Include="HeightShapeGenerator.h" />
     <ClInclude Include="imageBackground.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />

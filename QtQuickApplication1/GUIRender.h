@@ -22,6 +22,7 @@ protected:
 		sprite->vao->bind();
 		auto shader = ShaderCollection::shaders["sprite"].getShader();
 		shader->bind();
+	
 		shader->setUniformValue("w", sprite->width);
 		shader->setUniformValue("h", sprite->height);
 

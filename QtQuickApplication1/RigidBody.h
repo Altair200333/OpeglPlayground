@@ -31,7 +31,7 @@ public:
 		bodyType = _bodyType;
 		body->setType(bodyType);
 	}
-	void setCollider(reactphysics3d::CollisionShape* shape, reactphysics3d::Transform transform)
+	void addCollider(reactphysics3d::CollisionShape* shape, reactphysics3d::Transform transform)
 	{
 		collider = body->addCollider(shape, transform);
 	}

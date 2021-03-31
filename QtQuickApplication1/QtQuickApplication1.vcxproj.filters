@@ -68,6 +68,9 @@
     <Filter Include="Physics\Colliders">
       <UniqueIdentifier>{6a1bd15f-f4d9-43a7-967a-46bda64598a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Objects\HeightMap">
+      <UniqueIdentifier>{9886da15-3f20-4208-95ec-942635570983}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -234,6 +237,18 @@
     </ClInclude>
     <ClInclude Include="MeshShapeGenerator.h">
       <Filter>Physics\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightMap.h">
+      <Filter>Objects\HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightMapGenerator.h">
+      <Filter>Objects\HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightShapeGenerator.h">
+      <Filter>Physics\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightMapMeshGenerator.h">
+      <Filter>Objects\HeightMap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

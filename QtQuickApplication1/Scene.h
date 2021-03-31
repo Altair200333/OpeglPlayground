@@ -72,6 +72,10 @@ public:
 			objects.push_back(createObject(model, pos, data, tag));
 		}
 	}
+	void addModel(const MeshLoader::LoadedModel& model, const QVector3D& pos, ShaderData& data, const std::string& tag = "")
+	{
+		objects.push_back(createObject(model, pos, data, tag));
+	}
 	void addLight(std::shared_ptr<LightSource> light)
 	{
 		lights.push_back(std::move(light));

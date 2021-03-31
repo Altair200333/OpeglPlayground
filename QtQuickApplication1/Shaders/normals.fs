@@ -210,15 +210,16 @@ vec3 getLighting()
       vec3 dirToLight = normalize(-dirLights[i].direction);
 
       vec3 diffuse = baseColor * vec3(dirLights[i].color);
-      diffuse = diffuse * max(dot(dirToLight, norm), 0.0f);
 
+      diffuse = diffuse * max(dot(dirToLight, norm), 0.0f);
+      
       vec3 reflectDir = reflect(-dirToLight, norm);
       float spec = pow(max(dot(-dirToFrag, reflectDir), 0.0), 8.0);
       vec3 lightSpecular = dirLights[i].color.rgb * spec*getSpecular(); 
 
       result +=  ((diffuse + lightSpecular))*dirLights[i].intensity*(1.0 - shadow);
    }
-
+   
    result = (1-getRoughness())*(result + ambient.rgb*0.089f) + getRoughness()*envColor;
    return result;
 }
@@ -230,6 +231,6 @@ void main()
    }
    else
    {
-      fragColor = vec4(getLighting(), alpha);
+      fragColor = vec4(getLighting(), 1);//vec4(getLighting(), alpha);
    }
 }
