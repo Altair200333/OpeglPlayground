@@ -218,12 +218,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AloyApplication.h" />
+    <ClInclude Include="BoxShapeGenerator.h" />
+    <ClInclude Include="CollisionShapeGenerator.h" />
     <ClInclude Include="GLBackground.h" />
     <ClInclude Include="imageBackground.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="GUIRender.h" />
+    <ClInclude Include="MeshShapeGenerator.h" />
     <ClInclude Include="ObjectComponentManager.h" />
     <ClInclude Include="ExperimentalLevel.h" />
     <ClInclude Include="FPSCounter.h" />

@@ -65,6 +65,9 @@
     <Filter Include="Physics">
       <UniqueIdentifier>{ac054c3a-f61c-4f97-ae50-1dbb13524f4f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Physics\Colliders">
+      <UniqueIdentifier>{6a1bd15f-f4d9-43a7-967a-46bda64598a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -222,6 +225,15 @@
     </ClInclude>
     <ClInclude Include="PhysicsWorld.h">
       <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionShapeGenerator.h">
+      <Filter>Physics\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxShapeGenerator.h">
+      <Filter>Physics\Colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshShapeGenerator.h">
+      <Filter>Physics\Colliders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

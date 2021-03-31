@@ -2,6 +2,7 @@
 #include "OnUpdateSubscriber.h"
 #include "reactphysics3d/reactphysics3d.h"
 #include <fstream>
+#include "FPSCounter.h"
 
 class PhysicsWorld: public OnUpdateSubscriber
 {

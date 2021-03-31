@@ -9,7 +9,7 @@ public:
 	int drawMode = 0;
 	std::shared_ptr<Scene> scene;
 	std::shared_ptr<GLWindow> viewport;
-	const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
+	const unsigned int SHADOW_WIDTH = 4096, SHADOW_HEIGHT = 4096;
 
 	void nextDrawMode()
 	{

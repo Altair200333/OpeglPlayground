@@ -77,6 +77,8 @@ public:
 	
 	void init()
 	{
+		PhysicsWorld::init();
+
 		activeLevel = std::make_shared<ExperimentalLevel>(manager.viewport.get());
 		manager.viewport->glEnable(GL_DEPTH_TEST);
 		activeLevel->init();
@@ -95,8 +97,6 @@ public:
 		guiRenderer->scene = activeLevel;
 		guiRenderer->viewport = manager.viewport;
 		renderStack.layers.push_back(guiRenderer);
-
-		PhysicsWorld::getWorld().setIsDebugRenderingEnabled(true);
 	}
 	
 
@@ -115,15 +115,6 @@ public:
 		manager.viewport->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		renderStack.render();
-		// Get a reference to the debug renderer
-		reactphysics3d::DebugRenderer& debugRenderer = PhysicsWorld::getWorld().getDebugRenderer();
-		debugRenderer.setIsDebugItemDisplayed(reactphysics3d::DebugRenderer::
-			DebugItem::CONTACT_POINT, true);
-		debugRenderer.setIsDebugItemDisplayed(reactphysics3d::DebugRenderer ::
-			DebugItem::CONTACT_NORMAL, true);
-		debugRenderer.setIsDebugItemDisplayed(reactphysics3d::DebugRenderer ::
-			DebugItem::COLLIDER_AABB, true);
-
 	}
 
 	void moveCamera()

@@ -1,6 +1,8 @@
 #pragma once
+#include "BoxShapeGenerator.h"
 #include "FPSCounter.h"
 #include "Level.h"
+#include "MeshShapeGenerator.h"
 #include "OnUpdateSubscriber.h"
 #include "PhysicsWorld.h"
 #include "RigidBody.h"
@@ -60,7 +62,15 @@ public:
 	
 	void init() override
 	{
-		PhysicsWorld::init();
+
+		addModel(MeshLoader().loadModel("Assets/Models/ico1.obj"), { 0.5f, 5, 0 }, ShaderCollection::shaders["normals"]);
+		auto ico = objects.back();
+		auto icoRb = ComponentManager::addComponent(ico, std::make_shared<RigidBody>());
+		icoRb->init(RigidBody::Type::DYNAMIC);
+		// Create the box shape
+		icoRb->setCollider(MeshShapeGenerator("Assets/Models/ico1.obj").generate(), reactphysics3d::Transform::identity());
+
+		//
 		
 		//-----
 		addModel(MeshLoader().loadModel("Assets/Models/sam2.obj"), { 2.5f, 3, 0 }, ShaderCollection::shaders["normals"]);
@@ -69,10 +79,10 @@ public:
 		rb1->init();
 		const reactphysics3d::Vector3 halfExtents(1, 1, 1);
 		// Create the box shape
-		reactphysics3d::BoxShape* boxShape = PhysicsWorld::getCommon().createBoxShape(halfExtents);
-		rb1->setCollider(boxShape, reactphysics3d::Transform::identity());
+		rb1->setCollider(BoxShapeGenerator(halfExtents).generate(), reactphysics3d::Transform::identity());
+		//rb1->setCollider(MeshShapeGenerator("Assets/Models/sam2.obj").generate(), reactphysics3d::Transform::identity());
+
 		
-		//
 		addTransparent(MeshLoader().loadModel("Assets/Models/earthAtmo.obj"), { 0, 3, 0 }, ShaderCollection::shaders["cubicCloud"]);
 		
 		//addLight(std::make_shared<PointLight>(QVector3D{ -8, 4, 7 }, QColor{ 255, 255, 255 }, 2.5));
@@ -90,10 +100,10 @@ public:
 		rb2->init(RigidBody::Type::KINEMATIC);
 		const reactphysics3d::Vector3 halfExtents2(4, 0.1f, 4);
 		// Create the box shape
-		reactphysics3d::BoxShape* boxShape2 = PhysicsWorld::getCommon().createBoxShape(halfExtents2);
-		rb2->setCollider(boxShape2, reactphysics3d::Transform::identity());
+		rb2->setCollider(BoxShapeGenerator(halfExtents2).generate(), reactphysics3d::Transform::identity());
 
 		loadPlane();
+		cube->addChild(fuselage);
 		//---
 		sprites.push_back(std::make_shared<Sprite>("Assets\\Sprites\\UV_1k.jpg", 200, 200));
 	}
@@ -117,6 +127,6 @@ public:
 
 		addTransparent(MeshLoader().loadModel("Assets/Models/plane/cockpit.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
 		fuselage->addChild(transparentObjects.back());
-		ComponentManager::getComponent<Material>(transparentObjects.back())->alpha = 0.2f;
+		ComponentManager::getComponent<Material>(transparentObjects.back())->alpha = 0.4f;
 	}
 };
