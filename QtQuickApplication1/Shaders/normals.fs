@@ -231,6 +231,6 @@ void main()
    }
    else
    {
-      fragColor = vec4(getLighting(), 1);//vec4(getLighting(), alpha);
+      fragColor = vec4(getLighting(), alpha);
    }
 }

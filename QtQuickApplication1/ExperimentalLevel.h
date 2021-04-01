@@ -105,9 +105,9 @@ public:
 		loadPlane();
 		cube->addChild(fuselage);
 
-		map = HeightMapGenerator().genHeightMap(100, 100, 5);
+		map = HeightMapGenerator().genHeightMap(100, 100, 0, 1);
 		auto terr = HeightMapMeshGenerator().genMesh(map);
-		addModel(MeshLoader::LoadedModel{ terr, std::make_shared<Material>(QColor(240,10,10)) }, { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
+		addModel(MeshLoader::LoadedModel{ terr, std::make_shared<Material>() }, { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
 
 		auto surf = objects.back();
 		auto surfRb = ComponentManager::addComponent(surf, std::make_shared<RigidBody>());
