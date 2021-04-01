@@ -26,7 +26,7 @@ public:
 
 			ComponentManager::getComponent<Material>(scene->lightSourceBlock)->diffuse = light->color;
 			ComponentManager::getComponent<Material>(scene->lightSourceBlock)->isLightSource = true;
-			ComponentManager::getComponent<MeshRenderer>(scene->lightSourceBlock)->render({ &scene->camera, scene->lights });
+			ComponentManager::getComponent<MeshRenderer>(scene->lightSourceBlock)->render({ scene->camera, scene->lights });
 		}
 	}
 
@@ -35,10 +35,10 @@ public:
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 		for (auto& obj : scene->transparentObjects)
-			ComponentManager::getComponent<MeshRenderer>(obj)->render({ &scene->camera, scene->lights });
+			ComponentManager::getComponent<MeshRenderer>(obj)->render({ scene->camera, scene->lights });
 		glCullFace(GL_FRONT);
 		for (auto& obj : scene->transparentObjects)
-			ComponentManager::getComponent<MeshRenderer>(obj)->render({ &scene->camera, scene->lights });
+			ComponentManager::getComponent<MeshRenderer>(obj)->render({ scene->camera, scene->lights });
 		glCullFace(GL_BACK);
 	}
 
@@ -48,11 +48,11 @@ public:
 		{
 			if (drawMode == 0)
 				ComponentManager::getComponent<MeshRenderer>(scene->objects[i])->render({
-					&scene->camera, scene->lights, scene->backround, depthMap, &lightSpaceMatrix });
+					scene->camera, scene->lights, scene->backround, depthMap, &lightSpaceMatrix });
 			else if (drawMode == 1)
 			{
 				ComponentManager::getComponent<MeshRenderer>(scene->objects[i])->render(
-					{&scene->camera, scene->lights, scene->backround, depthMap, &lightSpaceMatrix });
+					{scene->camera, scene->lights, scene->backround, depthMap, &lightSpaceMatrix });
 				ComponentManager::getComponent<MeshRenderer>(scene->objects[i])->renderWireframe(scene->camera);
 			}
 			else
@@ -103,7 +103,7 @@ public:
 		lightProjection.ortho(-size, size, -size, size, near_plane, far_plane);
 
 		QMatrix4x4 lightView;
-		lightView.lookAt( scene->camera.position-dirLight->direction*10, scene->camera.position + dirLight->direction * 3, QVector3D(0, 1, 0));
+		lightView.lookAt( scene->camera->position-dirLight->direction*10, scene->camera->position + dirLight->direction * 3, QVector3D(0, 1, 0));
 
 		lightSpaceMatrix = lightProjection* lightView;
 		

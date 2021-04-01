@@ -4,7 +4,7 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLVertexArrayObject>
 
-#include "GLCamera.h"
+#include "GLcamera.h"
 
 class GLBackground
 {
@@ -34,14 +34,14 @@ public:
 		vao->release();
 		shader->release();
 	}
-	void uploadCamera(GLCamera& camera)
+	void uploadCamera(std::shared_ptr<GLCamera>& camera)
 	{
-		shader->setUniformValue("origin", camera.position);
-		shader->setUniformValue("front", camera.front);
-		shader->setUniformValue("right", camera.right);
-		shader->setUniformValue("up", camera.up);
-		shader->setUniformValue("fov", camera.FOV);
-		shader->setUniformValue("aspectRatio", camera.aspectRatio);
+		shader->setUniformValue("origin", camera->position);
+		shader->setUniformValue("front", camera->front);
+		shader->setUniformValue("right", camera->right);
+		shader->setUniformValue("up", camera->up);
+		shader->setUniformValue("fov", camera->FOV);
+		shader->setUniformValue("aspectRatio", camera->aspectRatio);
 	}
-	virtual void render(GLCamera& camera) = 0;
+	virtual void render(std::shared_ptr<GLCamera>& camera) = 0;
 };

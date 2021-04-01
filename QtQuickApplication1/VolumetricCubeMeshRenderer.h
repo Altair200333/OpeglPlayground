@@ -15,7 +15,7 @@ public:
 		shader->bind();
 
 		material->uploadToShader(shader);
-		uploadCameraDetails(*context.camera, shader);
+		uploadCameraDetails(context.camera, shader);
 		shader->setUniformValue("position", transform->position);
 		
 		vao->bind();

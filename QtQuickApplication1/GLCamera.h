@@ -3,7 +3,7 @@
 #include <qvector3d.h>
 #include <QtMath>
 
-class GLCamera final
+class GLCamera
 {
 public:
 	float FOV = 60;

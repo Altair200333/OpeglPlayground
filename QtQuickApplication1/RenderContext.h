@@ -5,7 +5,7 @@
 
 struct RenderContext
 {
-	GLCamera* camera;
+	std::shared_ptr<GLCamera> camera;
 	const std::vector<std::shared_ptr<LightSource>>& lights = std::vector<std::shared_ptr<LightSource>>{};
 	std::shared_ptr<GLBackground> background = nullptr;
 	unsigned int shadowMap = 0;

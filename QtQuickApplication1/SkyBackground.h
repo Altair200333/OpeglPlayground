@@ -14,7 +14,7 @@ public:
 		
 	}
 
-	void render(GLCamera& camera) override
+	void render(std::shared_ptr<GLCamera>& camera) override
 	{
 		shader->bind();
 

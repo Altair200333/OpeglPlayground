@@ -12,6 +12,7 @@
 #include "RigidBody.h"
 #include "SkyBackground.h"
 #include "reactphysics3d/reactphysics3d.h"
+#include "FreeCamera.h"
 
 class ExperimentalLevel: public Level
 {
@@ -37,7 +38,7 @@ public:
 			light->position = QQuaternion::fromAxisAndAngle({ 0,1,0 }, 20.0f * FPSCounter::getFrameTime()) * light->position;
 		}
 		
-		if(MouseInput::keyPressed(Qt::RightButton))
+		if(Input::keyPressed(Qt::Key_R))
 		{
 			//dirLight->direction = QQuaternion::fromAxisAndAngle(camera.right, MouseInput::delta().y()) * dirLight->direction;
 			//dirLight->direction = QQuaternion::fromAxisAndAngle(QVector3D(0, 1, 0), -MouseInput::delta().x()) * dirLight->direction;
@@ -53,7 +54,7 @@ public:
 		{
 			selectedObject = objects[pickedObjectId];
 		}
-		if(selectedObject!=nullptr && MouseInput::keyPressed(Qt::MiddleButton))
+		if(selectedObject!=nullptr && Input::keyPressed(Qt::Key_G))
 		{
 			//ComponentManager::getComponent<Transform>(selectedObject)->translate(camera.right* MouseInput::delta().x()*0.01f+
 			//	camera.up * MouseInput::delta().y() * 0.01f);
@@ -66,7 +67,8 @@ public:
 	
 	void init() override
 	{
-
+		camera = std::make_shared<FreeCamera>();
+		
 		addModel(MeshLoader().loadModel("Assets/Models/ico1.obj"), { 0.5f, 5, 0 }, ShaderCollection::shaders["normals"]);
 		auto ico = objects.back();
 		auto icoRb = ComponentManager::addComponent(ico, std::make_shared<RigidBody>());
@@ -105,7 +107,7 @@ public:
 		loadPlane();
 		cube->addChild(fuselage);
 
-		map = HeightMapGenerator().genHeightMap(100, 100, 0, 1);
+		map = HeightMapGenerator().genHeightMap(200, 200, 0, 4);
 		auto terr = HeightMapMeshGenerator().genMesh(map);
 		addModel(MeshLoader::LoadedModel{ terr, std::make_shared<Material>() }, { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
 

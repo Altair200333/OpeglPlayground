@@ -55,7 +55,7 @@ public:
 
 		shader->bind();
 		material->uploadToShader(shader);
-		uploadCameraDetails(*context.camera, shader);
+		uploadCameraDetails(context.camera, shader);
 		shader->setUniformValue(shader->uniformLocation("model"), transform->getGlobalTransform());
 
 		uploadLights(context.lights);

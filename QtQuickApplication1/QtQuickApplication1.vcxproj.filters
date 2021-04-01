@@ -71,6 +71,9 @@
     <Filter Include="Objects\HeightMap">
       <UniqueIdentifier>{9886da15-3f20-4208-95ec-942635570983}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Objects\Camera">
+      <UniqueIdentifier>{bfb31b16-83e4-40c2-a67d-564e6e8d97da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -150,9 +153,6 @@
     </ClInclude>
     <ClInclude Include="AloyApplication.h">
       <Filter>Application</Filter>
-    </ClInclude>
-    <ClInclude Include="GLCamera.h">
-      <Filter>Objects</Filter>
     </ClInclude>
     <ClInclude Include="UIManager.h">
       <Filter>Application</Filter>
@@ -249,6 +249,15 @@
     </ClInclude>
     <ClInclude Include="HeightMapMeshGenerator.h">
       <Filter>Objects\HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="FastNoiseLite.h">
+      <Filter>Objects\HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="GLCamera.h">
+      <Filter>Objects\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeCamera.h">
+      <Filter>Objects\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

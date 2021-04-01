@@ -8,7 +8,7 @@
 #include "ImageBackground.h"
 #include "ComponentManager.h"
 #include "Mesh.h"
-#include "GLCamera.h"
+#include "GLcamera.h"
 #include "PointLight.h"
 #include "Material.h"
 #include "RenderContext.h"
@@ -119,14 +119,14 @@ public:
 	}
 
 	
-	void uploadCameraDetails(GLCamera& camera, std::shared_ptr<QOpenGLShaderProgram> shader) const
+	void uploadCameraDetails(std::shared_ptr<GLCamera> camera, std::shared_ptr<QOpenGLShaderProgram> shader) const
 	{
-		shader->setUniformValue(shader->uniformLocation("view"), camera.getViewMatrix());
-		shader->setUniformValue(shader->uniformLocation("projection"), camera.getProjectionMatrix());
-		shader->setUniformValue(shader->uniformLocation("cameraPos"), camera.position);
+		shader->setUniformValue(shader->uniformLocation("view"), camera->getViewMatrix());
+		shader->setUniformValue(shader->uniformLocation("projection"), camera->getProjectionMatrix());
+		shader->setUniformValue(shader->uniformLocation("cameraPos"), camera->position);
 	}
 
-	void renderWireframe(GLCamera& camera) const
+	void renderWireframe(std::shared_ptr<GLCamera>& camera) const
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 

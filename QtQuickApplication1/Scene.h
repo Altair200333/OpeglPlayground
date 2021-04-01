@@ -56,13 +56,14 @@ public:
 	int pickedObjectId = -1;
 
 	
-	GLCamera camera;
+	std::shared_ptr<GLCamera> camera;
 	
 	Scene() = default;
 	virtual void init() = 0;
 
 	Scene(QOpenGLFunctions* _functions): functions(_functions)
 	{
+		camera = std::make_shared<GLCamera>();
 		createLightSourceBlock();
 	}
 	void addModel(const std::vector<MeshLoader::LoadedModel>& models, const QVector3D& pos, ShaderData& data, const std::string& tag = "")
