@@ -229,23 +229,11 @@
     <ClInclude Include="PhysicsWorld.h">
       <Filter>Physics</Filter>
     </ClInclude>
-    <ClInclude Include="CollisionShapeGenerator.h">
-      <Filter>Physics\Colliders</Filter>
-    </ClInclude>
-    <ClInclude Include="BoxShapeGenerator.h">
-      <Filter>Physics\Colliders</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshShapeGenerator.h">
-      <Filter>Physics\Colliders</Filter>
-    </ClInclude>
     <ClInclude Include="HeightMap.h">
       <Filter>Objects\HeightMap</Filter>
     </ClInclude>
     <ClInclude Include="HeightMapGenerator.h">
       <Filter>Objects\HeightMap</Filter>
-    </ClInclude>
-    <ClInclude Include="HeightShapeGenerator.h">
-      <Filter>Physics\Colliders</Filter>
     </ClInclude>
     <ClInclude Include="HeightMapMeshGenerator.h">
       <Filter>Objects\HeightMap</Filter>
@@ -258,6 +246,9 @@
     </ClInclude>
     <ClInclude Include="FreeCamera.h">
       <Filter>Objects\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="TexturesTaskLevel.h">
+      <Filter>Application\Level</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

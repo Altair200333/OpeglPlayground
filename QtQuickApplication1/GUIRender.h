@@ -25,7 +25,10 @@ protected:
 	
 		shader->setUniformValue("w", sprite->width);
 		shader->setUniformValue("h", sprite->height);
-
+		
+		shader->setUniformValue("x", sprite->x);
+		shader->setUniformValue("y", sprite->y);
+		
 		shader->setUniformValue("viewportW", sprite->viewportW);
 		shader->setUniformValue("viewportH", sprite->viewportH);
 

@@ -98,7 +98,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>assimp-vc142-mt.lib;opengl32.lib;shell32.lib;reactphysics3d_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc142-mt.lib;opengl32.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Libs;.;C:\openssl\lib;C:\Utils\my_sql\mysql-5.7.25-winx64\lib;C:\Utils\postgresql\pgsql\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
@@ -156,7 +156,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>assimp-vc142-mt.lib;opengl32.lib;shell32.lib;reactphysics3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc142-mt.lib;opengl32.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Libs;.;C:\openssl\lib;C:\Utils\my_sql\mysql-5.7.25-winx64\lib;C:\Utils\postgresql\pgsql\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
@@ -218,21 +218,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AloyApplication.h" />
-    <ClInclude Include="BoxShapeGenerator.h" />
-    <ClInclude Include="CollisionShapeGenerator.h" />
     <ClInclude Include="FastNoiseLite.h" />
     <ClInclude Include="FreeCamera.h" />
     <ClInclude Include="GLBackground.h" />
     <ClInclude Include="HeightMap.h" />
     <ClInclude Include="HeightMapGenerator.h" />
     <ClInclude Include="HeightMapMeshGenerator.h" />
-    <ClInclude Include="HeightShapeGenerator.h" />
     <ClInclude Include="imageBackground.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="GUIRender.h" />
-    <ClInclude Include="MeshShapeGenerator.h" />
     <ClInclude Include="ObjectComponentManager.h" />
     <ClInclude Include="ExperimentalLevel.h" />
     <ClInclude Include="FPSCounter.h" />
@@ -269,6 +265,7 @@
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TexturesTaskLevel.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="TypeInfo.h" />
     <ClInclude Include="UIManager.h" />

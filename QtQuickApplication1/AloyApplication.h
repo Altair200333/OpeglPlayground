@@ -22,6 +22,7 @@
 #include "UIManager.h"
 #include "PickRenderer.h"
 #include "PhysicsWorld.h"
+#include "TexturesTaskLevel.h"
 
 class AloyApplication final: public OnUpdateSubscriber
 {
@@ -77,7 +78,7 @@ public:
 	{
 		PhysicsWorld::init();
 
-		activeLevel = std::make_shared<ExperimentalLevel>(manager.viewport.get());
+		activeLevel = std::make_shared<TexturesTaskLevel>(manager.viewport.get());
 		manager.viewport->glEnable(GL_DEPTH_TEST);
 		activeLevel->init();
 

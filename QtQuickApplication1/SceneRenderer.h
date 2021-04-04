@@ -20,13 +20,16 @@ public:
 	{
 		for (auto& light : scene->lights)
 		{
-			auto transform = ComponentManager::getComponent<Transform>(scene->lightSourceBlock);
-			transform->translate(-transform->position);
-			transform->translate(light->position);
+			if(std::dynamic_pointer_cast<DirectionalLight>(light) == nullptr)
+			{
+				auto transform = ComponentManager::getComponent<Transform>(scene->lightSourceBlock);
+				transform->translate(-transform->position);
+				transform->translate(light->position);
 
-			ComponentManager::getComponent<Material>(scene->lightSourceBlock)->diffuse = light->color;
-			ComponentManager::getComponent<Material>(scene->lightSourceBlock)->isLightSource = true;
-			ComponentManager::getComponent<MeshRenderer>(scene->lightSourceBlock)->render({ scene->camera, scene->lights });
+				ComponentManager::getComponent<Material>(scene->lightSourceBlock)->diffuse = light->color;
+				ComponentManager::getComponent<Material>(scene->lightSourceBlock)->isLightSource = true;
+				ComponentManager::getComponent<MeshRenderer>(scene->lightSourceBlock)->render({ scene->camera, scene->lights });
+			}
 		}
 	}
 

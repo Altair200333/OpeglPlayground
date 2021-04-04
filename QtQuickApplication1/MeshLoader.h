@@ -20,9 +20,21 @@ public:
     };
     std::vector<LoadedModel> models;
     std::vector<Texture> cachedTextures;
-
+	
+    static std::string getDir(const std::string& path)
+    {
+        std::string directory;
+        const size_t last_slash_idx = path.rfind('/');
+        if (std::string::npos != last_slash_idx)
+        {
+            directory = path.substr(0, last_slash_idx);
+        }
+        return directory;
+    }
+    std::string modelPath;
     std::vector<LoadedModel> loadModel(const std::string& path)
     {
+        modelPath = path;
         Assimp::Importer import;
         const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
@@ -160,7 +172,7 @@ public:
             if (!skip)
             {   // if texture hasn't been loaded already, load it
                 Texture texture;
-                std::string path = std::string("Assets\\Models\\") + std::string(str.C_Str());
+                std::string path = getDir(modelPath)+'/' + std::string(str.C_Str());
                 texture.texture = new QOpenGLTexture(QImage(QString(path.c_str())));
                 texture.type = typeName;
                 texture.path = str.C_Str();
