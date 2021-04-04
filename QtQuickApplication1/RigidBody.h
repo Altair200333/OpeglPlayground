@@ -25,12 +25,15 @@ public:
 
 		body = new btRigidBody(bodyCI);
 
-		
 		PhysicsWorld::getWorld().addRigidBody(body);
 	}
 	void addCollider()
 	{
 
+	}
+	void addForce(const QVector3D& force)
+	{
+		body->applyCentralForce(btVector3(force.x(), force.y(), force.z()));
 	}
 	void onUpdate() override
 	{

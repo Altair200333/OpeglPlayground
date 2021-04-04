@@ -9,6 +9,7 @@
 #include "RigidBody.h"
 #include "SkyBackground.h"
 #include "FreeCamera.h"
+#include "b3d/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
 
 class ExperimentalLevel: public Level
 {
@@ -56,14 +57,13 @@ public:
 				camera->up * MouseInput::delta().y() * 0.01f);
 
 		}
+		if(MouseInput::keyPressed(Qt::MiddleButton))
+		{
+			ComponentManager::getComponent<RigidBody>(cube)->addForce(camera->right * MouseInput::delta().x() +
+				camera->up * MouseInput::delta().y());
+		}
 		//ComponentManager::getComponent<RigidBody>(cube)->body->applyForceToCenterOfMass(reactphysics3d::Vector3(1, 0, 0));
 
-		btTransform trans;
-		fallRigidBody->getMotionState()->getWorldTransform(trans);
-
-
-		auto tr = ComponentManager::getComponent<Transform>(cube);
-		trans.getOpenGLMatrix(tr->transform.data());
 	}
 
 	btCollisionShape* groundShape;
@@ -72,29 +72,19 @@ public:
 	btRigidBody* fallRigidBody;
 	void initPhysics()
 	{
+		btHeightfieldTerrainShape* shape = new btHeightfieldTerrainShape(map->w, map->h, map->data.data(), 
+			1, map->minValue, map->maxValue, 1, PHY_FLOAT, false);
 		groundShape = new btStaticPlaneShape(btVector3(0, 1, 0), 1);
 
-		fallShape = new btSphereShape(1);
+		fallShape = new btBoxShape(btVector3(1,1,1));
 
 		btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
 		btRigidBody::btRigidBodyConstructionInfo
-			groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
+			groundRigidBodyCI(0, groundMotionState, shape, btVector3(0, 0, 0));
 		groundRigidBody = new btRigidBody(groundRigidBodyCI);
 		PhysicsWorld::getWorld().addRigidBody(groundRigidBody);
 
-		auto tr = ComponentManager::getComponent<Transform>(cube);
-		btTransform transfrom = btTransform();
-		transfrom.setFromOpenGLMatrix(tr->transform.data());
-		
-		btDefaultMotionState* fallMotionState =
-			new btDefaultMotionState(transfrom);
-		btScalar mass = 1;
-		btVector3 fallInertia(0, 0, 0);
-		fallShape->calculateLocalInertia(mass, fallInertia);
-		btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(1, fallMotionState, fallShape, fallInertia);
-		fallRigidBody = new btRigidBody(fallRigidBodyCI);
-		PhysicsWorld::getWorld().addRigidBody(fallRigidBody);
-		
+		ComponentManager::addComponent(cube, std::make_shared<RigidBody>())->init(ComponentManager::getComponent<Transform>(cube), fallShape, 1);
 	}
 	void init() override
 	{
