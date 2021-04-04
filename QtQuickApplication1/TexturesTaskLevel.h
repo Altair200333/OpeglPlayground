@@ -52,6 +52,9 @@ public:
 		addModel(MeshLoader().loadModel("Assets/Models/task/road1.obj"), { 0, 0, 6 }, ShaderCollection::shaders["normals"]);
 		road4 = objects.back();
 		ComponentManager::getComponent<Material>(road4)->textures[0].setFilterMode(Texture::FilterMode::Anisotropic);
+
+		addModel(MeshLoader().loadModel("Assets/Models/task/title.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
+
 	}
 	
 };

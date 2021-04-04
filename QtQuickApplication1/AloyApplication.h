@@ -78,7 +78,7 @@ public:
 	{
 		PhysicsWorld::init();
 
-		activeLevel = std::make_shared<TexturesTaskLevel>(manager.viewport.get());
+		activeLevel = std::make_shared<ExperimentalLevel>(manager.viewport.get());
 		manager.viewport->glEnable(GL_DEPTH_TEST);
 		activeLevel->init();
 

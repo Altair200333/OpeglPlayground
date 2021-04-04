@@ -90,7 +90,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
       <WarningLevel>Level3</WarningLevel>
@@ -98,7 +98,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>assimp-vc142-mt.lib;opengl32.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc142-mt.lib;opengl32.lib;shell32.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Libs;.;C:\openssl\lib;C:\Utils\my_sql\mysql-5.7.25-winx64\lib;C:\Utils\postgresql\pgsql\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
@@ -156,7 +156,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>assimp-vc142-mt.lib;opengl32.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc142-mt.lib;opengl32.lib;shell32.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)Libs;.;C:\openssl\lib;C:\Utils\my_sql\mysql-5.7.25-winx64\lib;C:\Utils\postgresql\pgsql\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>

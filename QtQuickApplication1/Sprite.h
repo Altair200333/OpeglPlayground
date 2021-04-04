@@ -14,7 +14,7 @@ public:
 	
 	QOpenGLVertexArrayObject* vao = nullptr;
 
-	Sprite(const std::string& path, int w, int h):width(w), height(h)
+	Sprite(const std::string& path, int w, int h, int _x =0, int _y=0):width(w), height(h), x(_x), y(_y)
 	{
 		vao = new QOpenGLVertexArrayObject();
 		vao->create();

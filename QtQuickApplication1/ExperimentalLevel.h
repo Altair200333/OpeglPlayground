@@ -52,14 +52,50 @@ public:
 		}
 		if(selectedObject!=nullptr && Input::keyPressed(Qt::Key_G))
 		{
-			//ComponentManager::getComponent<Transform>(selectedObject)->translate(camera.right* MouseInput::delta().x()*0.01f+
-			//	camera.up * MouseInput::delta().y() * 0.01f);
+			ComponentManager::getComponent<Transform>(selectedObject)->translate(camera->right* MouseInput::delta().x()*0.01f+
+				camera->up * MouseInput::delta().y() * 0.01f);
 
 		}
 		//ComponentManager::getComponent<RigidBody>(cube)->body->applyForceToCenterOfMass(reactphysics3d::Vector3(1, 0, 0));
+
+		btTransform trans;
+		fallRigidBody->getMotionState()->getWorldTransform(trans);
+
+
+		auto tr = ComponentManager::getComponent<Transform>(cube);
+		trans.getOpenGLMatrix(tr->transform.data());
 	}
 
-	
+	btCollisionShape* groundShape;
+	btCollisionShape* fallShape;
+	btRigidBody* groundRigidBody;
+	btRigidBody* fallRigidBody;
+	void initPhysics()
+	{
+		groundShape = new btStaticPlaneShape(btVector3(0, 1, 0), 1);
+
+		fallShape = new btSphereShape(1);
+
+		btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
+		btRigidBody::btRigidBodyConstructionInfo
+			groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
+		groundRigidBody = new btRigidBody(groundRigidBodyCI);
+		PhysicsWorld::getWorld().addRigidBody(groundRigidBody);
+
+		auto tr = ComponentManager::getComponent<Transform>(cube);
+		btTransform transfrom = btTransform();
+		transfrom.setFromOpenGLMatrix(tr->transform.data());
+		
+		btDefaultMotionState* fallMotionState =
+			new btDefaultMotionState(transfrom);
+		btScalar mass = 1;
+		btVector3 fallInertia(0, 0, 0);
+		fallShape->calculateLocalInertia(mass, fallInertia);
+		btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(1, fallMotionState, fallShape, fallInertia);
+		fallRigidBody = new btRigidBody(fallRigidBodyCI);
+		PhysicsWorld::getWorld().addRigidBody(fallRigidBody);
+		
+	}
 	void init() override
 	{
 		camera = std::make_shared<FreeCamera>();
@@ -67,7 +103,7 @@ public:
 		addModel(MeshLoader().loadModel("Assets/Models/ico1.obj"), { 0.5f, 5, 0 }, ShaderCollection::shaders["normals"]);
 		
 		//-----
-		addModel(MeshLoader().loadModel("Assets/Models/sam2.obj"), { 2.5f, 3, 0 }, ShaderCollection::shaders["normals"]);
+		addModel(MeshLoader().loadModel("Assets/Models/sam2.obj"), { 10.5f, 20, 0 }, ShaderCollection::shaders["normals"]);
 		cube = objects.back();
 		
 		addTransparent(MeshLoader().loadModel("Assets/Models/earthAtmo.obj"), { 0, 3, 0 }, ShaderCollection::shaders["cubicCloud"]);
@@ -93,8 +129,11 @@ public:
 
 		auto surf = objects.back();
 		
+		initPhysics();
+
 		//---
-		sprites.push_back(std::make_shared<Sprite>("Assets\\Sprites\\UV_1k.jpg", 200, 200));
+		sprites.push_back(std::make_shared<Sprite>("Assets\\Sprites\\UV_1k.jpg", 200, 200, 100, 100));
+
 	}
 	
 	std::shared_ptr<HeightMap> map;

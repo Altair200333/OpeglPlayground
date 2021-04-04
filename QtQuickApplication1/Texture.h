@@ -15,11 +15,13 @@ struct Texture final
 		Trilinear,
 		Anisotropic
 	};
+	
 	enum WrapMode
 	{
 		Repeat,
 		Clamp
 	};
+	
 	void setFilterMode(int filterMode)
 	{
 		int minFilter = 0;
