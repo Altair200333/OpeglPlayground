@@ -18,6 +18,7 @@ public:
 	
 	std::shared_ptr<Object> cube;
 	std::shared_ptr<Object> plane;
+	std::shared_ptr<Object> terrain;
 	
 	std::shared_ptr<DirectionalLight> dirLight;
 	
@@ -59,14 +60,13 @@ public:
 		}
 		if(MouseInput::keyPressed(Qt::MiddleButton))
 		{
-			ComponentManager::getComponent<RigidBody>(cube)->addForce(camera->right * MouseInput::delta().x() +
-				camera->up * MouseInput::delta().y());
+			ComponentManager::getComponent<RigidBody>(cube)->addForce(camera->right * MouseInput::delta().x()*5 +
+				camera->up * MouseInput::delta().y()*5);
 		}
 		//ComponentManager::getComponent<RigidBody>(cube)->body->applyForceToCenterOfMass(reactphysics3d::Vector3(1, 0, 0));
 
 	}
 
-	btCollisionShape* groundShape;
 	btCollisionShape* fallShape;
 	btRigidBody* groundRigidBody;
 	btRigidBody* fallRigidBody;
@@ -74,16 +74,11 @@ public:
 	{
 		btHeightfieldTerrainShape* shape = new btHeightfieldTerrainShape(map->w, map->h, map->data.data(), 
 			1, map->minValue, map->maxValue, 1, PHY_FLOAT, false);
-		groundShape = new btStaticPlaneShape(btVector3(0, 1, 0), 1);
 
-		fallShape = new btBoxShape(btVector3(1,1,1));
+		ComponentManager::addComponent(terrain, std::make_shared<RigidBody>())->init(ComponentManager::getComponent<Transform>(terrain), shape, 0);
 
-		btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
-		btRigidBody::btRigidBodyConstructionInfo
-			groundRigidBodyCI(0, groundMotionState, shape, btVector3(0, 0, 0));
-		groundRigidBody = new btRigidBody(groundRigidBodyCI);
-		PhysicsWorld::getWorld().addRigidBody(groundRigidBody);
-
+		
+		fallShape = new btBoxShape(btVector3(1, 1, 1));
 		ComponentManager::addComponent(cube, std::make_shared<RigidBody>())->init(ComponentManager::getComponent<Transform>(cube), fallShape, 1);
 	}
 	void init() override
@@ -116,9 +111,8 @@ public:
 		map = HeightMapGenerator().genHeightMap(200, 200, 0, 3);
 		auto terr = HeightMapMeshGenerator().genMesh(map);
 		addModel(MeshLoader::LoadedModel{ terr, std::make_shared<Material>() }, { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
-
-		auto surf = objects.back();
-		
+		terrain = objects.back();
+				
 		initPhysics();
 
 		//---
