@@ -58,35 +58,31 @@ public:
 				camera->up * MouseInput::delta().y() * 0.01f);
 
 		}
-		if(MouseInput::keyPressed(Qt::MiddleButton))
+		if(MouseInput::keyPressed(Qt::MiddleButton) && selectedObject != nullptr)
 		{
-			ComponentManager::getComponent<RigidBody>(cube)->addForce(camera->right * MouseInput::delta().x()*5 +
-				camera->up * MouseInput::delta().y()*5);
+			auto selRb = ComponentManager::getComponent<RigidBody>(selectedObject);
+			if(selRb)
+				selRb->addForce(camera->right * MouseInput::delta().x()*5 +
+					camera->up * MouseInput::delta().y()*5);
 		}
 
 	}
 
-	void initPhysics()
-	{
-		ComponentManager::addComponent(terrain, std::make_shared<RigidBody>())->init(ComponentManager::getComponent<Transform>(terrain), 
-			CollisionShapeGenerator::getTerrain(map), 0);
 
-		ComponentManager::addComponent(cube, std::make_shared<RigidBody>())->init(ComponentManager::getComponent<Transform>(cube), 
-			CollisionShapeGenerator::getBox({1,1,1}), 1);
-	}
 	void init() override
 	{
 		camera = std::make_shared<FreeCamera>();
 		
 		addModel(MeshLoader().loadModel("Assets/Models/ico1.obj"), { 0.5f, 5, 0 }, ShaderCollection::shaders["normals"]);
 		ComponentManager::addComponent(objects.back(), 
-			std::make_shared<RigidBody>())->init(ComponentManager::getComponent<Transform>(objects.back()),
+			std::make_shared<RigidBody>())->init(
 			CollisionShapeGenerator::getMeshCollider("Assets/Models/ico1.obj"), 1);
 		//-----
 		addModel(MeshLoader().loadModel("Assets/Models/sam2.obj"), { 10.5f, 20, 0 }, ShaderCollection::shaders["normals"]);
 		cube = objects.back();
+		ComponentManager::addComponent(cube, std::make_shared<RigidBody>())->init(ComponentManager::getComponent<Transform>(cube),
+			CollisionShapeGenerator::getBox({ 1,1,1 }), 1);
 		
-		addTransparent(MeshLoader().loadModel("Assets/Models/earthAtmo.obj"), { 0, 3, 0 }, ShaderCollection::shaders["cubicCloud"]);
 		
 		//addLight(std::make_shared<PointLight>(QVector3D{ -8, 4, 7 }, QColor{ 255, 255, 255 }, 2.5));
 		dirLight = (std::make_shared<DirectionalLight>());
@@ -97,9 +93,6 @@ public:
 		backround->light = dirLight;
 		
 
-		addModel(MeshLoader().loadModel("Assets/Models/plane.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
-		plane = objects.back();
-
 		loadPlane();
 		//cube->addChild(fuselage);
 
@@ -107,8 +100,9 @@ public:
 		auto terr = HeightMapMeshGenerator().genMesh(map);
 		addModel(MeshLoader::LoadedModel{ terr, std::make_shared<Material>() }, { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
 		terrain = objects.back();
-				
-		initPhysics();
+
+		ComponentManager::addComponent(terrain, std::make_shared<RigidBody>())->init(CollisionShapeGenerator::getTerrain(map), 0);
+		
 
 		//---
 		sprites.push_back(std::make_shared<Sprite>("Assets\\Sprites\\UV_1k.jpg", 200, 200, 100, 100));
@@ -120,19 +114,16 @@ public:
 	
 	void loadPlane()
 	{
-		addModel(MeshLoader().loadModel("Assets/Models/plane/body.obj"), { 3.5f, 3, 0 }, ShaderCollection::shaders["normals"]);
+		addModel(MeshLoader().loadModel("Assets/Models/plane/body.obj"), { 1.5f, 3, 0 }, ShaderCollection::shaders["normals"]);
 		fuselage = objects.back();
+		ComponentManager::addComponent(fuselage, std::make_shared<RigidBody>())->init(
+			CollisionShapeGenerator::getMeshCollider("Assets/Models/plane/body_c.obj"), 1);
 		
-		addModel(MeshLoader().loadModel("Assets/Models/plane/body2.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
-		fuselage->addChild(objects.back());
 		addModel(MeshLoader().loadModel("Assets/Models/plane/wings.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
 		fuselage->addChild(objects.back());
 		addModel(MeshLoader().loadModel("Assets/Models/plane/engine.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
 		fuselage->addChild(objects.back());
-		addModel(MeshLoader().loadModel("Assets/Models/plane/rud.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
-		fuselage->addChild(objects.back());
-		addModel(MeshLoader().loadModel("Assets/Models/plane/eleron.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
-		fuselage->addChild(objects.back());
+		
 
 		addTransparent(MeshLoader().loadModel("Assets/Models/plane/cockpit.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
 		fuselage->addChild(transparentObjects.back());

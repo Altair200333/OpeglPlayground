@@ -23,7 +23,7 @@ public:
 	QMatrix4x4 getProjectionMatrix()
 	{
 		QMatrix4x4 projection;
-		projection.perspective(FOV, aspectRatio, 0.1f, 1000.0f);
+		projection.perspective(FOV, aspectRatio, 0.01f, 1000.0f);
 		return projection;
 	}
 	QMatrix4x4 getViewMatrix() const

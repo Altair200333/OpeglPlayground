@@ -16,8 +16,12 @@ public:
 	}
 	static btCollisionShape* getTerrain(std::shared_ptr<HeightMap> map)
 	{
-		return new btHeightfieldTerrainShape(map->w, map->h, map->data.data(),
+		auto shape = new btHeightfieldTerrainShape(map->w, map->h, map->data.data(),
 			1, map->minValue, map->maxValue, 1, PHY_FLOAT, false);
+		//auto tmap = shape->getTriangleInfoMap();
+		//btBvhTriangleMeshShape* tshape = new btBvhTriangleMeshShape(tmap);
+		shape->setUseDiamondSubdivision(true);
+		return shape;
 	}
 	static btCollisionShape* getMeshCollider(const std::string& path)
 	{

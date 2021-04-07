@@ -18,7 +18,6 @@ public:
 		btTrans.setFromOpenGLMatrix(transform->transform.data());
 
 		btDefaultMotionState* fallMotionState = new btDefaultMotionState(btTrans);
-		
 		btVector3 fallInertia(0, 0, 0);
 		
 		if(mass!=0)
@@ -26,12 +25,17 @@ public:
 		btRigidBody::btRigidBodyConstructionInfo bodyCI(mass, fallMotionState, shape, fallInertia);
 
 		body = new btRigidBody(bodyCI);
-
+		body->setDamping(0.2, 0.1);
 		PhysicsWorld::getWorld().addRigidBody(body);
 	}
+	void init(btCollisionShape* shape, float mass)
+	{
+		init(ComponentManager::getComponent<Transform>(owner), shape, mass);
+	}
+	
 	void addCollider()
 	{
-
+		
 	}
 	void addForce(const QVector3D& force)
 	{
