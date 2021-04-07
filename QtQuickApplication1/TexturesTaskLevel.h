@@ -37,6 +37,10 @@ public:
 		backround = std::make_shared<SkyBackground>(functions);
 		backround->light = dirLight;
 
+		addModel(MeshLoader().loadModel("Assets/Models/task/truck.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
+		addTransparent(MeshLoader().loadModel("Assets/Models/task/glass.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
+		ComponentManager::getComponent<Material>(transparentObjects.back())->alpha = 0.4f;
+		
 		addModel(MeshLoader().loadModel("Assets/Models/task/road1.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
 		road1 = objects.back();
 		ComponentManager::getComponent<Material>(road1)->textures[0].setFilterMode(Texture::FilterMode::Point);
@@ -76,6 +80,7 @@ public:
 			texture.setFilterMode(Texture::FilterMode::Anisotropic);
 		}
 		addModel(MeshLoader().loadModel("Assets/Models/task/title.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
+
 
 	}
 	

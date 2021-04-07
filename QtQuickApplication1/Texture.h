@@ -17,6 +17,7 @@ struct Texture final
 	Texture(QOpenGLTexture* _texture):texture(_texture)
 	{
 	}
+	
 	enum FilterMode
 	{
 		Point,
