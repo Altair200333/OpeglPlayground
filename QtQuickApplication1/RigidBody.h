@@ -35,7 +35,7 @@ public:
 	}
 	void addForce(const QVector3D& force)
 	{
-		body->activate(true)//wake up samurai we've got a force to add
+		body->activate(true);//wake up samurai we've got a force to add
 		body->applyCentralForce(btVector3(force.x(), force.y(), force.z()));
 	}
 	void onUpdate() override

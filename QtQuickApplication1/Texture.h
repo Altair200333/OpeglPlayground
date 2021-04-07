@@ -7,7 +7,16 @@ struct Texture final
     std::string type;
     std::string path;
     QOpenGLTexture* texture;
-
+	
+	Texture() = default;
+	Texture(const std::string& _path)
+	{
+		path = _path;
+		texture = new QOpenGLTexture(QImage(QString(path.c_str())));
+	}
+	Texture(QOpenGLTexture* _texture):texture(_texture)
+	{
+	}
 	enum FilterMode
 	{
 		Point,
@@ -24,8 +33,8 @@ struct Texture final
 	
 	void setFilterMode(int filterMode)
 	{
-		int minFilter = 0;
-		int magFilter = 0;
+		auto minFilter = GL_NEAREST;
+		auto magFilter = GL_NEAREST;
 		bool useAniso = false;
 		if(filterMode== Point)
 		{

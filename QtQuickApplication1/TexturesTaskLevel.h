@@ -51,8 +51,30 @@ public:
 
 		addModel(MeshLoader().loadModel("Assets/Models/task/road1.obj"), { 0, 0, 6 }, ShaderCollection::shaders["normals"]);
 		road4 = objects.back();
-		ComponentManager::getComponent<Material>(road4)->textures[0].setFilterMode(Texture::FilterMode::Anisotropic);
+		auto mat = ComponentManager::getComponent<Material>(road4);
+		mat->textures.emplace_back("Assets/Models/task/textures/road_3.jpg");
+		mat->textures.emplace_back("Assets/Models/task/textures/road_2.jpg");
+		for(auto& texture: mat->textures)
+		{
+			texture.setFilterMode(Texture::FilterMode::Anisotropic);
+		}
 
+		addModel(MeshLoader().loadModel("Assets/Models/task/sand.obj"), { 0, 0, 8 }, ShaderCollection::shaders["normals"]);
+		ComponentManager::getComponent<Material>(objects.back())->textures[0].setFilterMode(Texture::FilterMode::Point);
+
+		addModel(MeshLoader().loadModel("Assets/Models/task/sand.obj"), { 0, 0, 10 }, ShaderCollection::shaders["normals"]);
+		ComponentManager::getComponent<Material>(objects.back())->textures[0].setFilterMode(Texture::FilterMode::Bilinear);
+
+		addModel(MeshLoader().loadModel("Assets/Models/task/sand.obj"), { 0, 0, 12 }, ShaderCollection::shaders["normals"]);
+		ComponentManager::getComponent<Material>(objects.back())->textures[0].setFilterMode(Texture::FilterMode::Trilinear);
+
+		addModel(MeshLoader().loadModel("Assets/Models/task/sand.obj"), { 0, 0, 14 }, ShaderCollection::shaders["normals"]);
+		auto ansandmat = ComponentManager::getComponent<Material>(objects.back());
+		//ansandmat->textures.emplace_back("Assets/Models/task/textures/road_3.jpg");
+		for (auto& texture : ansandmat->textures)
+		{
+			texture.setFilterMode(Texture::FilterMode::Anisotropic);
+		}
 		addModel(MeshLoader().loadModel("Assets/Models/task/title.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
 
 	}

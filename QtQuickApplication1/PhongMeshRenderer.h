@@ -7,15 +7,17 @@
 class PhongMeshRenderer final: public MeshRenderer
 {
 public:
-
+	int textureNum = 0;
 	void bindAlbedo()
 	{
 		shader->setUniformValue("albedoCount", static_cast<int>(material->textures.size()));
-		if(!material->textures.empty())
+		for(int i=0;i<material->textures.size();++i)
 		{
-			functions->glActiveTexture(GL_TEXTURE0 + 0);
-			material->textures[0].texture->bind();
-			shader->setUniformValue("texture_diffuse", 0);
+			functions->glActiveTexture(GL_TEXTURE0 + textureNum);
+			material->textures[i].texture->bind();
+			auto address = "texture_diffuse[" + std::to_string(i) + "]";
+			shader->setUniformValue(address.c_str(), textureNum);
+			textureNum++;
 		}
 	}
 	void bindNormals()
@@ -23,9 +25,10 @@ public:
 		shader->setUniformValue("normalCount", static_cast<int>(material->normal.size()));
 		if (!material->normal.empty())
 		{
-			functions->glActiveTexture(GL_TEXTURE1);
+			functions->glActiveTexture(GL_TEXTURE0 + textureNum);
 			material->normal[0].texture->bind();
-			shader->setUniformValue("texture_normal", 1);
+			shader->setUniformValue("texture_normal", textureNum);
+			textureNum++;
 		}
 	}
 	void bindSpecular()
@@ -33,22 +36,25 @@ public:
 		shader->setUniformValue("specularCount", static_cast<int>(material->specular.size()));
 		if (!material->specular.empty())
 		{
-			functions->glActiveTexture(GL_TEXTURE2);
+			functions->glActiveTexture(GL_TEXTURE0 + textureNum);
 			material->specular[0].texture->bind();
-			shader->setUniformValue("texture_specular", 2);
+			shader->setUniformValue("texture_specular", textureNum);
+			textureNum++;
 		}
 	}
 	void bindShadowMap(unsigned int shadowMap)
 	{
 		if (shadowMap != -1)
 		{
-			functions->glActiveTexture(GL_TEXTURE4);
+			functions->glActiveTexture(GL_TEXTURE0 + textureNum);
 			functions->glBindTexture(GL_TEXTURE_2D, shadowMap);
-			shader->setUniformValue("shadowMap", 4);
+			shader->setUniformValue("shadowMap", textureNum);
+			textureNum++;
 		}
 	}
 	void render(const RenderContext& context) override
 	{
+		textureNum = 0;
 		if(!enabled)
 			return;
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -74,8 +80,9 @@ public:
 		auto imgBack = std::dynamic_pointer_cast<ImageBackground>(context.background);
 		if(imgBack !=nullptr)
 		{
-			shader->setUniformValue("texture_background", 3);
-			functions->glActiveTexture(GL_TEXTURE3);
+			shader->setUniformValue("texture_background", textureNum);
+			functions->glActiveTexture(GL_TEXTURE0 + textureNum);
+			textureNum++;
 			imgBack->image->bind();
 		}
 		

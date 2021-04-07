@@ -10,7 +10,7 @@
 #include "SkyBackground.h"
 #include "FreeCamera.h"
 #include "b3d/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
-
+#include "CollisionShapeGenerator.h"
 class ExperimentalLevel: public Level
 {
 public:
@@ -63,30 +63,25 @@ public:
 			ComponentManager::getComponent<RigidBody>(cube)->addForce(camera->right * MouseInput::delta().x()*5 +
 				camera->up * MouseInput::delta().y()*5);
 		}
-		//ComponentManager::getComponent<RigidBody>(cube)->body->applyForceToCenterOfMass(reactphysics3d::Vector3(1, 0, 0));
 
 	}
 
-	btCollisionShape* fallShape;
-	btRigidBody* groundRigidBody;
-	btRigidBody* fallRigidBody;
 	void initPhysics()
 	{
-		btHeightfieldTerrainShape* shape = new btHeightfieldTerrainShape(map->w, map->h, map->data.data(), 
-			1, map->minValue, map->maxValue, 1, PHY_FLOAT, false);
+		ComponentManager::addComponent(terrain, std::make_shared<RigidBody>())->init(ComponentManager::getComponent<Transform>(terrain), 
+			CollisionShapeGenerator::getTerrain(map), 0);
 
-		ComponentManager::addComponent(terrain, std::make_shared<RigidBody>())->init(ComponentManager::getComponent<Transform>(terrain), shape, 0);
-
-		
-		fallShape = new btBoxShape(btVector3(1, 1, 1));
-		ComponentManager::addComponent(cube, std::make_shared<RigidBody>())->init(ComponentManager::getComponent<Transform>(cube), fallShape, 1);
+		ComponentManager::addComponent(cube, std::make_shared<RigidBody>())->init(ComponentManager::getComponent<Transform>(cube), 
+			CollisionShapeGenerator::getBox({1,1,1}), 1);
 	}
 	void init() override
 	{
 		camera = std::make_shared<FreeCamera>();
 		
 		addModel(MeshLoader().loadModel("Assets/Models/ico1.obj"), { 0.5f, 5, 0 }, ShaderCollection::shaders["normals"]);
-		
+		ComponentManager::addComponent(objects.back(), 
+			std::make_shared<RigidBody>())->init(ComponentManager::getComponent<Transform>(objects.back()),
+			CollisionShapeGenerator::getMeshCollider("Assets/Models/ico1.obj"), 1);
 		//-----
 		addModel(MeshLoader().loadModel("Assets/Models/sam2.obj"), { 10.5f, 20, 0 }, ShaderCollection::shaders["normals"]);
 		cube = objects.back();

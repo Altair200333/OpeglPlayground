@@ -1,4 +1,4 @@
-#version 330
+#version 400
 
 out vec4 fragColor;
 
@@ -20,7 +20,7 @@ uniform sampler2D texture_background;
 uniform bool useBackground;
 
 uniform int albedoCount;
-uniform sampler2D texture_diffuse;
+uniform sampler2D texture_diffuse[4];
 
 uniform int specularCount;
 uniform sampler2D texture_specular;
@@ -80,9 +80,15 @@ vec2 SampleSphericalMap(vec3 direction)
 
 vec3 getDiffuseColor()
 {
-   if(albedoCount != 0)
-     return texture(texture_diffuse, TexCoords).xyz;
-   return color.xyz;
+   if(albedoCount == 0)
+      return color.xyz;
+   vec3 result = texture(texture_diffuse[0], TexCoords).xyz;
+   for(int i=1;i<albedoCount;++i)
+   {
+      result = texture(texture_diffuse[i], TexCoords).xyz*result;
+   }
+   return result;
+   
 }
 
 vec3 getNormal()

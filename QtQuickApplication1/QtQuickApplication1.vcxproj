@@ -218,6 +218,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AloyApplication.h" />
+    <ClInclude Include="CollisionShapeGenerator.h" />
     <ClInclude Include="FastNoiseLite.h" />
     <ClInclude Include="FreeCamera.h" />
     <ClInclude Include="GLBackground.h" />
