@@ -35,15 +35,32 @@ public:
 
 	void controlPlane()
 	{
-		auto rb = ComponentManager::getComponent<RigidBody>(cube);
-		auto transform = ComponentManager::getComponent<Transform>(cube);
-		if (Input::keyPressed(Qt::Key_Shift))
+		//if(planeCamera->enabled)
 		{
-			rb->addForce(transform->getForward() * 20);
-		}
-		if (Input::keyPressed(Qt::Key_Control))
-		{
-			rb->addForce(-transform->getForward() * 20);
+			auto rb = ComponentManager::getComponent<RigidBody>(fuselage);
+			auto transform = ComponentManager::getComponent<Transform>(fuselage);
+			if (Input::keyPressed(Qt::Key_Shift))
+			{
+				rb->addForce(transform->getForward() * 20);
+			}
+			if (Input::keyPressed(Qt::Key_Control))
+			{
+				rb->addForce(-transform->getForward() * 20);
+			}
+
+			if(MouseInput::keyPressed(Qt::MiddleButton))
+			{
+				rb->addTorgue(transform->getRight() * MouseInput::delta().y()*10);
+				rb->addTorgue(transform->getForward() * MouseInput::delta().x()/10);
+			}
+			if(Input::keyPressed(Qt::Key_T))
+			{
+				rb->addTorgue(transform->getRight()*20);
+			}
+			if (Input::keyPressed(Qt::Key_G))
+			{
+				rb->addTorgue(-transform->getRight()*20);
+			}
 		}
 	}
 

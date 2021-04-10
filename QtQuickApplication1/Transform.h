@@ -10,7 +10,7 @@ public:
 	QVector3D position;
 	QVector3D right = QVector3D(1,0,0);
 	QVector3D up = QVector3D(0,1,0);
-	QVector3D forward = QVector3D(0, 0, 1);
+	QVector3D forward = QVector3D(0, 0, -1);
 
 	void translate(const QVector3D& translation);
 

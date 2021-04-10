@@ -8,7 +8,10 @@ class FollowCamera final: public GLCamera, public OnUpdateSubscriber
 {
 public:
 	std::shared_ptr<Transform> target;
-	FollowCamera() = default;
+	FollowCamera()
+	{
+		FOV = 80;
+	}
 
 	QVector3D getPosition() const override
 	{
