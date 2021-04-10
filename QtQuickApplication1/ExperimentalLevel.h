@@ -11,6 +11,8 @@
 #include "FreeCamera.h"
 #include "b3d/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
 #include "CollisionShapeGenerator.h"
+#include "FollowCamera.h"
+
 class ExperimentalLevel: public Level
 {
 public:
@@ -24,6 +26,8 @@ public:
 	
 	std::shared_ptr<Object> selectedObject = nullptr;
 
+	std::shared_ptr<GLCamera> freeCamera;
+	std::shared_ptr<GLCamera> planeCamera;
 	ExperimentalLevel(QOpenGLFunctions* _functions) :Level(_functions)
 	{
 
@@ -38,8 +42,6 @@ public:
 		
 		if(Input::keyPressed(Qt::Key_R))
 		{
-			//dirLight->direction = QQuaternion::fromAxisAndAngle(camera.right, MouseInput::delta().y()) * dirLight->direction;
-			//dirLight->direction = QQuaternion::fromAxisAndAngle(QVector3D(0, 1, 0), -MouseInput::delta().x()) * dirLight->direction;
 			if(selectedObject)
 			{
 				auto transform = ComponentManager::getComponent<Transform>(selectedObject);
@@ -65,13 +67,29 @@ public:
 				selRb->addForce(camera->right * MouseInput::delta().x()*5 +
 					camera->up * MouseInput::delta().y()*5);
 		}
-
+		if(Input::keyJustPressed(Qt::Key_V))
+		{
+			if(freeCamera->enabled)
+			{
+				camera = planeCamera;
+			}
+			else
+			{
+				camera = freeCamera;
+			}
+			freeCamera->enabled = !freeCamera->enabled;
+			planeCamera->enabled = !planeCamera->enabled;
+		}
 	}
 
 
 	void init() override
 	{
-		camera = std::make_shared<FreeCamera>();
+		freeCamera = std::make_shared<FreeCamera>();
+		planeCamera = std::make_shared<FollowCamera>();
+		planeCamera->enabled = false;
+		planeCamera->position = QVector3D(-1.8, 0.27, 0);
+		camera = freeCamera;
 		
 		addModel(MeshLoader().loadModel("Assets/Models/ico1.obj"), { 0.5f, 5, 0 }, ShaderCollection::shaders["normals"]);
 		ComponentManager::addComponent(objects.back(), 
@@ -94,8 +112,9 @@ public:
 		
 
 		loadPlane();
-		//cube->addChild(fuselage);
 
+		std::dynamic_pointer_cast<FollowCamera>(planeCamera)->target = ComponentManager::getComponent<Transform>(fuselage);
+		
 		map = HeightMapGenerator().genHeightMap(200, 200, 0, 3);
 		auto terr = HeightMapMeshGenerator().genMesh(map);
 		addModel(MeshLoader::LoadedModel{ terr, std::make_shared<Material>() }, { 0, 0, 0 }, ShaderCollection::shaders["normals"]);

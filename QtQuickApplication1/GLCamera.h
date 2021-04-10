@@ -15,7 +15,7 @@ public:
 	QVector3D right = { 1, 0, 0 };
 	QVector3D up =	  { 0, 1, 0 };
 	QVector3D position = {0,0, 3};
-	
+	bool enabled = true;
 	GLCamera()
 	{
 		updateCameraVectors();
@@ -29,8 +29,24 @@ public:
 	QMatrix4x4 getViewMatrix() const
 	{
 		QMatrix4x4 view;
-		view.lookAt(position, (position + front), up);
+		view.lookAt(getPosition(), (getPosition() + getForward()), getUp());
 		return view;
+	}
+	virtual QVector3D getPosition() const
+	{
+		return position;
+	}
+	virtual QVector3D getRight() const
+	{
+		return right;
+	}
+	virtual QVector3D getForward() const
+	{
+		return front;
+	}
+	virtual QVector3D getUp() const
+	{
+		return up;
 	}
 	void updateCameraVectors()
 	{
@@ -41,7 +57,7 @@ public:
 		forward.setZ(sin(qDegreesToRadians(yaw)) * cos(qDegreesToRadians(pitch)));
 		front = (forward).normalized();
 
-		right = QVector3D::crossProduct(forward, QVector3D( 0, 1, 0 )).normalized();
+		right = QVector3D::crossProduct(front, QVector3D(0,1,0)).normalized();
 		up = QVector3D::crossProduct(right, front).normalized();
 	}
 	void translate(const QVector3D& mult)

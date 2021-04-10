@@ -30,6 +30,8 @@ public:
 	}
 	void onUpdate() override
 	{
+		if (!enabled)
+			return;
 		if (MouseInput::keyPressed(Qt::RightButton))
 		{
 			acc += FPSCounter::getFrameTime();

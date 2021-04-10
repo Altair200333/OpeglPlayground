@@ -253,6 +253,9 @@
     <ClInclude Include="CollisionShapeGenerator.h">
       <Filter>Physics\Colliders</Filter>
     </ClInclude>
+    <ClInclude Include="FollowCamera.h">
+      <Filter>Objects\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

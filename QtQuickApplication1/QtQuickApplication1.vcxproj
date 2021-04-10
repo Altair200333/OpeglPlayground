@@ -220,6 +220,7 @@
     <ClInclude Include="AloyApplication.h" />
     <ClInclude Include="CollisionShapeGenerator.h" />
     <ClInclude Include="FastNoiseLite.h" />
+    <ClInclude Include="FollowCamera.h" />
     <ClInclude Include="FreeCamera.h" />
     <ClInclude Include="GLBackground.h" />
     <ClInclude Include="HeightMap.h" />
