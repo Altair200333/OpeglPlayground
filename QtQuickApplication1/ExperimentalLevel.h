@@ -32,6 +32,21 @@ public:
 	{
 
 	}
+
+	void controlPlane()
+	{
+		auto rb = ComponentManager::getComponent<RigidBody>(cube);
+		auto transform = ComponentManager::getComponent<Transform>(cube);
+		if (Input::keyPressed(Qt::Key_Shift))
+		{
+			rb->addForce(transform->getForward() * 20);
+		}
+		if (Input::keyPressed(Qt::Key_Control))
+		{
+			rb->addForce(-transform->getForward() * 20);
+		}
+	}
+
 	void onUpdate() override
 	{
 		
@@ -49,7 +64,7 @@ public:
 				transform->rotate(MouseInput::delta().x(), QVector3D(0,1,0));
 			}
 		}
-
+		controlPlane();
 		if(MouseInput::keyJustPressed(Qt::LeftButton) && pickedObjectId != -1 && pickedObjectId<objects.size())
 		{
 			selectedObject = objects[pickedObjectId];
@@ -80,6 +95,7 @@ public:
 			freeCamera->enabled = !freeCamera->enabled;
 			planeCamera->enabled = !planeCamera->enabled;
 		}
+		
 	}
 
 
@@ -88,7 +104,7 @@ public:
 		freeCamera = std::make_shared<FreeCamera>();
 		planeCamera = std::make_shared<FollowCamera>();
 		planeCamera->enabled = false;
-		planeCamera->position = QVector3D(-1.8, 0.27, 0);
+		planeCamera->position = QVector3D(0, 0.27, -1.8);
 		camera = freeCamera;
 		
 		addModel(MeshLoader().loadModel("Assets/Models/ico1.obj"), { 0.5f, 5, 0 }, ShaderCollection::shaders["normals"]);
@@ -146,6 +162,6 @@ public:
 
 		addTransparent(MeshLoader().loadModel("Assets/Models/plane/cockpit.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
 		fuselage->addChild(transparentObjects.back());
-		ComponentManager::getComponent<Material>(transparentObjects.back())->alpha = 0.4f;
+		ComponentManager::getComponent<Material>(transparentObjects.back())->alpha = 0.23f;
 	}
 };

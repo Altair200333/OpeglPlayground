@@ -42,6 +42,11 @@ public:
 		body->activate(true);//wake up samurai we've got a force to add
 		body->applyCentralForce(btVector3(force.x(), force.y(), force.z()));
 	}
+	void addTorgue(const QVector3D& torgue)
+	{
+		body->activate(true);
+		body->applyTorque(btVector3(torgue.x(), torgue.y(), torgue.z()));
+	}
 	void onUpdate() override
 	{
 		if (body == nullptr)
@@ -51,5 +56,8 @@ public:
 
 		auto tr = ComponentManager::getComponent<Transform>(owner);
 		trans.getOpenGLMatrix(tr->transform.data());
+		
+		auto pos = trans.getOrigin();
+		tr->position = QVector3D(pos.x(), pos.y(), pos.z());
 	}
 };

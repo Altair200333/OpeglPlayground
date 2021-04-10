@@ -15,24 +15,17 @@ public:
 		return target->transform * position;
 	}
 
-	QQuaternion getDirMatrix() const
-	{
-		QQuaternion q = QQuaternion::fromRotationMatrix(target->transform.normalMatrix());
-		return q;
-
-	}
-	
 	QVector3D getRight() const override
 	{
-		return getDirMatrix() * right;
+		return target->getRotationTransform() * right;
 	}
 	QVector3D getForward() const override
 	{
-		return getDirMatrix() * front;
+		return target->getRotationTransform() * front;
 	}
 	QVector3D getUp() const override
 	{
-		return getDirMatrix() * up;
+		return target->getRotationTransform() * up;
 	}
 	void onUpdate() override
 	{

@@ -19,6 +19,11 @@ public:
 	void rotate(const QQuaternion& quaternion);
 
 	void rotateAround(float angle, const QVector3D& axis, const QVector3D& point);
+
+	QQuaternion getRotationTransform() const
+	{
+		return QQuaternion::fromRotationMatrix(transform.normalMatrix());
+	}
 	
 	QMatrix4x4 getGlobalTransform() const
 	{
@@ -48,6 +53,18 @@ public:
 		position = QVector3D(0, 0, 0);
 		transform.setToIdentity();
 	}
+	QVector3D getRight() const
+	{
+		return getRotationTransform() * right;
+	}
+	QVector3D getForward() const
+	{
+		return getRotationTransform() * forward;
+	}
+	QVector3D getUp() const
+	{
+		return getRotationTransform() * up;
+	}
 };
 
 inline void Transform::translate(const QVector3D& translation)
@@ -71,10 +88,6 @@ inline void Transform::rotate(const QQuaternion& quaternion)
 	m.translate(-position);
 
 	transform = m * transform;
-	
-	forward = m * forward;
-	up = m * up;
-	right = m * right;
 }
 
 inline void Transform::rotateAround(float angle, const QVector3D& axis, const QVector3D& point)
@@ -87,10 +100,6 @@ inline void Transform::rotateAround(float angle, const QVector3D& axis, const QV
 	m.translate(-point);
 
 	position = m * position;
-
-	forward = m * forward;
-	up = m * up;
-	right = m * right;
 	
 	transform = m * transform;
 }

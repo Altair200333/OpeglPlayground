@@ -72,12 +72,14 @@ protected:
 	void keyPressEvent(QKeyEvent* e) override
 	{
 		Input::pressKey(e->nativeVirtualKey());
+		Input::pressKey(e->key());
 		QOpenGLWidget::keyPressEvent(e);
 	}
 
 	void keyReleaseEvent(QKeyEvent* e) override
 	{
 		Input::releaseKey(e->nativeVirtualKey());
+		Input::releaseKey(e->key());
 		QOpenGLWidget::keyReleaseEvent(e);
 	}
 
