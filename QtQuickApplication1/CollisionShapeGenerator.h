@@ -31,4 +31,14 @@ public:
 		shape->optimizeConvexHull();
 		return shape;
 	}
+	static btCollisionShape* getCompoundShape(std::initializer_list<btCollisionShape*> list)
+	{
+		btCompoundShape* compoundShape = new btCompoundShape();
+		
+		for(btCollisionShape* shape: list)
+		{
+			compoundShape->addChildShape(btTransform::getIdentity(), shape);
+		}
+		return compoundShape;
+	}
 };

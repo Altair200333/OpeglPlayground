@@ -32,10 +32,13 @@ public:
 	{
 		init(ComponentManager::getComponent<Transform>(owner), shape, mass);
 	}
-	
+
+	void setGravity(const QVector3D& gravity)
+	{
+		body->setGravity(btVector3(gravity.x(), gravity.y(), gravity.z()));
+	}
 	void addCollider()
 	{
-		
 	}
 	void addForce(const QVector3D& force)
 	{

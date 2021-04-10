@@ -51,15 +51,7 @@ public:
 			if(MouseInput::keyPressed(Qt::MiddleButton))
 			{
 				rb->addTorgue(transform->getRight() * MouseInput::delta().y()*10);
-				rb->addTorgue(transform->getForward() * MouseInput::delta().x()/10);
-			}
-			if(Input::keyPressed(Qt::Key_T))
-			{
-				rb->addTorgue(transform->getRight()*20);
-			}
-			if (Input::keyPressed(Qt::Key_G))
-			{
-				rb->addTorgue(-transform->getRight()*20);
+				rb->addTorgue(transform->getForward() * MouseInput::delta().x()*5);
 			}
 		}
 	}
@@ -121,7 +113,7 @@ public:
 		freeCamera = std::make_shared<FreeCamera>();
 		planeCamera = std::make_shared<FollowCamera>();
 		planeCamera->enabled = false;
-		planeCamera->position = QVector3D(0, 0.27, -1.8);
+		planeCamera->position = QVector3D(0, 0.29, -1.9);
 		camera = freeCamera;
 		
 		addModel(MeshLoader().loadModel("Assets/Models/ico1.obj"), { 0.5f, 5, 0 }, ShaderCollection::shaders["normals"]);
@@ -169,14 +161,26 @@ public:
 		addModel(MeshLoader().loadModel("Assets/Models/plane/body.obj"), { 1.5f, 3, 0 }, ShaderCollection::shaders["normals"]);
 		fuselage = objects.back();
 		ComponentManager::addComponent(fuselage, std::make_shared<RigidBody>())->init(
-			CollisionShapeGenerator::getMeshCollider("Assets/Models/plane/body_c.obj"), 1);
+			CollisionShapeGenerator::getCompoundShape(
+		{
+				CollisionShapeGenerator::getMeshCollider("Assets/Models/plane/body_c.obj"),
+				CollisionShapeGenerator::getMeshCollider("Assets/Models/plane/wings_c.obj")
+			}), 1);
+
+		ComponentManager::getComponent<RigidBody>(fuselage)->setGravity(QVector3D(0, -1.0f, 0));
+		//--
 		
 		addModel(MeshLoader().loadModel("Assets/Models/plane/wings.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
 		fuselage->addChild(objects.back());
 		addModel(MeshLoader().loadModel("Assets/Models/plane/engine.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
 		fuselage->addChild(objects.back());
-		
 
+		addModel(MeshLoader().loadModel("Assets/Models/plane/panel.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
+		fuselage->addChild(objects.back());
+
+		addModel(MeshLoader().loadModel("Assets/Models/plane/seat.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
+		fuselage->addChild(objects.back());
+		
 		addTransparent(MeshLoader().loadModel("Assets/Models/plane/cockpit.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
 		fuselage->addChild(transparentObjects.back());
 		ComponentManager::getComponent<Material>(transparentObjects.back())->alpha = 0.23f;
