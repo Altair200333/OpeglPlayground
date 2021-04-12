@@ -176,6 +176,7 @@ public:
                 texture.texture = new QOpenGLTexture(QImage(QString(path.c_str())));
                 texture.type = typeName;
                 texture.path = str.C_Str();
+                texture.setFilterMode(Texture::FilterMode::Anisotropic);
                 textures.push_back(texture);
                 cachedTextures.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
             }

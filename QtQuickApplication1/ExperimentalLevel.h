@@ -104,7 +104,13 @@ public:
 			freeCamera->enabled = !freeCamera->enabled;
 			planeCamera->enabled = !planeCamera->enabled;
 		}
-		
+		auto fuselageQuat = ComponentManager::getComponent<Transform>(fuselage)->getRotationTransform();
+		auto navBallTransform = ComponentManager::getComponent<Transform>(navball);
+		QMatrix4x4 navTransform;
+		navTransform.translate(-0.074943, -0.024163, -2.41394);
+		navBallTransform->transform = navTransform;
+		navBallTransform->rotate(fuselageQuat.inverted());
+	
 	}
 
 
@@ -155,6 +161,7 @@ public:
 	
 	std::shared_ptr<HeightMap> map;
 	std::shared_ptr<Object> fuselage;
+	std::shared_ptr<Object> navball;
 	
 	void loadPlane()
 	{
@@ -180,8 +187,12 @@ public:
 
 		addModel(MeshLoader().loadModel("Assets/Models/plane/seat.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
 		fuselage->addChild(objects.back());
+
+		addModel(MeshLoader().loadModel("Assets/Models/plane/navball.obj"), { -0.074943, -0.024163, -2.41394 }, ShaderCollection::shaders["plain"]);
+		navball = objects.back();
+		fuselage->addChild(navball);
 		
-		addTransparent(MeshLoader().loadModel("Assets/Models/plane/cockpit.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
+		addTransparent(MeshLoader().loadModel("Assets/Models/plane/cockpit.obj"), { 0, 0, 0 }, ShaderCollection::shaders["plain"]);
 		fuselage->addChild(transparentObjects.back());
 		ComponentManager::getComponent<Material>(transparentObjects.back())->alpha = 0.23f;
 	}
