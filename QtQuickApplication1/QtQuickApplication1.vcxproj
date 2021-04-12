@@ -244,6 +244,7 @@
     <ClInclude Include="LightSource.h" />
     <ClInclude Include="PhysicsWorld.h" />
     <ClInclude Include="PickRenderer.h" />
+    <ClInclude Include="Plane.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
@@ -258,6 +259,7 @@
     <ClInclude Include="RenderLayer.h" />
     <ClInclude Include="RenderLayerStack.h" />
     <ClInclude Include="RigidBody.h" />
+    <ClInclude Include="RotationAnimator.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneRenderer.h" />
     <ClInclude Include="ShaderCollection.h" />
@@ -266,6 +268,7 @@
     <ClInclude Include="SkyBackground.h" />
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="Su33.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TexturesTaskLevel.h" />
     <ClInclude Include="Transform.h" />

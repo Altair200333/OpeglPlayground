@@ -74,6 +74,12 @@
     <Filter Include="Objects\Camera">
       <UniqueIdentifier>{bfb31b16-83e4-40c2-a67d-564e6e8d97da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Application\Game">
+      <UniqueIdentifier>{08a07da6-1a48-4170-b7b1-c9cfac660d48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application\Game\Planes">
+      <UniqueIdentifier>{0833f85f-21fd-4da9-b5aa-4f13900452d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -255,6 +261,15 @@
     </ClInclude>
     <ClInclude Include="FollowCamera.h">
       <Filter>Objects\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane.h">
+      <Filter>Application\Game\Planes</Filter>
+    </ClInclude>
+    <ClInclude Include="Su33.h">
+      <Filter>Application\Game\Planes</Filter>
+    </ClInclude>
+    <ClInclude Include="RotationAnimator.h">
+      <Filter>Application\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

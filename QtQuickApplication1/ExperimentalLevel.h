@@ -12,6 +12,7 @@
 #include "b3d/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
 #include "CollisionShapeGenerator.h"
 #include "FollowCamera.h"
+#include "Su33.h"
 
 class ExperimentalLevel: public Level
 {
@@ -19,7 +20,6 @@ public:
 	
 	
 	std::shared_ptr<Object> cube;
-	std::shared_ptr<Object> plane;
 	std::shared_ptr<Object> terrain;
 	
 	std::shared_ptr<DirectionalLight> dirLight;
@@ -36,24 +36,7 @@ public:
 	void controlPlane()
 	{
 		//if(planeCamera->enabled)
-		{
-			auto rb = ComponentManager::getComponent<RigidBody>(fuselage);
-			auto transform = ComponentManager::getComponent<Transform>(fuselage);
-			if (Input::keyPressed(Qt::Key_Shift))
-			{
-				rb->addForce(transform->getForward() * 20);
-			}
-			if (Input::keyPressed(Qt::Key_Control))
-			{
-				rb->addForce(-transform->getForward() * 20);
-			}
-
-			if(MouseInput::keyPressed(Qt::MiddleButton))
-			{
-				rb->addTorgue(transform->getRight() * MouseInput::delta().y()*10);
-				rb->addTorgue(transform->getForward() * MouseInput::delta().x()*5);
-			}
-		}
+		
 	}
 
 	void onUpdate() override
@@ -104,13 +87,6 @@ public:
 			freeCamera->enabled = !freeCamera->enabled;
 			planeCamera->enabled = !planeCamera->enabled;
 		}
-		auto fuselageQuat = ComponentManager::getComponent<Transform>(fuselage)->getRotationTransform();
-		auto navBallTransform = ComponentManager::getComponent<Transform>(navball);
-		QMatrix4x4 navTransform;
-		navTransform.translate(-0.074943, -0.024163, -2.41394);
-		navBallTransform->transform = navTransform;
-		navBallTransform->rotate(fuselageQuat.inverted());
-	
 	}
 
 
@@ -144,7 +120,7 @@ public:
 
 		loadPlane();
 
-		std::dynamic_pointer_cast<FollowCamera>(planeCamera)->target = ComponentManager::getComponent<Transform>(fuselage);
+		std::dynamic_pointer_cast<FollowCamera>(planeCamera)->target = ComponentManager::getComponent<Transform>(plane->fuselage);
 		
 		map = HeightMapGenerator().genHeightMap(200, 200, 0, 3);
 		auto terr = HeightMapMeshGenerator().genMesh(map);
@@ -160,40 +136,12 @@ public:
 	}
 	
 	std::shared_ptr<HeightMap> map;
-	std::shared_ptr<Object> fuselage;
-	std::shared_ptr<Object> navball;
-	
+
+	std::shared_ptr<Su33> plane;
 	void loadPlane()
 	{
-		addModel(MeshLoader().loadModel("Assets/Models/plane/body.obj"), { 1.5f, 3, 0 }, ShaderCollection::shaders["normals"]);
-		fuselage = objects.back();
-		ComponentManager::addComponent(fuselage, std::make_shared<RigidBody>())->init(
-			CollisionShapeGenerator::getCompoundShape(
-		{
-				CollisionShapeGenerator::getMeshCollider("Assets/Models/plane/body_c.obj"),
-				CollisionShapeGenerator::getMeshCollider("Assets/Models/plane/wings_c.obj")
-			}), 1);
-
-		ComponentManager::getComponent<RigidBody>(fuselage)->setGravity(QVector3D(0, -1.0f, 0));
-		//--
+		plane = std::make_shared<Su33>();
+		plane->init(this);
 		
-		addModel(MeshLoader().loadModel("Assets/Models/plane/wings.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
-		fuselage->addChild(objects.back());
-		addModel(MeshLoader().loadModel("Assets/Models/plane/engine.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
-		fuselage->addChild(objects.back());
-
-		addModel(MeshLoader().loadModel("Assets/Models/plane/panel.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
-		fuselage->addChild(objects.back());
-
-		addModel(MeshLoader().loadModel("Assets/Models/plane/seat.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
-		fuselage->addChild(objects.back());
-
-		addModel(MeshLoader().loadModel("Assets/Models/plane/navball.obj"), { -0.074943, -0.024163, -2.41394 }, ShaderCollection::shaders["plain"]);
-		navball = objects.back();
-		fuselage->addChild(navball);
-		
-		addTransparent(MeshLoader().loadModel("Assets/Models/plane/cockpit.obj"), { 0, 0, 0 }, ShaderCollection::shaders["plain"]);
-		fuselage->addChild(transparentObjects.back());
-		ComponentManager::getComponent<Material>(transparentObjects.back())->alpha = 0.23f;
 	}
 };
