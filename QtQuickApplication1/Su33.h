@@ -14,6 +14,8 @@ public:
 	RotationAnimator leftFalpAnimator;
 	RotationAnimator rightFlapAnimator;
 	QPoint lastPos;
+
+	QVector3D navBallPos{ -0.105508, 0.082774, -2.34698 };
 	void onUpdate() override
 	{
 		{
@@ -57,7 +59,7 @@ public:
 		auto fuselageQuat = ComponentManager::getComponent<Transform>(fuselage)->getRotationTransform();
 		auto navBallTransform = ComponentManager::getComponent<Transform>(navball);
 		QMatrix4x4 navTransform;
-		navTransform.translate(-0.074943, -0.024163, -2.41394);
+		navTransform.translate(navBallPos);
 		navBallTransform->transform = navTransform;
 		navBallTransform->rotate(fuselageQuat.inverted());
 	}
@@ -96,7 +98,11 @@ public:
 		                ShaderCollection::shaders["normals"]);
 		fuselage->addChild(scene->objects.back());
 
-		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/navball.obj"), {-0.074943, -0.024163, -2.41394},
+		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/visor_frame.obj"), { 0, 0, 0 },
+			ShaderCollection::shaders["normals"]);
+		fuselage->addChild(scene->objects.back());
+		
+		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/navball.obj"), navBallPos,
 		                ShaderCollection::shaders["plain"]);
 		navball = scene->objects.back();
 		fuselage->addChild(navball);
@@ -117,5 +123,9 @@ public:
 		                      ShaderCollection::shaders["plain"]);
 		fuselage->addChild(scene->transparentObjects.back());
 		ComponentManager::getComponent<Material>(scene->transparentObjects.back())->alpha = 0.23f;
+
+		scene->addTransparent(MeshLoader().loadModel("Assets/Models/plane/visor.obj"), { 0, 0, 0 },
+			ShaderCollection::shaders["visor"]);
+		fuselage->addChild(scene->transparentObjects.back());
 	}
 };

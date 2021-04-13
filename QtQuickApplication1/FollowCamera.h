@@ -19,7 +19,7 @@ public:
 	std::shared_ptr<Transform> target;
 	FollowCamera()
 	{
-		FOV = 80;
+		FOV = 70;
 		minZoom = FOV;
 
 	}
@@ -56,7 +56,7 @@ public:
 			FOV = lerp(minZoom, maxZoom, acc / zoomTime);
 		}
 		acc = std::clamp(acc, 0.0f, zoomTime);
-		if (MouseInput::keyPressed(Qt::LeftButton))
+		if (Input::keyPressed(Qt::Key_Alt))
 			look(MouseInput::delta().x() * 0.13f, MouseInput::delta().y() * 0.13f);
 	}
 };
