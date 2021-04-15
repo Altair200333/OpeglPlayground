@@ -34,14 +34,13 @@ public:
 		inst.dispatcher = new btCollisionDispatcher(inst.collisionConfiguration);
 		
 		inst.solver = new btSequentialImpulseConstraintSolver;
-		
-		inst.dynamicsWorld = new btDiscreteDynamicsWorld(inst.dispatcher, inst.broadphase, inst.solver, inst.collisionConfiguration);
 
+		inst.dynamicsWorld = new btDiscreteDynamicsWorld(inst.dispatcher, inst.broadphase, inst.solver, inst.collisionConfiguration);
 		inst.dynamicsWorld->setGravity(btVector3(0, -9.8, 0));
 	}
 	void onUpdate() override
 	{
 		const auto deltaTime = FPSCounter::getFrameTime();
-		getWorld().stepSimulation(deltaTime);
+		getWorld().stepSimulation(deltaTime, 100);
 	}
 };

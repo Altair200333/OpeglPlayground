@@ -32,7 +32,10 @@ public:
 	{
 		init(ComponentManager::getComponent<Transform>(owner), shape, mass);
 	}
-
+	void setAngularDamping(float damping)
+	{
+		body->setDamping(body->getLinearDamping(), damping);
+	}
 	void setGravity(const QVector3D& gravity)
 	{
 		body->setGravity(btVector3(gravity.x(), gravity.y(), gravity.z()));

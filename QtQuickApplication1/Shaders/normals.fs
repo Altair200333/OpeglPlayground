@@ -223,7 +223,7 @@ vec3 getLighting()
       float spec = pow(max(dot(-dirToFrag, reflectDir), 0.0), 8.0);
       vec3 lightSpecular = dirLights[i].color.rgb * spec*getSpecular(); 
 
-      result +=  ((diffuse + lightSpecular))*dirLights[i].intensity*(1.0 - shadow);
+      result +=  ((diffuse + lightSpecular))*dirLights[i].intensity*(1.0 - shadow*0.7f);
    }
    
    result = (1-getRoughness())*(result + ambient.rgb*0.089f) + getRoughness()*envColor;

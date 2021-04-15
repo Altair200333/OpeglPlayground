@@ -11,7 +11,7 @@
 #include "FreeCamera.h"
 #include "b3d/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
 #include "CollisionShapeGenerator.h"
-#include "FollowCamera.h"
+#include "FPSFollowCamera.h"
 #include "Su33.h"
 
 class ExperimentalLevel: public Level
@@ -27,7 +27,6 @@ public:
 	std::shared_ptr<Object> selectedObject = nullptr;
 
 	std::shared_ptr<GLCamera> freeCamera;
-	std::shared_ptr<GLCamera> planeCamera;
 	ExperimentalLevel(QOpenGLFunctions* _functions) :Level(_functions)
 	{
 
@@ -38,7 +37,7 @@ public:
 		//if(planeCamera->enabled)
 		
 	}
-
+	int cameraState = 0;
 	void onUpdate() override
 	{
 		
@@ -76,16 +75,24 @@ public:
 		}
 		if(Input::keyJustPressed(Qt::Key_V))
 		{
-			if(freeCamera->enabled)
-			{
-				camera = planeCamera;
-			}
-			else
+			cameraState = (++cameraState) % 3;
+			plane->fpsCamera->enabled = false;
+			plane->chaseCamera->enabled = false;
+			freeCamera->enabled = false;
+			
+			if(cameraState == 0)
 			{
 				camera = freeCamera;
 			}
-			freeCamera->enabled = !freeCamera->enabled;
-			planeCamera->enabled = !planeCamera->enabled;
+			else if(cameraState == 1)
+			{
+				camera = plane->fpsCamera;
+			}
+			else if (cameraState == 2)
+			{
+				camera = plane->chaseCamera;
+			}
+			camera->enabled = true;
 		}
 	}
 
@@ -93,9 +100,7 @@ public:
 	void init() override
 	{
 		freeCamera = std::make_shared<FreeCamera>();
-		planeCamera = std::make_shared<FollowCamera>();
-		planeCamera->enabled = false;
-		planeCamera->position = QVector3D(0, 0.29, -1.9);
+		
 		camera = freeCamera;
 		
 		addModel(MeshLoader().loadModel("Assets/Models/ico1.obj"), { 0.5f, 5, 0 }, ShaderCollection::shaders["normals"]);
@@ -120,7 +125,6 @@ public:
 
 		loadPlane();
 
-		std::dynamic_pointer_cast<FollowCamera>(planeCamera)->target = ComponentManager::getComponent<Transform>(plane->fuselage);
 		
 		map = HeightMapGenerator().genHeightMap(200, 200, 0, 3);
 		auto terr = HeightMapMeshGenerator().genMesh(map);

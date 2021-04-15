@@ -259,7 +259,7 @@
     <ClInclude Include="CollisionShapeGenerator.h">
       <Filter>Physics\Colliders</Filter>
     </ClInclude>
-    <ClInclude Include="FollowCamera.h">
+    <ClInclude Include="FPSFollowCamera.h">
       <Filter>Objects\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Plane.h">
@@ -270,6 +270,9 @@
     </ClInclude>
     <ClInclude Include="RotationAnimator.h">
       <Filter>Application\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="TPFollowCamera.h">
+      <Filter>Objects\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

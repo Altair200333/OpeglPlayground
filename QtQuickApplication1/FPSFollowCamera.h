@@ -4,7 +4,7 @@
 #include "OnUpdateSubscriber.h"
 #include "Transform.h"
 
-class FollowCamera final: public GLCamera, public OnUpdateSubscriber
+class FPSFollowCamera final: public GLCamera, public OnUpdateSubscriber
 {
 	float minZoom;
 	float maxZoom = 20;
@@ -17,7 +17,7 @@ class FollowCamera final: public GLCamera, public OnUpdateSubscriber
 	}
 public:
 	std::shared_ptr<Transform> target;
-	FollowCamera()
+	FPSFollowCamera()
 	{
 		FOV = 70;
 		minZoom = FOV;

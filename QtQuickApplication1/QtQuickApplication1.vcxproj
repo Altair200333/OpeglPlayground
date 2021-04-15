@@ -220,7 +220,7 @@
     <ClInclude Include="AloyApplication.h" />
     <ClInclude Include="CollisionShapeGenerator.h" />
     <ClInclude Include="FastNoiseLite.h" />
-    <ClInclude Include="FollowCamera.h" />
+    <ClInclude Include="FPSFollowCamera.h" />
     <ClInclude Include="FreeCamera.h" />
     <ClInclude Include="GLBackground.h" />
     <ClInclude Include="HeightMap.h" />
@@ -271,6 +271,7 @@
     <ClInclude Include="Su33.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TexturesTaskLevel.h" />
+    <ClInclude Include="TPFollowCamera.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="TypeInfo.h" />
     <ClInclude Include="UIManager.h" />

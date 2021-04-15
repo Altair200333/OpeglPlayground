@@ -106,8 +106,22 @@ float attenuation(float dist)
 {
    return 1.0f / (1.0f + 0.01f * dist + 0.01f * dist*dist);
 }
-
+float planeHit(vec3 origin, vec3 direction, vec3 planePoint)
+{
+   float denom = dot(Normal, direction);
+   if (abs(denom) > 0.0001f) // your favorite epsilon
+   {
+      float t = dot((planePoint - origin), (Normal)) / denom;
+      if (t >= 0) return t; // you might want to allow an epsilon here too
+   }
+   return -1;
+}
 void main() 
 {
+   vec3 dir = FragPos - cameraPos;
+   float distanceToPlane = 0.5f;
+   vec3 planePoint = FragPos-Normal*distanceToPlane;
+   float hit = planeHit(cameraPos, normalize(dir), planePoint);
    fragColor = vec4(getDiffuseColor());
+   
 }
