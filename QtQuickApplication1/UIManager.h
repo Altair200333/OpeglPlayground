@@ -30,7 +30,7 @@ public:
 		
 		QSurfaceFormat format;
 		format.setSamples(2);
-		format.setVersion(3, 3);
+		format.setVersion(4, 3);
 		format.setProfile(QSurfaceFormat::CoreProfile);
 
 		viewport->setFormat(format);
