@@ -28,6 +28,16 @@ public:
 		body->setDamping(0.2, 0.1);
 		PhysicsWorld::getWorld().addRigidBody(body);
 	}
+	auto velocity() const
+	{
+		return body->getLinearVelocity();
+	}
+	auto qvelocity() const
+	{
+		auto& v = body->getLinearVelocity();
+		
+		return QVector3D(v.x(), v.y(), v.z());
+	}
 	void init(btCollisionShape* shape, float mass)
 	{
 		init(ComponentManager::getComponent<Transform>(owner), shape, mass);

@@ -80,6 +80,9 @@
     <Filter Include="Application\Game\Planes">
       <UniqueIdentifier>{0833f85f-21fd-4da9-b5aa-4f13900452d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Application\Game\Planes\Aerodynamics">
+      <UniqueIdentifier>{f74db297-b502-49ee-a282-17e2824000c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -273,6 +276,9 @@
     </ClInclude>
     <ClInclude Include="TPFollowCamera.h">
       <Filter>Objects\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="simpleAerodynamics.h">
+      <Filter>Application\Game\Planes\Aerodynamics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,8 +1,10 @@
-#pragma once
+﻿#pragma once
 #include "Plane.h"
 #include "Object.h"
 #include "RotationAnimator.h"
 #include "TPFollowCamera.h"
+#include "simpleAerodynamics.h"
+
 class Su33 : public Plane
 {
 public:
@@ -16,59 +18,95 @@ public:
 	RotationAnimator rightFlapAnimator;
 	RotationAnimator rearFlapAnimator;
 	QPoint lastPos;
+	QPoint currentPos;
 	std::shared_ptr<GLCamera> fpsCamera;
 	std::shared_ptr<GLCamera> chaseCamera;
 
-	QVector3D navBallPos{ -0.105508, 0.082774, -2.34698 };
-	QVector3D rearFlapPos{ 0, -0.246162 , 3.45535 };
-	
-	float maxDeltaMouse = 400;
-	void controlPlane(std::shared_ptr<RigidBody> rb, std::shared_ptr<Transform> transform)
-	{
-		QPoint delta = MouseInput::getPosition() - lastPos;
-		float deltaX = std::clamp(delta.x()*1.0f, -maxDeltaMouse, maxDeltaMouse);
-		float deltaY = std::clamp(delta.y()*1.0f, -maxDeltaMouse, maxDeltaMouse);
-		
-		rb->addTorgue(transform->getRight() * deltaY * -0.03f);
-		rb->addTorgue(transform->getForward() * deltaX * 0.02f);
-		rightFlapAnimator.target = deltaX/maxDeltaMouse*45;
-		leftFalpAnimator.target = deltaX / maxDeltaMouse *-45;
-		rearFlapAnimator.target = deltaY / maxDeltaMouse *45;
-	}
+	QVector3D navBallPos{-0.105508, 0.082774, -2.34698};
+	QVector3D rearFlapPos{0, -0.246162, 3.45535};
 
+	float maxDeltaMouse = 400;
+	float deltaX = 0;
+	float deltaY = 0;
+
+	void animateSurfaces(std::shared_ptr<RigidBody> rb, std::shared_ptr<Transform> transform)
+	{
+		const QPoint delta = currentPos - lastPos;
+		deltaX = std::clamp(delta.x() * 1.0f, -maxDeltaMouse, maxDeltaMouse);
+		deltaY = std::clamp(delta.y() * 1.0f, -maxDeltaMouse, maxDeltaMouse);
+
+		rb->addTorgue(transform->getRight() * deltaY * 0.1f);
+		rb->addTorgue(transform->getForward() * deltaX * 0.02f);
+
+		rightFlapAnimator.target = deltaX / maxDeltaMouse * 45;
+		leftFalpAnimator.target = deltaX / maxDeltaMouse * -45;
+		rearFlapAnimator.target = deltaY / maxDeltaMouse * 45;
+	}
+	
+	void applyForces(std::shared_ptr<RigidBody> rb, std::shared_ptr<Transform> transform)
+	{
+		//std::cout << rb->qvelocity().x()<<"\n";
+		if (Input::keyPressed(Qt::Key_Shift))
+		{
+			rb->addForce(transform->getForward() * 20);
+		}
+		if (Input::keyPressed(Qt::Key_Control))
+		{
+			rb->addForce(-transform->getForward() * 20);
+		}
+
+		if(rb->velocity().length()<1)
+			return;
+		
+		QVector3D drag = -rb->qvelocity();
+		drag.normalize();
+
+		auto vLift= QVector3D::crossProduct(QVector3D::crossProduct(drag, transform->getUp()), drag);
+		vLift.normalize();
+
+		float tmp = QVector3D::dotProduct(drag, transform->getUp());
+		tmp = std::clamp(tmp, -1.0f, 1.0f);
+
+		float attack = qRadiansToDegrees(asin(tmp));
+		float liftScale = 60;
+		auto result = (vLift * SimpleAerodynamics::LiftCoefficient(attack) + drag * SimpleAerodynamics::DragCoefficient(attack)) * tmp* liftScale;
+		printQv(result);
+		//std::cout << SimpleAerodynamics::LiftCoefficient(attack)<<" "<< SimpleAerodynamics::DragCoefficient(attack)<<"\n";
+		rb->addForce(result);
+	}
+	void printQv(const QVector3D& v)
+	{
+		std::cout << v.x() << " " << v.y() << " " << v.z() << "\n";
+	}
 	void onUpdate() override
 	{
+		deltaX = 0;
+		deltaY = 0;
+
+		auto rb = ComponentManager::getComponent<RigidBody>(fuselage);
+		auto transform = ComponentManager::getComponent<Transform>(fuselage);
+		
+		if (Input::keyPressed(Qt::Key_G))
 		{
-			auto rb = ComponentManager::getComponent<RigidBody>(fuselage);
-			auto transform = ComponentManager::getComponent<Transform>(fuselage);
-			if (Input::keyPressed(Qt::Key_Shift))
-			{
-				rb->addForce(transform->getForward() * 20);
-			}
-			if (Input::keyPressed(Qt::Key_Control))
-			{
-				rb->addForce(-transform->getForward() * 20);
-			}
-			if (Input::keyPressed(Qt::Key_G))
-			{
-				fpsCamera->position += MouseInput::delta().x() * QVector3D(1,0,0) * 0.002f;
-				fpsCamera->position += MouseInput::delta().y() * QVector3D(0,1,0) * 0.002f;
-			}
-			if(MouseInput::keyJustPressed(Qt::MiddleButton))
-			{
-				lastPos = MouseInput::getPosition();
-			}
-			if (MouseInput::keyPressed(Qt::MiddleButton))
-			{
-				controlPlane(rb, transform);
-			}
-			else
-			{
-				rightFlapAnimator.target = 0;
-				leftFalpAnimator.target = 0;
-			}
-			
+			fpsCamera->position += MouseInput::delta().x() * QVector3D(1, 0, 0) * 0.002f;
+			fpsCamera->position += MouseInput::delta().y() * QVector3D(0, 1, 0) * 0.002f;
 		}
+		if (MouseInput::keyJustPressed(Qt::MiddleButton))
+		{
+			lastPos = MouseInput::getPosition();
+			currentPos = lastPos;
+		}
+		if (MouseInput::keyPressed(Qt::MiddleButton))
+		{
+			currentPos += MouseInput::delta();
+			animateSurfaces(rb, transform);
+		}
+		else
+		{
+			rightFlapAnimator.target = 0;
+			leftFalpAnimator.target = 0;
+		}
+		applyForces(rb, transform);
 
 		auto fuselageQuat = ComponentManager::getComponent<Transform>(fuselage)->getRotationTransform();
 		auto navBallTransform = ComponentManager::getComponent<Transform>(navball);
@@ -91,7 +129,7 @@ public:
 				}), 1);
 
 		auto fuselageRB = ComponentManager::getComponent<RigidBody>(fuselage);
-		fuselageRB->setGravity(QVector3D(0, -3.0f, 0));
+		//fuselageRB->setGravity(QVector3D(0, -3.0f, 0));
 		fuselageRB->setAngularDamping(0.4f);
 		//--
 
@@ -113,18 +151,18 @@ public:
 		                ShaderCollection::shaders["normals"]);
 		fuselage->addChild(scene->objects.back());
 
-		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/visor_frame.obj"), { 0, 0, 0 },
-			ShaderCollection::shaders["normals"]);
+		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/visor_frame.obj"), {0, 0, 0},
+		                ShaderCollection::shaders["normals"]);
 		fuselage->addChild(scene->objects.back());
 
-		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/tail.obj"), { 0, 0, 0 },
-			ShaderCollection::shaders["normals"]);
+		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/tail.obj"), {0, 0, 0},
+		                ShaderCollection::shaders["normals"]);
 		fuselage->addChild(scene->objects.back());
 
-		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/tail2.obj"), { 0, 0, 0 },
-			ShaderCollection::shaders["normals"]);
+		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/tail2.obj"), {0, 0, 0},
+		                ShaderCollection::shaders["normals"]);
 		fuselage->addChild(scene->objects.back());
-		
+
 		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/navball.obj"), navBallPos,
 		                ShaderCollection::shaders["plain"]);
 		navball = scene->objects.back();
@@ -134,19 +172,19 @@ public:
 		                ShaderCollection::shaders["normals"]);
 		fuselage->addChild(scene->objects.back());
 		flapLeft = scene->objects.back();
-		leftFalpAnimator.init(ComponentManager::getComponent<Transform>(flapLeft), QVector3D(1, 0, 0), 30);
+		leftFalpAnimator.init(ComponentManager::getComponent<Transform>(flapLeft), QVector3D(1, 0, 0), 50);
 
 		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/flap_r.obj"), {2.11702, -0.155708, 1.33746},
 		                ShaderCollection::shaders["normals"]);
 		fuselage->addChild(scene->objects.back());
 		flapRight = scene->objects.back();
-		rightFlapAnimator.init(ComponentManager::getComponent<Transform>(flapRight), QVector3D(1, 0, 0), 30);
+		rightFlapAnimator.init(ComponentManager::getComponent<Transform>(flapRight), QVector3D(1, 0, 0), 50);
 
 		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/rearControl.obj"), rearFlapPos,
-			ShaderCollection::shaders["normals"]);
+		                ShaderCollection::shaders["normals"]);
 		fuselage->addChild(scene->objects.back());
 		rearFlap = scene->objects.back();
-		rearFlapAnimator.init(ComponentManager::getComponent<Transform>(rearFlap), QVector3D(1, 0, 0), 30);
+		rearFlapAnimator.init(ComponentManager::getComponent<Transform>(rearFlap), QVector3D(1, 0, 0), 50);
 
 		//===================
 		scene->addTransparent(MeshLoader().loadModel("Assets/Models/plane/cockpit.obj"), {0, 0, 0},
@@ -154,19 +192,20 @@ public:
 		fuselage->addChild(scene->transparentObjects.back());
 		ComponentManager::getComponent<Material>(scene->transparentObjects.back())->alpha = 0.23f;
 
-		scene->addTransparent(MeshLoader().loadModel("Assets/Models/plane/visor.obj"), { 0, 0, 0 },
-			ShaderCollection::shaders["visor"]);
+		scene->addTransparent(MeshLoader().loadModel("Assets/Models/plane/visor.obj"), {0, 0, 0},
+		                      ShaderCollection::shaders["visor"]);
 		fuselage->addChild(scene->transparentObjects.back());
 
 
 		chaseCamera = std::make_shared<TPFollowCamera>();
 		chaseCamera->enabled = false;
-		std::dynamic_pointer_cast<TPFollowCamera>(chaseCamera)->target = ComponentManager::getComponent<Transform>(fuselage);
+		std::dynamic_pointer_cast<TPFollowCamera>(chaseCamera)->target = ComponentManager::getComponent<Transform
+		>(fuselage);
 
 		fpsCamera = std::make_shared<FPSFollowCamera>();
 		fpsCamera->enabled = false;
 		fpsCamera->position = QVector3D(0, 0.29, -1.9);
-		std::dynamic_pointer_cast<FPSFollowCamera>(fpsCamera)->target = ComponentManager::getComponent<Transform>(fuselage);
-
+		std::dynamic_pointer_cast<FPSFollowCamera>(fpsCamera)->target = ComponentManager::getComponent<Transform
+		>(fuselage);
 	}
 };

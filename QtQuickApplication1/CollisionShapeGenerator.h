@@ -14,6 +14,10 @@ public:
 	{
 		return new btBoxShape(btVector3(size.x(), size.y(), size.z()));
 	}
+	static btCollisionShape* getPlane(const QVector3D& normal)
+	{
+		return new btStaticPlaneShape(btVector3(normal.x(), normal.y(), normal.z()), 0);
+	}
 	static btCollisionShape* getTerrain(std::shared_ptr<HeightMap> map)
 	{
 		auto shape = new btHeightfieldTerrainShape(map->w, map->h, map->data.data(),

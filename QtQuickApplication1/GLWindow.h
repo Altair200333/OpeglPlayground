@@ -45,6 +45,10 @@ public:
 	void initializeGL() override
 	{
 		initializeOpenGLFunctions();
+		if(lockMouse)
+		{
+			setCursor(Qt::BlankCursor);
+		}
 	}
 
 	void paintGL() override
@@ -98,6 +102,10 @@ protected:
 		{
 			lockPointer();
 		}
+		else
+		{
+			setCursor(Qt::ArrowCursor);
+		}
 		QOpenGLWidget::mouseMoveEvent(e);
 	}
 
@@ -116,6 +124,7 @@ protected:
 
 	void lockPointer()
 	{
+		setCursor(Qt::BlankCursor);
 		int w = width();
 		int h = height();
 		auto globalWP = mapToGlobal(pos());
