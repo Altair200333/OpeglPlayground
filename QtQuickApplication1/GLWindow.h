@@ -26,8 +26,9 @@
 #include <QHBoxLayout>
 #include "EventDispatcher.h"
 #include "OnUpdateEvent.h"
+#include "OnUpdateSubscriber.h"
 
-class GLWindow final : public QOpenGLWidget, public QOpenGLFunctions
+class GLWindow final : public QOpenGLWidget, public QOpenGLFunctions, public OnUpdateSubscriber
 {
 public:
 	QTimer* timer = nullptr;
@@ -82,10 +83,21 @@ protected:
 		Input::releaseKey(e->key());
 		QOpenGLWidget::keyReleaseEvent(e);
 	}
-
+	bool lockMouse = true;
+	void onUpdate() override
+	{
+		if(Input::keyJustPressed(Qt::Key_F1))
+		{
+			lockMouse = !lockMouse;
+		}
+	}
 	void mouseMoveEvent(QMouseEvent* e) override
 	{
 		MouseInput::mouseCallback(e->pos());
+		if(lockMouse)
+		{
+			lockPointer();
+		}
 		QOpenGLWidget::mouseMoveEvent(e);
 	}
 
@@ -99,5 +111,25 @@ protected:
 	{
 		MouseInput::releaseMouseKey(e->button());
 		QOpenGLWidget::mouseReleaseEvent(e);
+	}
+
+
+	void lockPointer()
+	{
+		int w = width();
+		int h = height();
+		auto globalWP = mapToGlobal(pos());
+		int x = globalWP.x();
+		int y = globalWP.y();
+		QCursor::setPos(x+w/2, y + h / 2);
+		MouseInput::setPos(mapFromGlobal(QCursor::pos()));
+	}
+
+	void leaveEvent(QEvent* event) override
+	{
+		if(lockMouse)
+		{
+			lockPointer();
+		}
 	}
 };

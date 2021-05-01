@@ -10,14 +10,32 @@ public:
 	std::shared_ptr<Object> navball;
 	std::shared_ptr<Object> flapLeft;
 	std::shared_ptr<Object> flapRight;
+	std::shared_ptr<Object> rearFlap;
 	RotationAnimator animator;
 	RotationAnimator leftFalpAnimator;
 	RotationAnimator rightFlapAnimator;
+	RotationAnimator rearFlapAnimator;
 	QPoint lastPos;
 	std::shared_ptr<GLCamera> fpsCamera;
 	std::shared_ptr<GLCamera> chaseCamera;
 
 	QVector3D navBallPos{ -0.105508, 0.082774, -2.34698 };
+	QVector3D rearFlapPos{ 0, -0.246162 , 3.45535 };
+	
+	float maxDeltaMouse = 400;
+	void controlPlane(std::shared_ptr<RigidBody> rb, std::shared_ptr<Transform> transform)
+	{
+		QPoint delta = MouseInput::getPosition() - lastPos;
+		float deltaX = std::clamp(delta.x()*1.0f, -maxDeltaMouse, maxDeltaMouse);
+		float deltaY = std::clamp(delta.y()*1.0f, -maxDeltaMouse, maxDeltaMouse);
+		
+		rb->addTorgue(transform->getRight() * deltaY * -0.03f);
+		rb->addTorgue(transform->getForward() * deltaX * 0.02f);
+		rightFlapAnimator.target = deltaX/maxDeltaMouse*45;
+		leftFalpAnimator.target = deltaX / maxDeltaMouse *-45;
+		rearFlapAnimator.target = deltaY / maxDeltaMouse *45;
+	}
+
 	void onUpdate() override
 	{
 		{
@@ -42,11 +60,7 @@ public:
 			}
 			if (MouseInput::keyPressed(Qt::MiddleButton))
 			{
-				QPoint delta = MouseInput::getPosition() - lastPos;
-				rb->addTorgue(transform->getRight() * delta.y() * -0.03f);
-				rb->addTorgue(transform->getForward() * delta.x() * 0.02f);
-				rightFlapAnimator.target = delta.x() > 0 ? 45 : -45;
-				leftFalpAnimator.target = delta.x() > 0 ? -45 : 45;
+				controlPlane(rb, transform);
 			}
 			else
 			{
@@ -128,6 +142,13 @@ public:
 		flapRight = scene->objects.back();
 		rightFlapAnimator.init(ComponentManager::getComponent<Transform>(flapRight), QVector3D(1, 0, 0), 30);
 
+		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/rearControl.obj"), rearFlapPos,
+			ShaderCollection::shaders["normals"]);
+		fuselage->addChild(scene->objects.back());
+		rearFlap = scene->objects.back();
+		rearFlapAnimator.init(ComponentManager::getComponent<Transform>(rearFlap), QVector3D(1, 0, 0), 30);
+
+		//===================
 		scene->addTransparent(MeshLoader().loadModel("Assets/Models/plane/cockpit.obj"), {0, 0, 0},
 		                      ShaderCollection::shaders["plain"]);
 		fuselage->addChild(scene->transparentObjects.back());

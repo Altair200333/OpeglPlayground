@@ -17,6 +17,10 @@ class MouseInput final
 		return input;
 	}
 public:
+	static void setPos(const QPoint& _mousePos)
+	{
+		instance().mousePos = _mousePos;
+	}
 	static QPoint& getPosition()
 	{
 		return instance().mousePos;
