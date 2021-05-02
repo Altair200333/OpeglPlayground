@@ -123,7 +123,7 @@ public:
 	{
 		shader->setUniformValue(shader->uniformLocation("view"), camera->getViewMatrix());
 		shader->setUniformValue(shader->uniformLocation("projection"), camera->getProjectionMatrix());
-		shader->setUniformValue(shader->uniformLocation("cameraPos"), camera->position);
+		shader->setUniformValue(shader->uniformLocation("cameraPos"), camera->getPosition());
 	}
 
 	void renderWireframe(std::shared_ptr<GLCamera>& camera) const

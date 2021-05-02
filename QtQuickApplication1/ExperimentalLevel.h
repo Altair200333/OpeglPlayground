@@ -114,7 +114,7 @@ public:
 		ComponentManager::addComponent(cube, std::make_shared<RigidBody>())->init(ComponentManager::getComponent<Transform>(cube),
 			CollisionShapeGenerator::getBox({ 1,1,1 }), 1);
 		
-		addModel(MeshLoader().loadModel("Assets/Models/flat.obj"), { 0, -2, 0 }, ShaderCollection::shaders["normals"]);
+		addModel(MeshLoader().loadModel("Assets/Models/flat.obj"), { 0, 0, 0 }, ShaderCollection::shaders["water"]);
 		water = objects.back();
 		ComponentManager::addComponent(water, std::make_shared<RigidBody>())->init(ComponentManager::getComponent<Transform>(water),
 			CollisionShapeGenerator::getPlane({ 0,1,0 }), 0);
@@ -133,7 +133,7 @@ public:
 		
 		map = HeightMapGenerator().genHeightMap(200, 200, 0, 3);
 		auto terr = HeightMapMeshGenerator().genMesh(map);
-		addModel(MeshLoader::LoadedModel{ terr, std::make_shared<Material>() }, { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
+		addModel(MeshLoader::LoadedModel{ terr, std::make_shared<Material>() }, { 0, 2, 0 }, ShaderCollection::shaders["normals"]);
 		terrain = objects.back();
 
 		ComponentManager::addComponent(terrain, std::make_shared<RigidBody>())->init(CollisionShapeGenerator::getTerrain(map), 0);

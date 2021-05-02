@@ -29,6 +29,7 @@ public:
 	inline static std::map<std::string, ShaderData> shaders =
 	{
 		{{"normals"}, {"Shaders\\normals.vs","Shaders\\normals.fs", "", std::make_shared<SimpleMeshRendererGenerator>()}},
+		{{"water"}, {"Shaders\\water.vs","Shaders\\water.fs", "", std::make_shared<SimpleMeshRendererGenerator>()}},
 		{{"plain"}, {"Shaders\\plain.vs","Shaders\\plain.fs", "", std::make_shared<SimpleMeshRendererGenerator>()}},
 		{{"visor"}, {"Shaders\\visor.vs","Shaders\\visor.fs", "", std::make_shared<SimpleMeshRendererGenerator>()}},
 		{{"pick"}, {"Shaders\\pick.vs","Shaders\\pick.fs", "", std::make_shared<SimpleMeshRendererGenerator>()}},
