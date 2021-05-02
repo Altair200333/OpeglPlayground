@@ -58,6 +58,7 @@ public:
 
 		//---
 		ias->number = std::round(rb->qvelocity().length());
+		alt->number = std::max<int>(0, transform->position.y());
 		//--
 		if(rb->velocity().length()<1)
 			return;
@@ -127,6 +128,7 @@ public:
 		navBallTransform->rotate(fuselageQuat.inverted());
 	}
 	std::shared_ptr<NumberRenderer> ias;
+	std::shared_ptr<NumberRenderer> alt;
 	void init(Scene* scene) override
 	{
 		
@@ -225,9 +227,17 @@ public:
 			ShaderCollection::shaders["plain"]);
 		fuselage->addChild(scene->objects.back());
 
+		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/text/alt.obj"), { 0, 0, 0 },
+			ShaderCollection::shaders["plain"]);
+		fuselage->addChild(scene->objects.back());
+		
 		ias = std::make_shared<NumberRenderer>(scene->functions);
 		ias->position = { 0.065182, 0.112829, -2.35856 };
 		ias->setParent(fuselage);
+
+		alt = std::make_shared<NumberRenderer>(scene->functions);
+		alt->position = { 0.063522, 0.103151, -2.35368 };
+		alt->setParent(fuselage);
 		//--------
 	}
 };
