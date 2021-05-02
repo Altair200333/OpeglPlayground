@@ -25,7 +25,7 @@ public:
 		btRigidBody::btRigidBodyConstructionInfo bodyCI(mass, fallMotionState, shape, fallInertia);
 
 		body = new btRigidBody(bodyCI);
-		body->setDamping(0.2, 0.1);
+		body->setDamping(0.02, 0.1);
 		PhysicsWorld::getWorld().addRigidBody(body);
 	}
 	auto velocity() const
@@ -45,6 +45,10 @@ public:
 	void setAngularDamping(float damping)
 	{
 		body->setDamping(body->getLinearDamping(), damping);
+	}
+	void setLinearDamping(float damping)
+	{
+		body->setDamping(damping, body->getAngularDamping());
 	}
 	void setGravity(const QVector3D& gravity)
 	{

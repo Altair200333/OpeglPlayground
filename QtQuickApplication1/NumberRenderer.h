@@ -13,7 +13,7 @@ public:
 	QOpenGLFunctions* functions;
 	std::vector<std::shared_ptr<Object>> digits;
 	int number = 0;
-	float spacing = 0.0044f;
+	float spacing = 0.0055f;
 	QVector3D position = QVector3D(0,0,0);
 	NumberRenderer(QOpenGLFunctions* _functions):functions(_functions)
 	{

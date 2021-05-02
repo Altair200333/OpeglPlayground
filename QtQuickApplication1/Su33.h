@@ -146,6 +146,7 @@ public:
 		auto fuselageRB = ComponentManager::getComponent<RigidBody>(fuselage);
 		//fuselageRB->setGravity(QVector3D(0, -3.0f, 0));
 		fuselageRB->setAngularDamping(0.6f);
+		fuselageRB->setLinearDamping(0.07f);
 		//--
 
 		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/wings.obj"), {0, 0, 0},
