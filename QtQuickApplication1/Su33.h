@@ -40,7 +40,7 @@ public:
 
 		rightFlapAnimator.target = deltaX / maxDeltaMouse * 45;
 		leftFalpAnimator.target = deltaX / maxDeltaMouse * -45;
-		rearFlapAnimator.target = deltaY / maxDeltaMouse * 45;
+		rearFlapAnimator.target = deltaY / maxDeltaMouse * -45;
 	}
 	
 	void applyForces(std::shared_ptr<RigidBody> rb, std::shared_ptr<Transform> transform)
@@ -59,6 +59,7 @@ public:
 			return;
 		
 		QVector3D drag = -rb->qvelocity();
+		float fLocalSpeed = drag.length();
 		drag.normalize();
 
 		auto vLift= QVector3D::crossProduct(QVector3D::crossProduct(drag, transform->getUp()), drag);
@@ -68,7 +69,10 @@ public:
 		tmp = std::clamp(tmp, -1.0f, 1.0f);
 
 		float attack = qRadiansToDegrees(asin(tmp));
-		float liftScale = 60;
+		float liftScale = 0.1;
+		float rho = 1;
+		float area = 2;
+		tmp = 0.5 * rho * fLocalSpeed* fLocalSpeed* area;
 		auto result = (vLift * SimpleAerodynamics::LiftCoefficient(attack) + drag * SimpleAerodynamics::DragCoefficient(attack)) * tmp* liftScale;
 		printQv(result);
 		//std::cout << SimpleAerodynamics::LiftCoefficient(attack)<<" "<< SimpleAerodynamics::DragCoefficient(attack)<<"\n";
@@ -172,19 +176,19 @@ public:
 		                ShaderCollection::shaders["normals"]);
 		fuselage->addChild(scene->objects.back());
 		flapLeft = scene->objects.back();
-		leftFalpAnimator.init(ComponentManager::getComponent<Transform>(flapLeft), QVector3D(1, 0, 0), 50);
+		leftFalpAnimator.init(ComponentManager::getComponent<Transform>(flapLeft), QVector3D(1, 0, 0), 120);
 
 		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/flap_r.obj"), {2.11702, -0.155708, 1.33746},
 		                ShaderCollection::shaders["normals"]);
 		fuselage->addChild(scene->objects.back());
 		flapRight = scene->objects.back();
-		rightFlapAnimator.init(ComponentManager::getComponent<Transform>(flapRight), QVector3D(1, 0, 0), 50);
+		rightFlapAnimator.init(ComponentManager::getComponent<Transform>(flapRight), QVector3D(1, 0, 0), 120);
 
 		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/rearControl.obj"), rearFlapPos,
 		                ShaderCollection::shaders["normals"]);
 		fuselage->addChild(scene->objects.back());
 		rearFlap = scene->objects.back();
-		rearFlapAnimator.init(ComponentManager::getComponent<Transform>(rearFlap), QVector3D(1, 0, 0), 50);
+		rearFlapAnimator.init(ComponentManager::getComponent<Transform>(rearFlap), QVector3D(1, 0, 0), 120);
 
 		//===================
 		scene->addTransparent(MeshLoader().loadModel("Assets/Models/plane/cockpit.obj"), {0, 0, 0},
