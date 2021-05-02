@@ -231,6 +231,7 @@
     <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="GUIRender.h" />
+    <ClInclude Include="NumberRenderer.h" />
     <ClInclude Include="ObjectComponentManager.h" />
     <ClInclude Include="ExperimentalLevel.h" />
     <ClInclude Include="FPSCounter.h" />
@@ -242,6 +243,8 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LightSource.h" />
+    <ClInclude Include="OnRenderEvent.h" />
+    <ClInclude Include="OnRenderSubscriber.h" />
     <ClInclude Include="PhysicsWorld.h" />
     <ClInclude Include="PickRenderer.h" />
     <ClInclude Include="Plane.h" />

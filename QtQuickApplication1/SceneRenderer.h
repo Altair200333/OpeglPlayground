@@ -1,5 +1,6 @@
 #pragma once
 #include "AloyApplication.h"
+#include "OnRenderEvent.h"
 #include "RenderLayer.h"
 #include "Scene.h"
 
@@ -63,6 +64,7 @@ public:
 				ComponentManager::getComponent<MeshRenderer>(scene->objects[i])->renderWireframe(scene->camera);
 			}
 		}
+		EventDispatcher::dispatch(OnRenderEvent({ scene->camera, scene->lights, scene->backround, depthMap, &lightSpaceMatrix }));
 	}
 
 	void onRender() override

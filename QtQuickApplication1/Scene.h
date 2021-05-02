@@ -26,6 +26,8 @@ protected:
 		lightSourceBlock = createObject(MeshLoader().loadModel("Assets/Models/ico.obj")[0], QVector3D(0, 0, 0),
 			ShaderCollection::shaders["lightSource"]);
 	}
+public:
+
 	std::shared_ptr<Object> createObject(const MeshLoader::LoadedModel& model, const QVector3D& pos, ShaderData& data, const std::string& tag = "") const
 	{
 		auto object = std::make_shared<Object>();
@@ -42,7 +44,6 @@ protected:
 		
 		return object;
 	}
-public:
 	QOpenGLFunctions* functions;
 
 	std::vector<std::shared_ptr<Object>> objects;

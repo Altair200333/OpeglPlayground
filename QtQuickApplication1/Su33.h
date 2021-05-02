@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "NumberRenderer.h"
 #include "Plane.h"
 #include "Object.h"
 #include "RotationAnimator.h"
@@ -55,6 +56,9 @@ public:
 			rb->addForce(-transform->getForward() * 20);
 		}
 
+		//---
+		ias->number = std::round(rb->qvelocity().length());
+		//--
 		if(rb->velocity().length()<1)
 			return;
 		
@@ -69,14 +73,17 @@ public:
 		tmp = std::clamp(tmp, -1.0f, 1.0f);
 
 		float attack = qRadiansToDegrees(asin(tmp));
-		float liftScale = 0.1;
+		float liftScale = 0.03;
 		float rho = 1;
 		float area = 2;
 		tmp = 0.5 * rho * fLocalSpeed* fLocalSpeed* area;
 		auto result = (vLift * SimpleAerodynamics::LiftCoefficient(attack) + drag * SimpleAerodynamics::DragCoefficient(attack)) * tmp* liftScale;
-		printQv(result);
-		//std::cout << SimpleAerodynamics::LiftCoefficient(attack)<<" "<< SimpleAerodynamics::DragCoefficient(attack)<<"\n";
+		//printQv(result);
+		std::cout << fLocalSpeed << "\n";
 		rb->addForce(result);
+
+
+		
 	}
 	void printQv(const QVector3D& v)
 	{
@@ -119,9 +126,11 @@ public:
 		navBallTransform->transform = navTransform;
 		navBallTransform->rotate(fuselageQuat.inverted());
 	}
-
+	std::shared_ptr<NumberRenderer> ias;
 	void init(Scene* scene) override
 	{
+		
+		//
 		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/body.obj"), {1.5f, 3, 0},
 		                ShaderCollection::shaders["normals"]);
 		fuselage = scene->objects.back();
@@ -209,7 +218,16 @@ public:
 		fpsCamera = std::make_shared<FPSFollowCamera>();
 		fpsCamera->enabled = false;
 		fpsCamera->position = QVector3D(0, 0.29, -1.9);
-		std::dynamic_pointer_cast<FPSFollowCamera>(fpsCamera)->target = ComponentManager::getComponent<Transform
-		>(fuselage);
+		std::dynamic_pointer_cast<FPSFollowCamera>(fpsCamera)->target = ComponentManager::getComponent<Transform>(fuselage);
+
+		//-----
+		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/text/ias.obj"), { 0, 0, 0 },
+			ShaderCollection::shaders["plain"]);
+		fuselage->addChild(scene->objects.back());
+
+		ias = std::make_shared<NumberRenderer>(scene->functions);
+		ias->position = { 0.065182, 0.112829, -2.35856 };
+		ias->setParent(fuselage);
+		//--------
 	}
 };
