@@ -31,7 +31,7 @@ uniform sampler2D texture_normal;
 uniform sampler2D shadowMap;
 
 const float PI = 3.14159265359;
-uniform float iTime;
+uniform int iTime;
 struct LightSource
 {
    vec3 position;
@@ -75,14 +75,14 @@ const float EPSILON	= 1e-3;
 
 // sea
 const int ITER_GEOMETRY = 3;
-const int ITER_FRAGMENT = 5;
+const int ITER_FRAGMENT = 9;
 const float SEA_HEIGHT = 0.3;
 const float SEA_CHOPPY = 4.1;
 const float SEA_SPEED = 0.8;
 const float SEA_FREQ = 0.16;
 const vec3 SEA_BASE = vec3(0.0,0.09,0.18);
 const vec3 SEA_WATER_COLOR = vec3(0.8,0.9,0.6)*0.6;
-#define SEA_TIME (1.0 + iTime * SEA_SPEED)
+#define SEA_TIME (1.0 + sin(0.0001*PI*(int(iTime)%10000)) * SEA_SPEED)
 const mat2 octave_m = mat2(1.6,1.2,-1.2,1.6);
 
 // math

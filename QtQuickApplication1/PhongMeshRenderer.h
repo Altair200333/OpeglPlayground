@@ -90,6 +90,9 @@ public:
 		shader->setUniformValue("isLightSource", material->isLightSource);
 
 		shader->setUniformValue("wireframe", false);
+		shader->setUniformValue("iTime", static_cast<int>(
+			std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()));
+		
 		vao->bind();
 		glDrawElements(GL_TRIANGLES, mesh->indices.size(), GL_UNSIGNED_INT, 0);
 		vao->release();

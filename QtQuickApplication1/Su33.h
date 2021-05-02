@@ -80,7 +80,7 @@ public:
 		tmp = 0.5 * rho * fLocalSpeed* fLocalSpeed* area;
 		auto result = (vLift * SimpleAerodynamics::LiftCoefficient(attack) + drag * SimpleAerodynamics::DragCoefficient(attack)) * tmp* liftScale;
 		//printQv(result);
-		std::cout << fLocalSpeed << "\n";
+		//std::cout << fLocalSpeed << "\n";
 		rb->addForce(result);
 
 
