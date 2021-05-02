@@ -37,9 +37,9 @@ public:
 	void uploadCamera(std::shared_ptr<GLCamera>& camera)
 	{
 		shader->setUniformValue("origin", camera->position);
-		shader->setUniformValue("front", camera->front);
-		shader->setUniformValue("right", camera->right);
-		shader->setUniformValue("up", camera->up);
+		shader->setUniformValue("front", camera->getForward());
+		shader->setUniformValue("right", camera->getRight());
+		shader->setUniformValue("up", camera->getUp());
 		shader->setUniformValue("fov", camera->FOV);
 		shader->setUniformValue("aspectRatio", camera->aspectRatio);
 	}

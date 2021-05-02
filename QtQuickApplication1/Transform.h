@@ -78,6 +78,7 @@ inline void Transform::translate(const QVector3D& translation)
 inline void Transform::rotate(float angle, const QVector3D& axis)
 {
 	transform.rotate(QQuaternion::fromAxisAndAngle(axis, angle));
+	
 }
 
 inline void Transform::rotate(const QQuaternion& quaternion)

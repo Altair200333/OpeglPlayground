@@ -114,7 +114,7 @@ public:
 		ComponentManager::addComponent(cube, std::make_shared<RigidBody>())->init(ComponentManager::getComponent<Transform>(cube),
 			CollisionShapeGenerator::getBox({ 1,1,1 }), 1);
 		
-		addModel(MeshLoader().loadModel("Assets/Models/flat.obj"), { 0, 0, 0 }, ShaderCollection::shaders["normals"]);
+		addModel(MeshLoader().loadModel("Assets/Models/flat.obj"), { 0, -2, 0 }, ShaderCollection::shaders["normals"]);
 		water = objects.back();
 		ComponentManager::addComponent(water, std::make_shared<RigidBody>())->init(ComponentManager::getComponent<Transform>(water),
 			CollisionShapeGenerator::getPlane({ 0,1,0 }), 0);
