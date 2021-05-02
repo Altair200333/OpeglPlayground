@@ -12,7 +12,7 @@ public:
 		const std::string& vertex = "Shaders/background.vs", const std::string& fragment = "Shaders/skyBackground.fs", const std::string& geometry = "Shaders/background.gs") :
 		GLBackground(_functions, vertex, fragment, geometry)
 	{
-		t0 = Texture("Assets\\Sprites\\1.jpg");
+		t0 = Texture("Assets\\Sprites\\1.png");
 		t1 = Texture("Assets\\Sprites\\1.jpg");
 	}
 

@@ -84,15 +84,77 @@ vec3 getSun(vec2 uv, vec3 dir, vec3 sunDir)
     return vec3(sunColor);
 }
 //----
+#define AA 1   // make this 2 or even 3 if you have a really powerful GPU
 
+#define USE_SMOOTH_NOISE 1   // enable to prevent discontinuities
+
+#define SC (250.0)
+
+// value noise, and its analytical derivatives
+vec3 noised( in vec2 x )
+{
+    vec2 f = fract(x);
+    #if USE_SMOOTH_NOISE==0
+    vec2 u = f*f*(3.0-2.0*f);
+    vec2 du = 6.0*f*(1.0-f);
+    #else
+    vec2 u = f*f*f*(f*(f*6.0-15.0)+10.0);
+    vec2 du = 30.0*f*f*(f*(f-2.0)+1.0);
+    #endif
+
+#if 1
+    // texel fetch version
+    ivec2 p = ivec2(floor(x));
+    float a = texelFetch( iChannel0, (p+ivec2(0,0))&255, 0 ).x;
+	float b = texelFetch( iChannel0, (p+ivec2(1,0))&255, 0 ).x;
+	float c = texelFetch( iChannel0, (p+ivec2(0,1))&255, 0 ).x;
+	float d = texelFetch( iChannel0, (p+ivec2(1,1))&255, 0 ).x;
+#else    
+    // texture version    
+    vec2 p = floor(x);
+	float a = textureLod( iChannel0, (p+vec2(0.5,0.5))/256.0, 0.0 ).x;
+	float b = textureLod( iChannel0, (p+vec2(1.5,0.5))/256.0, 0.0 ).x;
+	float c = textureLod( iChannel0, (p+vec2(0.5,1.5))/256.0, 0.0 ).x;
+	float d = textureLod( iChannel0, (p+vec2(1.5,1.5))/256.0, 0.0 ).x;
+#endif
+    
+	return vec3(a+(b-a)*u.x+(c-a)*u.y+(a-b-c+d)*u.x*u.y,
+				du*(vec2(b-a,c-a)+(a-b-c+d)*u.yx));
+}
+const mat2 m2 = mat2(0.8,-0.6,0.6,0.8);
+
+float fbm( vec2 p )
+{
+    float f = 0.0;
+    f += 0.5000*texture( iChannel0, p/256.0 ).x; p = m2*p*2.02;
+    f += 0.2500*texture( iChannel0, p/256.0 ).x; p = m2*p*2.03;
+    f += 0.1250*texture( iChannel0, p/256.0 ).x; p = m2*p*2.01;
+    f += 0.0625*texture( iChannel0, p/256.0 ).x;
+    return f/0.9375;
+}
 void main() 
 {
-    vec3 direction = normalize(getDirection());
-    vec2 uv = toUV(direction);// SampleSphericalMap(direction);
+    vec3 rd = normalize(getDirection());
+    vec2 uv = toUV(rd);// SampleSphericalMap(direction);
     vec2 sunUV = toUV(-sunDir);
 
-    vec3 color = getSky(uv, sunUV);
-    
-    //fragColor = vec4(getSky(uv, sunUV)+getSun(uv, direction, sunDir), 1.0f);
-    fragColor = vec4(color+getSun(uv, direction, sunDir), 1.0f);
+    float sundot = clamp(dot(rd,-sunDir),0.0,1.0);
+    // sky		
+    vec3 col = vec3(0.3,0.5,0.85) - rd.y*rd.y*0.5;
+    col = mix( col, 0.85*vec3(0.7,0.75,0.85), pow( 1.0-max(rd.y,0.0), 4.0 ) );
+     // sun
+	//col += 0.25*vec3(1.0,0.7,0.4)*pow( sundot,5.0 );
+	//col += 0.25*vec3(1.0,0.8,0.6)*pow( sundot,64.0 );
+	//col += 0.2*vec3(1.0,0.8,0.6)*pow( sundot,512.0 );
+     // clouds
+	vec2 sc = origin.xz + rd.xz*(SC*1000.0-origin.y)/rd.y;
+	col = mix( col, vec3(1.0,0.95,1.0), 0.5*smoothstep(0.5,0.8,fbm(0.0005*sc/SC)) );
+     // horizon
+    col = mix( col, 0.68*vec3(0.4,0.65,1.0), pow( 1.0-max(rd.y,0.0), 16.0 ) );
+     // sun scatter
+    col += 0.3*vec3(1.0,0.7,0.3)*pow( sundot, 8.0 );
+
+    // gamma
+	col = sqrt(col);
+    fragColor = vec4(col+getSun(uv, rd, sunDir), 1.0);
 }
