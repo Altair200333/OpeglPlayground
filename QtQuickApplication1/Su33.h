@@ -36,13 +36,16 @@ public:
 		deltaX = std::clamp(delta.x() * 1.0f, -maxDeltaMouse, maxDeltaMouse);
 		deltaY = std::clamp(delta.y() * 1.0f, -maxDeltaMouse, maxDeltaMouse);
 
-		rb->addTorgue(transform->getRight() * deltaY * 0.1f);
-		rb->addTorgue(transform->getForward() * deltaX * 0.02f);
+		rb->addTorgue(transform->getRight() * deltaY * 0.00001f * SimpleAerodynamics::getControlCurve(angleOfAttack, fLocalSpeed));
+		rb->addTorgue(transform->getForward() * deltaX * 0.00001f * SimpleAerodynamics::getControlCurve(angleOfAttack, fLocalSpeed));
 
 		rightFlapAnimator.target = deltaX / maxDeltaMouse * 45;
 		leftFalpAnimator.target = deltaX / maxDeltaMouse * -45;
 		rearFlapAnimator.target = deltaY / maxDeltaMouse * -45;
 	}
+	
+	float angleOfAttack;
+	float fLocalSpeed;
 	
 	void applyForces(std::shared_ptr<RigidBody> rb, std::shared_ptr<Transform> transform)
 	{
@@ -60,11 +63,9 @@ public:
 		ias->number = std::round(rb->qvelocity().length());
 		alt->number = std::max<int>(0, transform->position.y());
 		//--
-		if(rb->velocity().length()<1)
-			return;
 		
 		QVector3D drag = -rb->qvelocity();
-		float fLocalSpeed = drag.length();
+		fLocalSpeed = drag.length();
 		drag.normalize();
 
 		auto vLift= QVector3D::crossProduct(QVector3D::crossProduct(drag, transform->getUp()), drag);
@@ -73,23 +74,32 @@ public:
 		float tmp = QVector3D::dotProduct(drag, transform->getUp());
 		tmp = std::clamp(tmp, -1.0f, 1.0f);
 
-		float attack = qRadiansToDegrees(asin(tmp));
+		angleOfAttack = qRadiansToDegrees(asin(tmp));
+		
 		float liftScale = 0.03;
 		float rho = 1;
 		float area = 2;
 		tmp = 0.5 * rho * fLocalSpeed* fLocalSpeed* area;
-		auto result = (vLift * SimpleAerodynamics::LiftCoefficient(attack) + drag * SimpleAerodynamics::DragCoefficient(attack)) * tmp* liftScale;
+		auto result = (vLift * SimpleAerodynamics::LiftCoefficient(angleOfAttack) + drag * SimpleAerodynamics::DragCoefficient(angleOfAttack)) * tmp* liftScale;
 		//printQv(result);
 		//std::cout << fLocalSpeed << "\n";
 		rb->addForce(result);
-
-
-		
 	}
 	void printQv(const QVector3D& v)
 	{
 		std::cout << v.x() << " " << v.y() << " " << v.z() << "\n";
 	}
+
+	void positionNavball()
+	{
+		auto fuselageQuat = ComponentManager::getComponent<Transform>(fuselage)->getRotationTransform();
+		auto navBallTransform = ComponentManager::getComponent<Transform>(navball);
+		QMatrix4x4 navTransform;
+		navTransform.translate(navBallPos);
+		navBallTransform->transform = navTransform;
+		navBallTransform->rotate(fuselageQuat.inverted());
+	}
+
 	void onUpdate() override
 	{
 		deltaX = 0;
@@ -97,7 +107,7 @@ public:
 
 		auto rb = ComponentManager::getComponent<RigidBody>(fuselage);
 		auto transform = ComponentManager::getComponent<Transform>(fuselage);
-		
+
 		if (Input::keyPressed(Qt::Key_G))
 		{
 			fpsCamera->position += MouseInput::delta().x() * QVector3D(1, 0, 0) * 0.002f;
@@ -120,12 +130,7 @@ public:
 		}
 		applyForces(rb, transform);
 
-		auto fuselageQuat = ComponentManager::getComponent<Transform>(fuselage)->getRotationTransform();
-		auto navBallTransform = ComponentManager::getComponent<Transform>(navball);
-		QMatrix4x4 navTransform;
-		navTransform.translate(navBallPos);
-		navBallTransform->transform = navTransform;
-		navBallTransform->rotate(fuselageQuat.inverted());
+		positionNavball();
 	}
 	std::shared_ptr<NumberRenderer> ias;
 	std::shared_ptr<NumberRenderer> alt;

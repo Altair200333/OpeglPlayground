@@ -85,6 +85,14 @@ public:
 		}
 
 		return cd;
-
+	}
+	static float getControlCurve(float angle, float speed, float junction = 50)
+	{
+		if(speed< junction)
+		{
+			return speed * speed;
+		}
+		const float b = 1 / (junction * junction * junction);
+		return 1 / (b * speed);
 	}
 };
