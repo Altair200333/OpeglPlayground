@@ -17,19 +17,28 @@ public:
 
 	QVector3D getRight() const override
 	{
+		QVector3D diff = (target->position - position).normalized();
+		QVector3D right = QVector3D::crossProduct(diff, target->getUp()).normalized();
+		return right;
 		return target->getRotationTransform() * right;
 	}
 	QVector3D getForward() const override
 	{
+		QVector3D diff = (target->position - position).normalized();
+		return diff;
 		return target->getRotationTransform() * front;
 	}
 	QVector3D getUp() const override
 	{
-		return target->getRotationTransform() * up;
+		QVector3D diff = (target->position - position).normalized();
+		QVector3D right = QVector3D::crossProduct(diff, target->getUp()).normalized();
+		QVector3D up = QVector3D::crossProduct(right, diff).normalized();
+		return up;
+		return target->getRotationTransform()*up;
 	}
 	void onUpdate() override
 	{
 		targetPos = target->position - target->getForward()*offset.z()+target->getUp()*offset.y();
-		position = position + (targetPos - position) * FPSCounter::getFrameTime()*10;
+		position = position + (targetPos - position) * FPSCounter::getFrameTime() * 0.5f;
 	}
 };

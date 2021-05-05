@@ -14,7 +14,7 @@ public:
 	std::shared_ptr<Object> flapLeft;
 	std::shared_ptr<Object> flapRight;
 	std::shared_ptr<Object> rearFlap;
-	RotationAnimator animator;
+
 	RotationAnimator leftFalpAnimator;
 	RotationAnimator rightFlapAnimator;
 	RotationAnimator rearFlapAnimator;
@@ -76,14 +76,14 @@ public:
 
 		angleOfAttack = qRadiansToDegrees(asin(tmp));
 		
-		float liftScale = 0.03;
+		float liftScale = 1;
 		float rho = 1;
 		float area = 2;
 		tmp = 0.5 * rho * fLocalSpeed* fLocalSpeed* area;
 		auto result = (vLift * SimpleAerodynamics::LiftCoefficient(angleOfAttack) + drag * SimpleAerodynamics::DragCoefficient(angleOfAttack)) * tmp* liftScale;
 		//printQv(result);
-		//std::cout << fLocalSpeed << "\n";
-		rb->addForce(result);
+		std::cout << angleOfAttack << "\n";
+		rb->addForce(result * FPSCounter::getFrameTime());
 	}
 	void printQv(const QVector3D& v)
 	{
@@ -154,56 +154,27 @@ public:
 		fuselageRB->setLinearDamping(0.07f);
 		//--
 
-		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/wings.obj"), {0, 0, 0},
-		                ShaderCollection::shaders["normals"]);
-		fuselage->addChild(scene->objects.back());
-
-		animator.init(ComponentManager::getComponent<Transform>(scene->objects.back()), QVector3D(1, 0, 0));
-
-		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/engine.obj"), {0, 0, 0},
-		                ShaderCollection::shaders["normals"]);
-		fuselage->addChild(scene->objects.back());
-
-		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/panel.obj"), {0, 0, 0},
-		                ShaderCollection::shaders["normals"]);
-		fuselage->addChild(scene->objects.back());
-
-		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/seat.obj"), {0, 0, 0},
-		                ShaderCollection::shaders["normals"]);
-		fuselage->addChild(scene->objects.back());
-
-		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/visor_frame.obj"), {0, 0, 0},
-		                ShaderCollection::shaders["normals"]);
-		fuselage->addChild(scene->objects.back());
-
-		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/tail.obj"), {0, 0, 0},
-		                ShaderCollection::shaders["normals"]);
-		fuselage->addChild(scene->objects.back());
-
-		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/tail2.obj"), {0, 0, 0},
-		                ShaderCollection::shaders["normals"]);
-		fuselage->addChild(scene->objects.back());
-
-		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/navball.obj"), navBallPos,
-		                ShaderCollection::shaders["plain"]);
+		loadPlanePart(scene, "Assets/Models/plane/wings.obj");
+		loadPlanePart(scene, "Assets/Models/plane/engine.obj");
+		loadPlanePart(scene, "Assets/Models/plane/panel.obj");
+		loadPlanePart(scene, "Assets/Models/plane/seat.obj");
+		loadPlanePart(scene, "Assets/Models/plane/visor_frame.obj");
+		loadPlanePart(scene, "Assets/Models/plane/tail.obj");
+		loadPlanePart(scene, "Assets/Models/plane/tail2.obj");
+		loadPlanePart(scene, "Assets/Models/plane/navball.obj", ShaderCollection::shaders["plain"], navBallPos);
+		
 		navball = scene->objects.back();
-		fuselage->addChild(navball);
 
-		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/flap_l.obj"), {-2.11702, -0.155708, 1.33746},
-		                ShaderCollection::shaders["normals"]);
-		fuselage->addChild(scene->objects.back());
+		loadPlanePart(scene, "Assets/Models/plane/flap_l.obj", ShaderCollection::shaders["normals"], { -2.11702, -0.155708, 1.33746 });
 		flapLeft = scene->objects.back();
 		leftFalpAnimator.init(ComponentManager::getComponent<Transform>(flapLeft), QVector3D(1, 0, 0), 120);
 
-		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/flap_r.obj"), {2.11702, -0.155708, 1.33746},
-		                ShaderCollection::shaders["normals"]);
-		fuselage->addChild(scene->objects.back());
+		loadPlanePart(scene, "Assets/Models/plane/flap_r.obj", ShaderCollection::shaders["normals"], { 2.11702, -0.155708, 1.33746 });
 		flapRight = scene->objects.back();
 		rightFlapAnimator.init(ComponentManager::getComponent<Transform>(flapRight), QVector3D(1, 0, 0), 120);
 
-		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/rearControl.obj"), rearFlapPos,
-		                ShaderCollection::shaders["normals"]);
-		fuselage->addChild(scene->objects.back());
+		loadPlanePart(scene, "Assets/Models/plane/rearControl.obj", ShaderCollection::shaders["normals"], rearFlapPos);
+		
 		rearFlap = scene->objects.back();
 		rearFlapAnimator.init(ComponentManager::getComponent<Transform>(rearFlap), QVector3D(1, 0, 0), 120);
 
@@ -229,21 +200,26 @@ public:
 		std::dynamic_pointer_cast<FPSFollowCamera>(fpsCamera)->target = ComponentManager::getComponent<Transform>(fuselage);
 
 		//-----
-		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/text/ias.obj"), { 0, 0, 0 },
-			ShaderCollection::shaders["plain"]);
-		fuselage->addChild(scene->objects.back());
+		loadPlanePart(scene, "Assets/Models/plane/text/ias.obj", ShaderCollection::shaders["plain"]);
+		loadPlanePart(scene, "Assets/Models/plane/text/alt.obj", ShaderCollection::shaders["plain"]);
+		loadPlanePart(scene, "Assets/Models/plane/text/thr.obj", ShaderCollection::shaders["plain"]);
+		loadPlanePart(scene, "Assets/Models/plane/text/power.obj", ShaderCollection::shaders["plain"]);
+		loadPlanePart(scene, "Assets/Models/plane/text/eng.obj", ShaderCollection::shaders["plain"]);
+		loadPlanePart(scene, "Assets/Models/plane/text/gear.obj", ShaderCollection::shaders["plain"]);
 
-		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/text/alt.obj"), { 0, 0, 0 },
-			ShaderCollection::shaders["plain"]);
-		fuselage->addChild(scene->objects.back());
-		
-		ias = std::make_shared<NumberRenderer>(scene->functions);
-		ias->position = { 0.065182, 0.112829, -2.35856 };
-		ias->setParent(fuselage);
-
-		alt = std::make_shared<NumberRenderer>(scene->functions);
-		alt->position = { 0.063522, 0.103151, -2.35368 };
-		alt->setParent(fuselage);
+		addPanelText(scene, ias, { 0.065182, 0.112829, -2.35856 });
+		addPanelText(scene, alt, { 0.063522, 0.103151, -2.35368 });
 		//--------
+	}
+	void addPanelText(Scene* scene, std::shared_ptr<NumberRenderer>& text, const QVector3D& pos)
+	{
+		text = std::make_shared<NumberRenderer>(scene->functions);
+		text->position = pos;
+		text->setParent(fuselage);
+	}
+	void loadPlanePart(Scene* scene, const std::string& path, ShaderData data = ShaderCollection::shaders["normals"], const QVector3D& pos = QVector3D(0,0,0))
+	{
+		scene->addModel(MeshLoader().loadModel(path), pos, data);
+		fuselage->addChild(scene->objects.back());
 	}
 };

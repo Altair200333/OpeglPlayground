@@ -41,6 +41,6 @@ public:
 	void onUpdate() override
 	{
 		const auto deltaTime = FPSCounter::getFrameTime();
-		getWorld().stepSimulation(deltaTime, 100);
+		getWorld().stepSimulation(deltaTime, 32);
 	}
 };

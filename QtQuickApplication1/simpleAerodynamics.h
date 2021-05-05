@@ -88,11 +88,18 @@ public:
 	}
 	static float getControlCurve(float angle, float speed, float junction = 50)
 	{
+		float angleScale = exp(-angle * angle / (25 * 25));
+		float result;
 		if(speed< junction)
 		{
-			return speed * speed;
+			result = speed * speed;
 		}
-		const float b = 1 / (junction * junction * junction);
-		return 1 / (b * speed);
+		else
+		{
+			const float b = 1 / (junction * junction * junction);
+			result =  1 / (b * speed);
+		}
+		result *= angleScale;
+		return result;
 	}
 };
