@@ -14,6 +14,9 @@ public:
 	std::shared_ptr<Object> flapLeft;
 	std::shared_ptr<Object> flapRight;
 	std::shared_ptr<Object> rearFlap;
+	//--
+	std::shared_ptr<Object> exhaust1;
+	std::shared_ptr<Object> exhaust2;
 
 	RotationAnimator leftFalpAnimator;
 	RotationAnimator rightFlapAnimator;
@@ -87,9 +90,13 @@ public:
 		float area = 2;
 		tmp = 0.5 * rho * fLocalSpeed* fLocalSpeed* area;
 		auto result = (vLift * SimpleAerodynamics::LiftCoefficient(angleOfAttack) + drag * SimpleAerodynamics::DragCoefficient(angleOfAttack)) * tmp* liftScale;
-		//printQv(result);
-		//std::cout << angleOfAttack << "\n";
+		
 		rb->addForce(result * FPSCounter::getFrameTime());
+
+		//--
+		ComponentManager::getComponent<Material>(exhaust1)->alpha = 0.3f*thrust*0.01f;
+		ComponentManager::getComponent<Material>(exhaust2)->alpha = 0.75f*thrust*0.01f;
+
 	}
 	void printQv(const QVector3D& v)
 	{
@@ -194,12 +201,25 @@ public:
 		scene->addTransparent(MeshLoader().loadModel("Assets/Models/plane/visor.obj"), {0, 0, 0},
 		                      ShaderCollection::shaders["visor"]);
 		fuselage->addChild(scene->transparentObjects.back());
+		///----
+		//exhaust2.obj
 
+		scene->addTransparent(MeshLoader().loadModel("Assets/Models/plane/exhaust1.obj"), { 0, 0, 0 },
+			ShaderCollection::shaders["plain"]);
+		fuselage->addChild(scene->transparentObjects.back());
+		ComponentManager::getComponent<Material>(scene->transparentObjects.back())->alpha = 0.2f;
+		exhaust1 = scene->transparentObjects.back();
+
+		scene->addTransparent(MeshLoader().loadModel("Assets/Models/plane/exhaust2.obj"), { 0, 0, 0 },
+			ShaderCollection::shaders["plain"]);
+		fuselage->addChild(scene->transparentObjects.back());
+		ComponentManager::getComponent<Material>(scene->transparentObjects.back())->alpha = 0.75f;
+		exhaust2 = scene->transparentObjects.back();
+		///
 
 		chaseCamera = std::make_shared<TPFollowCamera>();
 		chaseCamera->enabled = false;
-		std::dynamic_pointer_cast<TPFollowCamera>(chaseCamera)->target = ComponentManager::getComponent<Transform
-		>(fuselage);
+		std::dynamic_pointer_cast<TPFollowCamera>(chaseCamera)->target = ComponentManager::getComponent<Transform>(fuselage);
 
 		fpsCamera = std::make_shared<FPSFollowCamera>();
 		fpsCamera->enabled = false;
