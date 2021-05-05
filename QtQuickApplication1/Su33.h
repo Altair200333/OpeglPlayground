@@ -46,22 +46,28 @@ public:
 	
 	float angleOfAttack;
 	float fLocalSpeed;
-	
+	float thrust = 0;
+	float thrustRate = 25;
 	void applyForces(std::shared_ptr<RigidBody> rb, std::shared_ptr<Transform> transform)
 	{
 		//std::cout << rb->qvelocity().x()<<"\n";
 		if (Input::keyPressed(Qt::Key_Shift))
 		{
-			rb->addForce(transform->getForward() * 20);
+			thrust += FPSCounter::getFrameTime()* thrustRate;
 		}
 		if (Input::keyPressed(Qt::Key_Control))
 		{
-			rb->addForce(-transform->getForward() * 20);
+			thrust -= FPSCounter::getFrameTime() * thrustRate;
 		}
+		
+		thrust = std::clamp<float>(thrust, 0, 100);
+
+		rb->addForce(transform->getForward() * thrust *0.01f * 20);
 
 		//---
 		ias->number = std::round(rb->qvelocity().length());
 		alt->number = std::max<int>(0, transform->position.y());
+		thr->number = thrust;
 		//--
 		
 		QVector3D drag = -rb->qvelocity();
@@ -134,6 +140,7 @@ public:
 	}
 	std::shared_ptr<NumberRenderer> ias;
 	std::shared_ptr<NumberRenderer> alt;
+	std::shared_ptr<NumberRenderer> thr;
 	void init(Scene* scene) override
 	{
 		
@@ -209,6 +216,7 @@ public:
 
 		addPanelText(scene, ias, { 0.065182, 0.112829, -2.35856 });
 		addPanelText(scene, alt, { 0.063522, 0.103151, -2.35368 });
+		addPanelText(scene, thr, { 0.064752, 0.09316, -2.34865 });
 		//--------
 	}
 	void addPanelText(Scene* scene, std::shared_ptr<NumberRenderer>& text, const QVector3D& pos)
