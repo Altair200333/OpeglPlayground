@@ -11,9 +11,17 @@ public:
 	int width, height;
 	int x=0, y=0;
 	int viewportW=400, viewportH=400;
-	
+	bool useRel = false;
+	float relX=0, relY=0;
+	bool visible = true;
 	QOpenGLVertexArrayObject* vao = nullptr;
 
+	void setRelPos(float x, float y)
+	{
+		useRel = true;
+		relX = x;
+		relY = y;
+	}
 	Sprite(const std::string& path, int w, int h, int _x =0, int _y=0):width(w), height(h), x(_x), y(_y)
 	{
 		vao = new QOpenGLVertexArrayObject();

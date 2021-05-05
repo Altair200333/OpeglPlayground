@@ -28,8 +28,9 @@ public:
 
 	QVector3D navBallPos{-0.105508, 0.082774, -2.34698};
 	QVector3D rearFlapPos{0, -0.246162, 3.45535};
-
-	float maxDeltaMouse = 400;
+	//--
+	std::shared_ptr<Sprite> mouseDeltaPos;
+	float maxDeltaMouse = 200;
 	float deltaX = 0;
 	float deltaY = 0;
 
@@ -45,6 +46,8 @@ public:
 		rightFlapAnimator.target = deltaX / maxDeltaMouse * 45;
 		leftFalpAnimator.target = deltaX / maxDeltaMouse * -45;
 		rearFlapAnimator.target = deltaY / maxDeltaMouse * -45;
+		mouseDeltaPos->x = mouseDeltaPos->viewportW / 2 + deltaX;
+		mouseDeltaPos->y = mouseDeltaPos->viewportH / 2 + deltaY;
 	}
 	
 	float angleOfAttack;
@@ -96,13 +99,14 @@ public:
 		//--
 		ComponentManager::getComponent<Material>(exhaust1)->alpha = 0.3f*thrust*0.01f;
 		ComponentManager::getComponent<Material>(exhaust2)->alpha = 0.75f*thrust*0.01f;
+		
 
 	}
 	void printQv(const QVector3D& v)
 	{
 		std::cout << v.x() << " " << v.y() << " " << v.z() << "\n";
 	}
-
+	
 	void positionNavball()
 	{
 		auto fuselageQuat = ComponentManager::getComponent<Transform>(fuselage)->getRotationTransform();
@@ -134,10 +138,13 @@ public:
 		if (MouseInput::keyPressed(Qt::MiddleButton))
 		{
 			currentPos += MouseInput::delta();
+			mouseDeltaPos->visible = true;
 			animateSurfaces(rb, transform);
 		}
 		else
 		{
+			mouseDeltaPos->visible = false;
+
 			rightFlapAnimator.target = 0;
 			leftFalpAnimator.target = 0;
 		}
@@ -242,7 +249,13 @@ public:
 		loadPlanePart(scene, "Assets/Models/plane/btns/engBtn.obj", ShaderCollection::shaders["plain"]);
 		loadPlanePart(scene, "Assets/Models/plane/btns/powBtn.obj", ShaderCollection::shaders["plain"]);
 		loadPlanePart(scene, "Assets/Models/plane/btns/gearBtn.obj", ShaderCollection::shaders["plain"]);
+		//---
+		auto cross = std::make_shared<Sprite>("Assets\\Sprites\\cross.png", 40, 40);
+		cross->setRelPos(0, 0);
+		scene->sprites.push_back(cross);
 
+		mouseDeltaPos = std::make_shared<Sprite>("Assets\\Sprites\\cross2.png", 30, 30);
+		scene->sprites.push_back(mouseDeltaPos);
 	}
 	void addPanelText(Scene* scene, std::shared_ptr<NumberRenderer>& text, const QVector3D& pos)
 	{

@@ -88,7 +88,7 @@ public:
 	}
 	static float getControlCurve(float angle, float speed, float junction = 80)
 	{
-		float angleScale = exp(-angle * angle / (25 * 25));
+		float angleScale = exp(-angle * angle / (35 * 35));
 		float result;
 		if(speed< junction)
 		{

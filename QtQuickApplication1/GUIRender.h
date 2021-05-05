@@ -17,6 +17,8 @@ protected:
 	}
 	void renderSprite(std::shared_ptr<Sprite>& sprite)
 	{
+		if(!sprite->visible)
+			return;
 		glDisable(GL_DEPTH_TEST);
 
 		sprite->vao->bind();
@@ -32,6 +34,10 @@ protected:
 		shader->setUniformValue("viewportW", sprite->viewportW);
 		shader->setUniformValue("viewportH", sprite->viewportH);
 
+		shader->setUniformValue("useRel", sprite->useRel);
+		shader->setUniformValue("relX", sprite->relX);
+		shader->setUniformValue("relY", sprite->relY);
+		
 		viewport->glActiveTexture(GL_TEXTURE0 + 0);
 		sprite->texture->bind();
 		shader->setUniformValue("sprite", 0);
