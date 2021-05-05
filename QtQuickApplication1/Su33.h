@@ -88,7 +88,7 @@ public:
 		tmp = 0.5 * rho * fLocalSpeed* fLocalSpeed* area;
 		auto result = (vLift * SimpleAerodynamics::LiftCoefficient(angleOfAttack) + drag * SimpleAerodynamics::DragCoefficient(angleOfAttack)) * tmp* liftScale;
 		//printQv(result);
-		std::cout << angleOfAttack << "\n";
+		//std::cout << angleOfAttack << "\n";
 		rb->addForce(result * FPSCounter::getFrameTime());
 	}
 	void printQv(const QVector3D& v)
@@ -218,6 +218,11 @@ public:
 		addPanelText(scene, alt, { 0.063522, 0.103151, -2.35368 });
 		addPanelText(scene, thr, { 0.064752, 0.09316, -2.34865 });
 		//--------
+
+		loadPlanePart(scene, "Assets/Models/plane/btns/engBtn.obj", ShaderCollection::shaders["plain"]);
+		loadPlanePart(scene, "Assets/Models/plane/btns/powBtn.obj", ShaderCollection::shaders["plain"]);
+		loadPlanePart(scene, "Assets/Models/plane/btns/gearBtn.obj", ShaderCollection::shaders["plain"]);
+
 	}
 	void addPanelText(Scene* scene, std::shared_ptr<NumberRenderer>& text, const QVector3D& pos)
 	{

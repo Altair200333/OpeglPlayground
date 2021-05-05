@@ -39,6 +39,6 @@ public:
 	void onUpdate() override
 	{
 		targetPos = target->position - target->getForward()*offset.z()+target->getUp()*offset.y();
-		position = position + (targetPos - position) * FPSCounter::getFrameTime() * 0.5f;
+		position = position + (targetPos - position) * FPSCounter::getFrameTime() * 0.9f;
 	}
 };
