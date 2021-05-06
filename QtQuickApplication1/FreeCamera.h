@@ -28,6 +28,10 @@ public:
 	{
 		minZoom = FOV;
 	}
+	QVector3D getPosition() const override
+	{
+		return position;
+	}
 	void onUpdate() override
 	{
 		if (!enabled)
