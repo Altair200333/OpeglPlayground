@@ -2,9 +2,6 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLTexture>
-
-
-
 #include "GLBackground.h"
 #include "GLCamera.h"
 

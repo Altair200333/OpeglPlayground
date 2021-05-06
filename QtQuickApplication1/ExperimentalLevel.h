@@ -114,10 +114,10 @@ public:
 		ComponentManager::addComponent(cube, std::make_shared<RigidBody>())->init(ComponentManager::getComponent<Transform>(cube),
 			CollisionShapeGenerator::getBox({ 1,1,1 }), 1);
 		
-		addModel(MeshLoader().loadModel("Assets/Models/flat.obj"), { 0, 0, 0 }, ShaderCollection::shaders["water"]);
-		water = objects.back();
-		ComponentManager::addComponent(water, std::make_shared<RigidBody>())->init(ComponentManager::getComponent<Transform>(water),
-			CollisionShapeGenerator::getPlane({ 0,1,0 }), 0);
+		//addModel(MeshLoader().loadModel("Assets/Models/flat.obj"), { 0, 0, 0 }, ShaderCollection::shaders["water"]);
+		//water = objects.back();
+		//ComponentManager::addComponent(water, std::make_shared<RigidBody>())->init(ComponentManager::getComponent<Transform>(water),
+		//	CollisionShapeGenerator::getPlane({ 0,1,0 }), 0);
 		
 		//addLight(std::make_shared<PointLight>(QVector3D{ -8, 4, 7 }, QColor{ 255, 255, 255 }, 2.5));
 		dirLight = (std::make_shared<DirectionalLight>());

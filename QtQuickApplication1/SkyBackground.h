@@ -13,7 +13,10 @@ public:
 		GLBackground(_functions, vertex, fragment, geometry)
 	{
 		t0 = Texture("Assets\\Sprites\\1.png");
+		t0.setWrapMode(Texture::WrapMode::Repeat);
 		t1 = Texture("Assets\\Sprites\\1.jpg");
+		t1.setWrapMode(Texture::WrapMode::Repeat);
+
 	}
 
 	void render(std::shared_ptr<GLCamera>& camera) override
