@@ -9,6 +9,7 @@
 #include "Module.h"
 #include "NumberRenderer.h"
 #include "RigidBody.h"
+#include "RotationAnimator.h"
 #include "simpleAerodynamics.h"
 
 class EngineModule: public Module
@@ -21,6 +22,9 @@ public:
 	//--
 	std::shared_ptr<Object> exhaust1;
 	std::shared_ptr<Object> exhaust2;
+	std::shared_ptr<Object> thrHandle;
+	RotationAnimator thrHandleAnimator;
+
 	//
 	std::shared_ptr<NumberRenderer> ias;
 	std::shared_ptr<NumberRenderer> alt;
@@ -51,6 +55,10 @@ public:
 		addPanelText(scene, ias, { 0.065182, 0.112829, -2.35856 });
 		addPanelText(scene, alt, { 0.063522, 0.103151, -2.35368 });
 		addPanelText(scene, thr, { 0.064752, 0.09316, -2.34865 });
+
+		loadPlanePart(scene, "Assets/Models/plane/thrHandle.obj", ShaderCollection::shaders["normals"], { -0.136533,-0.099797 , -2.15335 });
+		thrHandle = scene->objects.back();
+		thrHandleAnimator.init(ComponentManager::getComponent<Transform>(thrHandle), QVector3D(1, 0, 0), 30);
 	}
 	void update() override
 	{
@@ -66,6 +74,7 @@ public:
 		}
 
 		thrust = std::clamp<float>(thrust, 0, 100);
+		thrHandleAnimator.target = 30 - 60 * thrust / 100.0f;
 		//---
 		ias->number = std::round(body->qvelocity().length());
 		alt->number = std::max<int>(0, transform->position.y());
