@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "EngineModule.h"
 #include "NumberRenderer.h"
 #include "Plane.h"
 #include "Object.h"
@@ -14,10 +15,12 @@ public:
 	std::shared_ptr<Object> flapLeft;
 	std::shared_ptr<Object> flapRight;
 	std::shared_ptr<Object> rearFlap;
-	//--
-	std::shared_ptr<Object> exhaust1;
-	std::shared_ptr<Object> exhaust2;
+	
 
+	std::shared_ptr<Object> powerBtn;
+	std::shared_ptr<Object> engineBtn;
+
+	
 	RotationAnimator leftFalpAnimator;
 	RotationAnimator rightFlapAnimator;
 	RotationAnimator rearFlapAnimator;
@@ -34,14 +37,15 @@ public:
 	float deltaX = 0;
 	float deltaY = 0;
 
+	EngineModule engine;
 	void animateSurfaces(std::shared_ptr<RigidBody> rb, std::shared_ptr<Transform> transform)
 	{
 		const QPoint delta = currentPos - lastPos;
 		deltaX = std::clamp(delta.x() * 1.0f, -maxDeltaMouse, maxDeltaMouse);
 		deltaY = std::clamp(delta.y() * 1.0f, -maxDeltaMouse, maxDeltaMouse);
 
-		rb->addTorgue(transform->getRight() * deltaY * 0.00001f * SimpleAerodynamics::getControlCurve(angleOfAttack, fLocalSpeed));
-		rb->addTorgue(transform->getForward() * deltaX * 0.00001f * SimpleAerodynamics::getControlCurve(angleOfAttack, fLocalSpeed));
+		rb->addTorgue(transform->getRight() * deltaY * 0.00001f * SimpleAerodynamics::getControlCurve(engine.angleOfAttack, engine.fLocalSpeed));
+		rb->addTorgue(transform->getForward() * deltaX * 0.00001f * SimpleAerodynamics::getControlCurve(engine.angleOfAttack, engine.fLocalSpeed));
 
 		rightFlapAnimator.target = deltaX / maxDeltaMouse * 45;
 		leftFalpAnimator.target = deltaX / maxDeltaMouse * -45;
@@ -50,58 +54,6 @@ public:
 		mouseDeltaPos->y = mouseDeltaPos->viewportH / 2 + deltaY;
 	}
 	
-	float angleOfAttack;
-	float fLocalSpeed;
-	float thrust = 0;
-	float thrustRate = 25;
-	void applyForces(std::shared_ptr<RigidBody> rb, std::shared_ptr<Transform> transform)
-	{
-		//std::cout << rb->qvelocity().x()<<"\n";
-		if (Input::keyPressed(Qt::Key_Shift))
-		{
-			thrust += FPSCounter::getFrameTime()* thrustRate;
-		}
-		if (Input::keyPressed(Qt::Key_Control))
-		{
-			thrust -= FPSCounter::getFrameTime() * thrustRate;
-		}
-		
-		thrust = std::clamp<float>(thrust, 0, 100);
-
-		rb->addForce(transform->getForward() * thrust *0.01f * 20);
-
-		//---
-		ias->number = std::round(rb->qvelocity().length());
-		alt->number = std::max<int>(0, transform->position.y());
-		thr->number = thrust;
-		//--
-		
-		QVector3D drag = -rb->qvelocity();
-		fLocalSpeed = drag.length();
-		drag.normalize();
-
-		auto vLift= QVector3D::crossProduct(QVector3D::crossProduct(drag, transform->getUp()), drag);
-		vLift.normalize();
-
-		float tmp = QVector3D::dotProduct(drag, transform->getUp());
-		tmp = std::clamp(tmp, -1.0f, 1.0f);
-
-		angleOfAttack = qRadiansToDegrees(asin(tmp));
-		
-		float liftScale = 1;
-		float rho = 1;
-		float area = 2;
-		tmp = 0.5 * rho * fLocalSpeed* fLocalSpeed* area;
-		auto result = (vLift * SimpleAerodynamics::LiftCoefficient(angleOfAttack) + drag * SimpleAerodynamics::DragCoefficient(angleOfAttack)) * tmp* liftScale;
-		
-		rb->addForce(result * FPSCounter::getFrameTime());
-
-		//--
-		ComponentManager::getComponent<Material>(exhaust1)->alpha = 0.3f*thrust*0.01f;
-		ComponentManager::getComponent<Material>(exhaust2)->alpha = 0.75f*thrust*0.01f;
-		
-
-	}
 	void printQv(const QVector3D& v)
 	{
 		std::cout << v.x() << " " << v.y() << " " << v.z() << "\n";
@@ -148,16 +100,26 @@ public:
 			rightFlapAnimator.target = 0;
 			leftFalpAnimator.target = 0;
 		}
-		applyForces(rb, transform);
+		engine.update();
 
 		positionNavball();
+		
+		if(Input::keyJustPressed(Qt::Key_F) && scene->pickedObjectId != -1 && scene->pickedObjectId < scene->objects.size())
+		{
+			auto selected = scene->objects[scene->pickedObjectId];
+			if(selected == engineBtn)
+			{
+				engine.enabled = !engine.enabled;
+				ComponentManager::getComponent<Material>(engineBtn)->diffuse = engine.enabled ? QColor(0, 220, 0) : QColor(220, 0, 0);
+				std::cout << "Eng\n";
+			}
+		}
 	}
-	std::shared_ptr<NumberRenderer> ias;
-	std::shared_ptr<NumberRenderer> alt;
-	std::shared_ptr<NumberRenderer> thr;
+	
+	Scene* scene;
 	void init(Scene* scene) override
 	{
-		
+		this->scene = scene;
 		//
 		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/body.obj"), {1.5f, 3, 0},
 		                ShaderCollection::shaders["normals"]);
@@ -210,20 +172,7 @@ public:
 		fuselage->addChild(scene->transparentObjects.back());
 		///----
 		//exhaust2.obj
-
-		scene->addTransparent(MeshLoader().loadModel("Assets/Models/plane/exhaust1.obj"), { 0, 0, 0 },
-			ShaderCollection::shaders["plain"]);
-		fuselage->addChild(scene->transparentObjects.back());
-		ComponentManager::getComponent<Material>(scene->transparentObjects.back())->alpha = 0.2f;
-		exhaust1 = scene->transparentObjects.back();
-
-		scene->addTransparent(MeshLoader().loadModel("Assets/Models/plane/exhaust2.obj"), { 0, 0, 0 },
-			ShaderCollection::shaders["plain"]);
-		fuselage->addChild(scene->transparentObjects.back());
-		ComponentManager::getComponent<Material>(scene->transparentObjects.back())->alpha = 0.75f;
-		exhaust2 = scene->transparentObjects.back();
-		///
-
+		
 		chaseCamera = std::make_shared<TPFollowCamera>();
 		chaseCamera->enabled = false;
 		std::dynamic_pointer_cast<TPFollowCamera>(chaseCamera)->target = ComponentManager::getComponent<Transform>(fuselage);
@@ -241,12 +190,10 @@ public:
 		loadPlanePart(scene, "Assets/Models/plane/text/eng.obj", ShaderCollection::shaders["plain"]);
 		loadPlanePart(scene, "Assets/Models/plane/text/gear.obj", ShaderCollection::shaders["plain"]);
 
-		addPanelText(scene, ias, { 0.065182, 0.112829, -2.35856 });
-		addPanelText(scene, alt, { 0.063522, 0.103151, -2.35368 });
-		addPanelText(scene, thr, { 0.064752, 0.09316, -2.34865 });
 		//--------
 
 		loadPlanePart(scene, "Assets/Models/plane/btns/engBtn.obj", ShaderCollection::shaders["plain"]);
+		engineBtn = scene->objects.back();
 		loadPlanePart(scene, "Assets/Models/plane/btns/powBtn.obj", ShaderCollection::shaders["plain"]);
 		loadPlanePart(scene, "Assets/Models/plane/btns/gearBtn.obj", ShaderCollection::shaders["plain"]);
 		//---
@@ -256,13 +203,13 @@ public:
 
 		mouseDeltaPos = std::make_shared<Sprite>("Assets\\Sprites\\cross2.png", 30, 30);
 		scene->sprites.push_back(mouseDeltaPos);
+		//
+		auto rb = ComponentManager::getComponent<RigidBody>(fuselage);
+		auto transform = ComponentManager::getComponent<Transform>(fuselage);
+		
+		engine.init(scene, rb, transform, fuselage);
 	}
-	void addPanelText(Scene* scene, std::shared_ptr<NumberRenderer>& text, const QVector3D& pos)
-	{
-		text = std::make_shared<NumberRenderer>(scene->functions);
-		text->position = pos;
-		text->setParent(fuselage);
-	}
+	
 	void loadPlanePart(Scene* scene, const std::string& path, ShaderData data = ShaderCollection::shaders["normals"], const QVector3D& pos = QVector3D(0,0,0))
 	{
 		scene->addModel(MeshLoader().loadModel(path), pos, data);

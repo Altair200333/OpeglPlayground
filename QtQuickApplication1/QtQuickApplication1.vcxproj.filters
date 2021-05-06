@@ -289,6 +289,12 @@
     <ClInclude Include="NumberRenderer.h">
       <Filter>Application\Game</Filter>
     </ClInclude>
+    <ClInclude Include="Module.h">
+      <Filter>Application\Game\Planes</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineModule.h">
+      <Filter>Application\Game\Planes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

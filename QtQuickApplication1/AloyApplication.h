@@ -107,7 +107,7 @@ public:
 		manager.viewport->glClearColor(1.0f, 1.0f, 1.0f, 1);
 		manager.viewport->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		if(MouseInput::keyPressed(Qt::LeftButton))
+		if(Input::keyPressed(Qt::Key_F))
 		{
 			activeLevel->pickedObjectId = pickRenderer->pickedObjectId;
 		}

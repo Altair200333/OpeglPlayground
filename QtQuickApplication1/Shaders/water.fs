@@ -68,14 +68,14 @@ uniform int dirLightsCount;
 
 uniform bool wireframe;
 //-----
-const int NUM_STEPS = 8;
+const int NUM_STEPS = 5;
 const float EPSILON	= 1e-3;
 #define EPSILON_NRM (0.1 / 100.0f)
 //#define AA
 
 // sea
-const int ITER_GEOMETRY = 3;
-const int ITER_FRAGMENT = 4;
+const int ITER_GEOMETRY = 2;
+const int ITER_FRAGMENT = 2;
 const float SEA_HEIGHT = 0.3;
 const float SEA_CHOPPY = 4.1;
 const float SEA_SPEED = 0.8;

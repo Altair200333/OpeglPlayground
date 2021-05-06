@@ -219,6 +219,7 @@
   <ItemGroup>
     <ClInclude Include="AloyApplication.h" />
     <ClInclude Include="CollisionShapeGenerator.h" />
+    <ClInclude Include="EngineModule.h" />
     <ClInclude Include="FastNoiseLite.h" />
     <ClInclude Include="FPSFollowCamera.h" />
     <ClInclude Include="FreeCamera.h" />
@@ -231,6 +232,7 @@
     <ClInclude Include="ComponentManager.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="GUIRender.h" />
+    <ClInclude Include="Module.h" />
     <ClInclude Include="NumberRenderer.h" />
     <ClInclude Include="ObjectComponentManager.h" />
     <ClInclude Include="ExperimentalLevel.h" />

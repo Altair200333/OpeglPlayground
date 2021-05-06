@@ -69,10 +69,10 @@ public:
 		}
 		if(MouseInput::keyPressed(Qt::MiddleButton) && selectedObject != nullptr)
 		{
-			auto selRb = ComponentManager::getComponent<RigidBody>(selectedObject);
-			if(selRb)
-				selRb->addForce(camera->right * MouseInput::delta().x()*5 +
-					camera->up * MouseInput::delta().y()*5);
+			//auto selRb = ComponentManager::getComponent<RigidBody>(selectedObject);
+			//if(selRb)
+			//	selRb->addForce(camera->right * MouseInput::delta().x()*5 +
+			//		camera->up * MouseInput::delta().y()*5);
 		}
 		if(Input::keyJustPressed(Qt::Key_V))
 		{

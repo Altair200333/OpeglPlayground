@@ -9,7 +9,6 @@
 #include "Object.h"
 #include <QTransform>
 
-
 #include "ImageBackground.h"
 #include "ComponentManager.h"
 #include "MeshLoader.h"
