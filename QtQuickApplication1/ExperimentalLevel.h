@@ -137,10 +137,13 @@ public:
 		//terrain = objects.back();
 		//ComponentManager::addComponent(terrain, std::make_shared<RigidBody>())->init(CollisionShapeGenerator::getTerrain(map), 0);
 		
-		addModel(MeshLoader().loadModel("Assets/Models/runway.obj"), { 0.0f, 1, 0 }, ShaderCollection::shaders["normals"]);
+		addModel(MeshLoader().loadModel("Assets/Models/runway.obj"), { 0.0f, 0, 0 }, ShaderCollection::shaders["normals"]);
 		ComponentManager::addComponent(objects.back(),
-			std::make_shared<RigidBody>())->init(
-				CollisionShapeGenerator::getMeshCollider("Assets/Models/runway.obj"), 0);
+			std::make_shared<RigidBody>())->init(CollisionShapeGenerator::getMeshCollider("Assets/Models/runway.obj"), 0);
+
+		addModel(MeshLoader().loadModel("Assets/Models/runway1.obj"), { 0.0f, 0, 0 }, ShaderCollection::shaders["normals"]);
+		ComponentManager::addComponent(objects.back(),
+			std::make_shared<RigidBody>())->init(CollisionShapeGenerator::getMeshCollider("Assets/Models/runway1.obj"), 0);
 		//---
 		//sprites.push_back(std::make_shared<Sprite>("Assets\\Sprites\\UV_1k.jpg", 200, 200, 100, 100));
 

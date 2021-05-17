@@ -175,8 +175,8 @@ const float EPSILON	= 1e-3;
 //#define AA
 
 // sea
-const int ITER_GEOMETRY = 2;
-const int ITER_FRAGMENT = 2;
+const int ITER_GEOMETRY = 3;
+const int ITER_FRAGMENT = 3;
 const float SEA_HEIGHT = 0.3;
 const float SEA_CHOPPY = 4.1;
 const float SEA_SPEED = 0.8;

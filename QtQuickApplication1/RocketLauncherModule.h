@@ -63,7 +63,7 @@ public:
 				ComponentManager::addComponent(rockets[active].rocket, std::make_shared<RigidBody>())->init(
 					CollisionShapeGenerator::getMeshCollider("Assets/Models/plane/rocket_c.obj"), 1);
 				auto rb = ComponentManager::getComponent<RigidBody>(rockets[active].rocket);
-				rb->setLinearDamping(0.1);
+				rb->setLinearDamping(0.4);
 				rb->setAngularDamping(0.5);
 				rb->setGravity(QVector3D(0, -1, 0));
 				rockets[active].launched = true;
@@ -76,7 +76,7 @@ public:
 			if (rocket.launched)
 			{
 				auto tr = ComponentManager::getComponent<Transform>(rocket.rocket);
-				ComponentManager::getComponent<RigidBody>(rocket.rocket)->addForce(tr->getForward() * 20);
+				ComponentManager::getComponent<RigidBody>(rocket.rocket)->addForce(tr->getForward() * 100);
 			}
 		}
 	}
