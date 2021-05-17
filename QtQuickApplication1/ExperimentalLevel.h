@@ -104,10 +104,10 @@ public:
 		
 		camera = freeCamera;
 		
-		addModel(MeshLoader().loadModel("Assets/Models/ico1.obj"), { 0.5f, 5, 0 }, ShaderCollection::shaders["normals"]);
-		ComponentManager::addComponent(objects.back(), 
-			std::make_shared<RigidBody>())->init(
-			CollisionShapeGenerator::getMeshCollider("Assets/Models/ico1.obj"), 1);
+		//addModel(MeshLoader().loadModel("Assets/Models/ico1.obj"), { 0.5f, 5, 0 }, ShaderCollection::shaders["normals"]);
+		//ComponentManager::addComponent(objects.back(), 
+		//	std::make_shared<RigidBody>())->init(
+		//	CollisionShapeGenerator::getMeshCollider("Assets/Models/ico1.obj"), 1);
 		//-----
 		addModel(MeshLoader().loadModel("Assets/Models/sam2.obj"), { 10.5f, 20, 0 }, ShaderCollection::shaders["normals"]);
 		cube = objects.back();
@@ -131,14 +131,16 @@ public:
 		loadPlane();
 
 		
-		map = HeightMapGenerator().genHeightMap(200, 200, 0, 3);
-		auto terr = HeightMapMeshGenerator().genMesh(map);
-		addModel(MeshLoader::LoadedModel{ terr, std::make_shared<Material>() }, { 0, 2, 0 }, ShaderCollection::shaders["normals"]);
-		terrain = objects.back();
-
-		ComponentManager::addComponent(terrain, std::make_shared<RigidBody>())->init(CollisionShapeGenerator::getTerrain(map), 0);
+		//map = HeightMapGenerator().genHeightMap(200, 200, 0, 3);
+		//auto terr = HeightMapMeshGenerator().genMesh(map);
+		//addModel(MeshLoader::LoadedModel{ terr, std::make_shared<Material>() }, { 0, 2, 0 }, ShaderCollection::shaders["normals"]);
+		//terrain = objects.back();
+		//ComponentManager::addComponent(terrain, std::make_shared<RigidBody>())->init(CollisionShapeGenerator::getTerrain(map), 0);
 		
-
+		addModel(MeshLoader().loadModel("Assets/Models/runway.obj"), { 0.0f, 1, 0 }, ShaderCollection::shaders["normals"]);
+		ComponentManager::addComponent(objects.back(),
+			std::make_shared<RigidBody>())->init(
+				CollisionShapeGenerator::getMeshCollider("Assets/Models/runway.obj"), 0);
 		//---
 		//sprites.push_back(std::make_shared<Sprite>("Assets\\Sprites\\UV_1k.jpg", 200, 200, 100, 100));
 

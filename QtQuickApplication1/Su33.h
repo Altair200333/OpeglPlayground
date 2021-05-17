@@ -6,6 +6,7 @@
 #include "RotationAnimator.h"
 #include "TPFollowCamera.h"
 #include "simpleAerodynamics.h"
+#include "RocketLauncherModule.h"
 
 class Su33 : public Plane
 {
@@ -28,7 +29,7 @@ public:
 	QPoint currentPos;
 	std::shared_ptr<GLCamera> fpsCamera;
 	std::shared_ptr<GLCamera> chaseCamera;
-
+	
 	QVector3D navBallPos{-0.105508, 0.082774, -2.34698};
 	QVector3D rearFlapPos{0, -0.246162, 3.45535};
 	//--
@@ -38,6 +39,7 @@ public:
 	float deltaY = 0;
 
 	EngineModule engine;
+	RocketLauncherModule rockets;
 	void animateSurfaces(std::shared_ptr<RigidBody> rb, std::shared_ptr<Transform> transform)
 	{
 		const QPoint delta = currentPos - lastPos;
@@ -101,7 +103,8 @@ public:
 			leftFalpAnimator.target = 0;
 		}
 		engine.update();
-
+		rockets.update();
+		
 		positionNavball();
 		
 		if(Input::keyJustPressed(Qt::Key_F) && scene->pickedObjectId != -1 && scene->pickedObjectId < scene->objects.size())
@@ -114,6 +117,7 @@ public:
 				std::cout << "Eng\n";
 			}
 		}
+		
 	}
 	
 	Scene* scene;
@@ -144,8 +148,8 @@ public:
 		loadPlanePart(scene, "Assets/Models/plane/visor_frame.obj");
 		loadPlanePart(scene, "Assets/Models/plane/tail.obj");
 		loadPlanePart(scene, "Assets/Models/plane/tail2.obj");
+
 		loadPlanePart(scene, "Assets/Models/plane/navball.obj", ShaderCollection::shaders["plain"], navBallPos);
-		
 		navball = scene->objects.back();
 
 		loadPlanePart(scene, "Assets/Models/plane/flap_l.obj", ShaderCollection::shaders["normals"], { -2.11702, -0.155708, 1.33746 });
@@ -196,6 +200,7 @@ public:
 		engineBtn = scene->objects.back();
 		loadPlanePart(scene, "Assets/Models/plane/btns/powBtn.obj", ShaderCollection::shaders["plain"]);
 		loadPlanePart(scene, "Assets/Models/plane/btns/gearBtn.obj", ShaderCollection::shaders["plain"]);
+		
 		//---
 		auto cross = std::make_shared<Sprite>("Assets\\Sprites\\cross.png", 40, 40);
 		cross->setRelPos(0, 0);
@@ -208,6 +213,7 @@ public:
 		auto transform = ComponentManager::getComponent<Transform>(fuselage);
 		
 		engine.init(scene, rb, transform, fuselage);
+		rockets.init(scene, rb, transform, fuselage);
 	}
 	
 	void loadPlanePart(Scene* scene, const std::string& path, ShaderData data = ShaderCollection::shaders["normals"], const QVector3D& pos = QVector3D(0,0,0))

@@ -264,6 +264,7 @@
     <ClInclude Include="RenderLayer.h" />
     <ClInclude Include="RenderLayerStack.h" />
     <ClInclude Include="RigidBody.h" />
+    <ClInclude Include="RocketLauncherModule.h" />
     <ClInclude Include="RotationAnimator.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneRenderer.h" />
