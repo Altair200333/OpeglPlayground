@@ -125,7 +125,7 @@ public:
 	{
 		this->scene = scene;
 		//
-		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/body.obj"), {1.0f, 10, 40},
+		scene->addModel(MeshLoader().loadModel("Assets/Models/plane/body.obj"), {-18.0f, 10, 40},
 		                ShaderCollection::shaders["normals"]);
 		fuselage = scene->objects.back();
 		ComponentManager::addComponent(fuselage, std::make_shared<RigidBody>())->init(

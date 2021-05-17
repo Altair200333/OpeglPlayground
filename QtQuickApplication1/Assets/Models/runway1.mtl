@@ -10,5 +10,5 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Bump textures\\Asphalt_02_2K_Normal.png
-map_Kd textures\\Asphalt_02_2K_Base_Color.png
+map_Bump textures\\Paving_stone_10_2K_Normal.png
+map_Kd textures\\Paving_stone_10_2K_Base_Color.png

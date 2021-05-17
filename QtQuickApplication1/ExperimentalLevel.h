@@ -140,10 +140,17 @@ public:
 		addModel(MeshLoader().loadModel("Assets/Models/runway.obj"), { 0.0f, 0, 0 }, ShaderCollection::shaders["normals"]);
 		ComponentManager::addComponent(objects.back(),
 			std::make_shared<RigidBody>())->init(CollisionShapeGenerator::getMeshCollider("Assets/Models/runway.obj"), 0);
-
+		
+		addModel(MeshLoader().loadModel("Assets/Models/runway2.obj"), { 0.0f, 0, 0 }, ShaderCollection::shaders["normals"]);
+		ComponentManager::addComponent(objects.back(),
+			std::make_shared<RigidBody>())->init(CollisionShapeGenerator::getMeshCollider("Assets/Models/runway2.obj"), 0);
+		
 		addModel(MeshLoader().loadModel("Assets/Models/runway1.obj"), { 0.0f, 0, 0 }, ShaderCollection::shaders["normals"]);
 		ComponentManager::addComponent(objects.back(),
 			std::make_shared<RigidBody>())->init(CollisionShapeGenerator::getMeshCollider("Assets/Models/runway1.obj"), 0);
+
+		addModel(MeshLoader().loadModel("Assets/Models/hangars.obj"), { 0.0f, 0, 0 }, ShaderCollection::shaders["normals"]);
+
 		//---
 		//sprites.push_back(std::make_shared<Sprite>("Assets\\Sprites\\UV_1k.jpg", 200, 200, 100, 100));
 
