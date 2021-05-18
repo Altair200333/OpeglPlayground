@@ -24,6 +24,7 @@ class RocketLauncherModule : public Module
 	};
 
 	Rocket rockets[4];
+	std::shared_ptr<Object> indicators[4];
 	int active = 0;
 	float rocketX[4] = { -1.93016, -1.35912, 1.35912, 1.93016};
 public:
@@ -40,6 +41,17 @@ public:
 			              { rocketX[i], -0.339718, 0.74305});
 			rockets[i].rocket = scene->objects.back();
 		}
+		loadPlanePart(scene, "Assets/Models/plane/plane_icon.obj", ShaderCollection::shaders["plain"]);
+		auto indicator = MeshLoader().loadModel("Assets/Models/plane/rc_icon.obj");
+		float offsets[] = { 0,0.074933 - 0.052625,0.114905 - 0.052625,0.138341 - 0.052625 };
+		for(int i=0;i<4;++i)
+		{
+			auto mat = std::make_shared<Material>(*indicator[0].material);
+			scene->addModel({indicator[0].mesh,mat }, QVector3D(offsets[i], 0, 0), ShaderCollection::shaders["plain"]);
+			parent->addChild(scene->objects.back());
+			indicators[i] = scene->objects.back();
+		}
+		
 	}
 
 	void loadPlanePart(Scene* scene, const std::string& path, ShaderData data = ShaderCollection::shaders["normals"],
@@ -67,6 +79,9 @@ public:
 				rb->setAngularDamping(0.5);
 				rb->setGravity(QVector3D(0, -1, 0));
 				rockets[active].launched = true;
+
+				ComponentManager::getComponent<Material>(indicators[active])->diffuse = QColor(220, 0, 0);
+				
 				active++;
 			}
 		}
