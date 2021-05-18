@@ -20,8 +20,9 @@ public:
 
 	std::shared_ptr<Object> powerBtn;
 	std::shared_ptr<Object> engineBtn;
-
 	
+	std::shared_ptr<Object> radar;
+
 	RotationAnimator leftFalpAnimator;
 	RotationAnimator rightFlapAnimator;
 	RotationAnimator rearFlapAnimator;
@@ -117,7 +118,9 @@ public:
 				std::cout << "Eng\n";
 			}
 		}
-		
+		std::shared_ptr<RadarMeshRenderer> rm = std::dynamic_pointer_cast<RadarMeshRenderer>(ComponentManager::getComponent<MeshRenderer>(radar));
+		rm->planePos = transform->position;
+		std::cout << transform->position.z()<<'\n';
 	}
 	
 	Scene* scene;
@@ -201,6 +204,8 @@ public:
 		loadPlanePart(scene, "Assets/Models/plane/btns/powBtn.obj", ShaderCollection::shaders["plain"]);
 		loadPlanePart(scene, "Assets/Models/plane/btns/gearBtn.obj", ShaderCollection::shaders["plain"]);
 		
+		loadPlanePart(scene, "Assets/Models/plane/radar.obj", ShaderCollection::shaders["radar"]);
+		radar = scene->objects.back();
 		//---
 		auto cross = std::make_shared<Sprite>("Assets\\Sprites\\cross.png", 40, 40);
 		cross->setRelPos(0, 0);

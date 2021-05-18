@@ -43,6 +43,7 @@ public:
 		}
 		loadPlanePart(scene, "Assets/Models/plane/plane_icon.obj", ShaderCollection::shaders["plain"]);
 		auto indicator = MeshLoader().loadModel("Assets/Models/plane/rc_icon.obj");
+		
 		float offsets[] = { 0,0.074933 - 0.052625,0.114905 - 0.052625,0.138341 - 0.052625 };
 		for(int i=0;i<4;++i)
 		{
